@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization", "Serializat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugging", "Debugging\Debugging.csproj", "{DFF08DAA-9D68-46F8-AE91-8462BF7B3DC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{BEBC1940-97E8-4B73-87D3-568A805FDB53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{DFF08DAA-9D68-46F8-AE91-8462BF7B3DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFF08DAA-9D68-46F8-AE91-8462BF7B3DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFF08DAA-9D68-46F8-AE91-8462BF7B3DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEBC1940-97E8-4B73-87D3-568A805FDB53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEBC1940-97E8-4B73-87D3-568A805FDB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEBC1940-97E8-4B73-87D3-568A805FDB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEBC1940-97E8-4B73-87D3-568A805FDB53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
