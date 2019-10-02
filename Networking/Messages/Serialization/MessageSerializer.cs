@@ -1,8 +1,8 @@
-﻿using MineLW.Networking.IO;
+﻿using DotNetty.Buffers;
 
 namespace MineLW.Networking.Messages.Serialization
 {
-    public abstract class MessageSerializer<T> : IMessageProcessor where T : struct
+    public abstract class MessageSerializer<T>
     {
         public static MessageSerializer<T> Instance { get; internal set; }
 
@@ -13,8 +13,8 @@ namespace MineLW.Networking.Messages.Serialization
             Id = id;
         }
 
-        public abstract void Serialize(BitStream stream, object message);
-        
+        public abstract void Serialize(IByteBuffer buffer, object message);
+
         public override string ToString()
         {
             return $"Message{typeof(T)}#{Id}";

@@ -20,6 +20,9 @@
         "projectReferences": {
           "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj": {
             "projectPath": "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj"
+          },
+          "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj": {
+            "projectPath": "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj"
           }
         }
       }
@@ -32,6 +35,20 @@
   },
   "frameworks": {
     "netcoreapp3.0": {
+      "dependencies": {
+        "DotNetty.Codecs": {
+          "target": "Package",
+          "version": "[0.6.0, )"
+        },
+        "DotNetty.Handlers": {
+          "target": "Package",
+          "version": "[0.6.0, )"
+        },
+        "DotNetty.Transport": {
+          "target": "Package",
+          "version": "[0.6.0, )"
+        }
+      },
       "imports": [
         "net461",
         "net462",

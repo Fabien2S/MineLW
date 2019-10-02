@@ -51,6 +51,53 @@
         }
       }
     },
+    "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj",
+        "projectName": "MineLW API",
+        "projectPath": "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj",
+        "packagesPath": "C:\\Users\\Fabien\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\MineLW\\MineLW API\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Fabien\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    },
     "D:\\Projects\\MineLW\\Networking\\Networking.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -77,6 +124,9 @@
             "projectReferences": {
               "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj": {
                 "projectPath": "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj"
+              },
+              "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj": {
+                "projectPath": "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj"
               }
             }
           }
@@ -89,6 +139,20 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "dependencies": {
+            "DotNetty.Codecs": {
+              "target": "Package",
+              "version": "[0.6.0, )"
+            },
+            "DotNetty.Handlers": {
+              "target": "Package",
+              "version": "[0.6.0, )"
+            },
+            "DotNetty.Transport": {
+              "target": "Package",
+              "version": "[0.6.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

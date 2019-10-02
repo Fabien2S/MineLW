@@ -2,11 +2,11 @@
 {
     public class NetworkController
     {
-        protected readonly NetworkConnection Connection;
+        protected readonly NetworkClient Client;
 
-        protected NetworkController(NetworkConnection connection)
+        protected NetworkController(NetworkClient client)
         {
-            Connection = connection;
+            Client = client;
         }
     }
 }
