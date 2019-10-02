@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace MineLW.Debugging
 {
-    public class LogManager
+    public static class LogManager
     {
         private static readonly Dictionary<Type, Logger> Loggers = new Dictionary<Type, Logger>();
         
-        public static LogLevel GlobalLevel = LogLevel.Info;
+        public static LogLevel GlobalLevel = LogLevel.Debug;
         
         public static Logger GetLogger<T>()
         {
