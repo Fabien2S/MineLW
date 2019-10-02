@@ -17,7 +17,11 @@
     },
     "frameworks": {
       "netcoreapp3.0": {
-        "projectReferences": {}
+        "projectReferences": {
+          "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj": {
+            "projectPath": "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj"
+          }
+        }
       }
     },
     "warningProperties": {

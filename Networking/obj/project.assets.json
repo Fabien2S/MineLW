@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.0": {}
+    ".NETCoreApp,Version=v3.0": {
+      "Debugging/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "compile": {
+          "bin/placeholder/Debugging.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Debugging.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Debugging/1.0.0": {
+      "type": "project",
+      "path": "../Debugging/Debugging.csproj",
+      "msbuildProject": "../Debugging/Debugging.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.0": []
+    ".NETCoreApp,Version=v3.0": [
+      "Debugging >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Fabien\\.nuget\\packages\\": {},
@@ -34,7 +53,11 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj": {
+              "projectPath": "D:\\Projects\\MineLW\\Debugging\\Debugging.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

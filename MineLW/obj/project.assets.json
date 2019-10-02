@@ -2,6 +2,16 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.0": {
+      "Debugging/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "compile": {
+          "bin/placeholder/Debugging.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Debugging.dll": {}
+        }
+      },
       "MineLW API/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.0",
@@ -11,19 +21,43 @@
         "runtime": {
           "bin/placeholder/MineLW API.dll": {}
         }
+      },
+      "Networking/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "dependencies": {
+          "Debugging": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Networking.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Networking.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "Debugging/1.0.0": {
+      "type": "project",
+      "path": "../Debugging/Debugging.csproj",
+      "msbuildProject": "../Debugging/Debugging.csproj"
+    },
     "MineLW API/1.0.0": {
       "type": "project",
       "path": "../MineLW API/MineLW API.csproj",
       "msbuildProject": "../MineLW API/MineLW API.csproj"
+    },
+    "Networking/1.0.0": {
+      "type": "project",
+      "path": "../Networking/Networking.csproj",
+      "msbuildProject": "../Networking/Networking.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
-      "MineLW API >= 1.0.0"
+      "MineLW API >= 1.0.0",
+      "Networking >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -56,6 +90,9 @@
           "projectReferences": {
             "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj": {
               "projectPath": "D:\\Projects\\MineLW\\MineLW API\\MineLW API.csproj"
+            },
+            "D:\\Projects\\MineLW\\Networking\\Networking.csproj": {
+              "projectPath": "D:\\Projects\\MineLW\\Networking\\Networking.csproj"
             }
           }
         }
