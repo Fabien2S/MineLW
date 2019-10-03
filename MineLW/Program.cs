@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
+using MineLW.API;
 
 namespace MineLW
 {
     internal static class Program
     {
-        private static GameServer _server;
+        private static IServer _server;
 
         private static void Main(string[] args)
         {
