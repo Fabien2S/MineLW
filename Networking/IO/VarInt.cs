@@ -6,15 +6,15 @@ namespace MineLW.Networking.IO
 {
     public static class VarInt
     {
-        public const byte VarIntMaxBytes = 5;
+        private const byte VarIntIndexMask = 0b10000000;
+        private const byte VarIntContentMask = 0b01111111;
+        private const byte VarIntContentBytesCount = 7;
+        
+        private const byte VarInt32MaxBytes = 5;
 
-        private const byte VarInt32BytesCount = 7;
-        private const byte VarInt32IndexMask = 1 << VarInt32BytesCount;
-        private const byte VarInt32ContentMask = byte.MaxValue & ~VarInt32IndexMask;
-
-        public static bool TryReadVarInt(this IByteBuffer buffer, out int result)
+        public static bool TryReadVarInt32(this IByteBuffer buffer, out int result)
         {
-            var bytes = (byte) 0;
+            var numBytes = (byte) 0;
 
             result = 0;
             byte read;
@@ -24,20 +24,21 @@ namespace MineLW.Networking.IO
                     return false;
 
                 read = buffer.ReadByte();
-                var value = read & VarInt32ContentMask;
-                result |= value << (VarInt32BytesCount * bytes);
+                var value = read & VarIntContentMask;
+                result |= value << (VarIntContentBytesCount * numBytes);
 
-                bytes++;
-                if (bytes > VarIntMaxBytes)
+                numBytes++;
+                if (numBytes > VarInt32MaxBytes)
                     return false;
-            } while ((read & VarInt32IndexMask) != 0);
+                
+            } while ((read & VarIntIndexMask) != 0);
 
             return true;
         }
 
         public static int ReadVarInt32(this IByteBuffer buffer)
         {
-            if (TryReadVarInt(buffer, out var result))
+            if (TryReadVarInt32(buffer, out var result))
                 return result;
             throw new IOException("Invalid VarInt32");
         }
@@ -48,10 +49,10 @@ namespace MineLW.Networking.IO
 
             do
             {
-                var tmp = (byte) (bigEndianValue & VarInt32ContentMask);
-                bigEndianValue >>= VarInt32BytesCount;
+                var tmp = (byte) (bigEndianValue & VarIntContentMask);
+                bigEndianValue >>= VarIntContentBytesCount;
                 if (bigEndianValue != 0)
-                    tmp |= VarInt32IndexMask;
+                    tmp |= VarIntIndexMask;
                 buffer.WriteByte(tmp);
             } while (bigEndianValue != 0);
         }

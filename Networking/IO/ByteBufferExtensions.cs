@@ -10,8 +10,8 @@ namespace MineLW.Networking.IO
         {
             var len = buffer.ReadVarInt32();
             if (len > maxLen)
-                throw new IndexOutOfRangeException("String is too long (" + len + " > " + maxLen + ")");
-            
+                throw new IndexOutOfRangeException("String is too long");
+
             if (buffer.HasArray)
             {
                 var bytes = buffer.ReadBytes(len);
@@ -23,6 +23,16 @@ namespace MineLW.Networking.IO
                 buffer.GetBytes(buffer.ReaderIndex, bytes);
                 return Encoding.UTF8.GetString(bytes);
             }
+        }
+
+        public static void WriteUtf8(this IByteBuffer buffer, string s)
+        {
+            if (s.Length > short.MaxValue)
+                throw new IndexOutOfRangeException("String is too long");
+            
+            var bytes = Encoding.UTF8.GetBytes(s);
+            buffer.WriteVarInt32(bytes.Length);
+            buffer.WriteBytes(bytes);
         }
     }
 }

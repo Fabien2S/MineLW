@@ -2,6 +2,7 @@
 using DotNetty.Transport.Channels;
 using MineLW.API.Utils;
 using MineLW.Debugging;
+using MineLW.Networking.Handshake;
 using MineLW.Networking.Messages;
 
 namespace MineLW.Networking
@@ -14,8 +15,8 @@ namespace MineLW.Networking
 
         public bool IsConnected => _channel != null && _channel.Open;
 
-        public NetworkAdapter Adapter;
-        
+        public NetworkState State;
+
         private IChannel _channel;
         private bool _closed;
 
@@ -23,6 +24,12 @@ namespace MineLW.Networking
         {
             _channel = context.Channel;
             _channel.Configuration.AutoRead = true;
+        }
+
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            Close("End of stream");
+            _channel = null;
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
@@ -44,12 +51,16 @@ namespace MineLW.Networking
                 return;
 
             _closed = true;
-            Logger.Info("Closing connection {0}: {1}", this, reason);
+            Logger.Info("Closing connection {0} (reason: {1})", this, reason);
             _channel.CloseAsync();
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage msg)
         {
+            // TODO found a way to map the message and their controller function
+            
+            if(msg is HandshakeMessage.Message message && State.CreateController(this) is HandshakeController c)
+                c.HandleHandshake(message);
         }
 
         public override string ToString()

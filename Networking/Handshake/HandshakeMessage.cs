@@ -1,16 +1,13 @@
 ﻿using DotNetty.Buffers;
 using MineLW.Networking.IO;
+using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
 namespace MineLW.Networking.Handshake
 {
     public class HandshakeMessage : MessageDeserializer<HandshakeMessage.Message>
     {
-        public HandshakeMessage() : base(0x00)
-        {
-        }
-
-        public override Message Deserialize(IByteBuffer buffer)
+        public override IMessage Deserialize(IByteBuffer buffer)
         {
             return new Message(
                 buffer.ReadVarInt32(),
@@ -20,7 +17,7 @@ namespace MineLW.Networking.Handshake
             );
         }
 
-        public struct Message
+        public struct Message : IMessage
         {
             public readonly int Protocol;
             public readonly string IpAddress;

@@ -8,7 +8,7 @@ using MineLW.Networking.Messages;
 
 namespace MineLW.Networking.Handlers
 {
-    public class MessageEncodingHandler : MessageToMessageCodec<IByteBuffer, object>
+    public class MessageEncodingHandler : MessageToMessageCodec<IByteBuffer, IMessage>
     {
         public const string Name = "message_encoding";
         
@@ -21,23 +21,27 @@ namespace MineLW.Networking.Handlers
             _client = client;
         }
 
-        protected override void Encode(IChannelHandlerContext ctx, object msg, List<object> output)
+        protected override void Encode(IChannelHandlerContext ctx, IMessage msg, List<object> output)
         {
-            foreach (var message in output)
-            {
-                var buffer = ctx.Allocator.Buffer();
-                MessageManager.Serialize(buffer, message);
-                
-                Logger.Debug("Sending message \"{0}\" to {1}", message, _client);
+            var buffer = ctx.Allocator.Buffer();
+            
+            var state = _client.State;
+            state.Serialize(buffer, msg);
+            
+            Logger.Debug("Sending message \"{0}\" to {1}", msg, _client);
 
-                output.Add(buffer);
-            }
+            output.Add(buffer);
         }
 
         protected override void Decode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
+            var state = _client.State;
             var id = msg.ReadVarInt32();
-            Logger.Debug("Message {0} received from {1}", id, _client);
+            var message = state.Deserialize(msg, id);
+            
+            Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
+            
+            output.Add(message);
         }
     }
 }

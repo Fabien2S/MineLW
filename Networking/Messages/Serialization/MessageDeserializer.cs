@@ -2,22 +2,18 @@
 
 namespace MineLW.Networking.Messages.Serialization
 {
-    public abstract class MessageDeserializer<T>
+    public interface IMessageDeserializer
     {
-        public static MessageDeserializer<T> Instance { get; internal set; }
+        IMessage Deserialize(IByteBuffer buffer);
+    }
 
-        public int Id { get; }
-
-        protected MessageDeserializer(int id)
-        {
-            Id = id;
-        }
-
-        public abstract T Deserialize(IByteBuffer buffer);
+    public abstract class MessageDeserializer<T> : IMessageDeserializer where T : IMessage
+    {
+        public abstract IMessage Deserialize(IByteBuffer buffer);
 
         public override string ToString()
         {
-            return $"Message{typeof(T)}#{Id}";
+            return $"Message{typeof(T)}";
         }
     }
 }

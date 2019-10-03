@@ -22,8 +22,8 @@ namespace MineLW.Networking
         private readonly ServerBootstrap _bootstrap = new ServerBootstrap();
         private readonly HashSet<NetworkClient> _clients = new HashSet<NetworkClient>();
         
-        private readonly HandshakeAdapter _handshakeAdapter = new HandshakeAdapter();
-        private readonly Dictionary<uint, NetworkAdapter> _adapters = new Dictionary<uint, NetworkAdapter>();
+        private readonly HandshakeState _handshakeState = new HandshakeState();
+        private readonly Dictionary<uint, NetworkState> _adapters = new Dictionary<uint, NetworkState>();
 
         private IEventLoopGroup _bossGroup;
         private IEventLoopGroup _workerGroup;
@@ -42,7 +42,7 @@ namespace MineLW.Networking
 
             var client = new NetworkClient
             {
-                Adapter = _handshakeAdapter
+                State = _handshakeState
             };
 
             channel.Pipeline
@@ -60,44 +60,35 @@ namespace MineLW.Networking
 
         public void Start(EndPoint endPoint)
         {
-            Logger.Debug("Starting network server on {0}", endPoint);
+            Logger.Debug("Starting network server asynchronously on {0}", endPoint);
             
             _bossGroup = new MultithreadEventLoopGroup();
             _workerGroup = new MultithreadEventLoopGroup();
 
-            try
-            {
-                _bootstrap.Group(_bossGroup, _workerGroup)
-                    .Channel<TcpServerSocketChannel>()
-                    .ChildOption(ChannelOption.TcpNodelay, true)
-                    .ChildOption(ChannelOption.SoKeepalive, true)
-                    .ChildHandler(this)
-                    .BindAsync(endPoint)
-                    .ContinueWith(task =>
+            _bootstrap
+                .Group(_bossGroup, _workerGroup)
+                .Channel<TcpServerSocketChannel>()
+                .ChildOption(ChannelOption.TcpNodelay, true)
+                .ChildOption(ChannelOption.SoKeepalive, true)
+                .ChildHandler(this)
+                .BindAsync(endPoint)
+                .ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                        Logger.Success("Network server started on {0}", endPoint);
+                    else
                     {
-                        if (task.IsCompletedSuccessfully)
-                        {
-                            Logger.Success("Network server started on {0}", endPoint);
-                        }
-                        else
-                        {
-                            Logger.Error("Unable to start the network server: {0}", task.Exception);
-                            Environment.Exit(1);
-                        }
-                    });
-            }
-            finally
-            {
-                _bossGroup.ShutdownGracefullyAsync();
-                _workerGroup.ShutdownGracefullyAsync();
-            }
+                        Logger.Error("Unable to start the network server: {0}", task.Exception);
+                        Environment.Exit(1);
+                    }
+                });
         }
 
         public void Stop()
         {
             Logger.Debug("Stopping network server...");
-            _bootstrap.Group().ShutdownGracefullyAsync();
-            _bootstrap.ChildGroup().ShutdownGracefullyAsync();
+            _bossGroup.ShutdownGracefullyAsync();
+            _workerGroup.ShutdownGracefullyAsync();
         }
     }
 }

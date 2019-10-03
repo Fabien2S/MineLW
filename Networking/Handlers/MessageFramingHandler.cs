@@ -21,13 +21,7 @@ namespace MineLW.Networking.Handlers
         {
             msg.MarkReaderIndex();
 
-            if (!msg.TryReadVarInt(out var length))
-            {
-                msg.ResetReaderIndex();
-                return;
-            }
-
-            if (msg.ReadableBytes < length)
+            if (!msg.TryReadVarInt32(out var length) || msg.ReadableBytes < length)
             {
                 msg.ResetReaderIndex();
                 return;
