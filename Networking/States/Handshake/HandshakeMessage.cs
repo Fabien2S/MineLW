@@ -3,9 +3,9 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.Handshake
+namespace MineLW.Networking.States.Handshake
 {
-    public class HandshakeMessage : MessageDeserializer<HandshakeMessage.Message>
+    public class HandshakeMessage : MessageDeserializer<HandshakeController, HandshakeMessage.Message>
     {
         public override IMessage Deserialize(IByteBuffer buffer)
         {
@@ -15,6 +15,11 @@ namespace MineLW.Networking.Handshake
                 buffer.ReadUnsignedShort(),
                 buffer.ReadVarInt32()
             );
+        }
+
+        public override void Handle(HandshakeController controller, Message message)
+        {
+            controller.HandleHandshake(message);
         }
 
         public struct Message : IMessage
