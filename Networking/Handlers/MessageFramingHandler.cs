@@ -12,23 +12,27 @@ namespace MineLW.Networking.Handlers
 
         protected override void Encode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
-            var buffer = ctx.Allocator.Buffer();
+            var buffer = ctx.Allocator.Buffer(msg.ReadableBytes, msg.ReadableBytes + VarInt.VarInt32MaxBytes);
             buffer.WriteVarInt32(msg.ReadableBytes);
             buffer.WriteBytes(msg);
+            output.Add(buffer);
         }
 
         protected override void Decode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
-            msg.MarkReaderIndex();
-
-            if (!msg.TryReadVarInt32(out var length) || msg.ReadableBytes < length)
+            while (true)
             {
-                msg.ResetReaderIndex();
-                return;
-            }
+                msg.MarkReaderIndex();
 
-            var buffer = msg.ReadBytes(length);
-            output.Add(buffer);
+                if (!msg.TryReadVarInt32(out var length) || msg.ReadableBytes < length)
+                {
+                    msg.ResetReaderIndex();
+                    break;
+                }
+
+                var buffer = msg.ReadBytes(length);
+                output.Add(buffer);
+            }
         }
     }
 }

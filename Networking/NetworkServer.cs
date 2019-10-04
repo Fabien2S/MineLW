@@ -8,7 +8,7 @@ using DotNetty.Transport.Channels.Sockets;
 using MineLW.API.Utils;
 using MineLW.Debugging;
 using MineLW.Networking.Handlers;
-using MineLW.Networking.Handshake;
+using MineLW.Networking.States.Handshake;
 
 namespace MineLW.Networking
 {
@@ -30,32 +30,9 @@ namespace MineLW.Networking
 
         public void Update(float deltaTime)
         {
-            _clients.RemoveWhere(client => !client.IsConnected);
+            _clients.RemoveWhere(client => client.Closed);
             foreach (var client in _clients)
                 client.Update(deltaTime);
-        }
-
-        protected override void InitChannel(TcpSocketChannel channel)
-        {
-            Logger.Debug("Connection from {0}", channel.RemoteAddress);
-            channel.Configuration.SetOption(ChannelOption.TcpNodelay, true);
-
-            var client = new NetworkClient
-            {
-                State = _handshakeState
-            };
-
-            channel.Pipeline
-                .AddLast("idle_timeout", new IdleStateHandler(
-                    ReadIdleTimeout,
-                    WriteIdleTimeout,
-                    0
-                ))
-                .AddLast(MessageFramingHandler.Name, new MessageFramingHandler())
-                .AddLast(MessageEncodingHandler.Name, new MessageEncodingHandler(client))
-                .AddLast(NetworkClient.Name, client);
-
-            _clients.Add(client);
         }
 
         public void Start(EndPoint endPoint)
@@ -89,6 +66,29 @@ namespace MineLW.Networking
             Logger.Debug("Stopping network server...");
             _bossGroup.ShutdownGracefullyAsync();
             _workerGroup.ShutdownGracefullyAsync();
+        }
+
+        protected override void InitChannel(TcpSocketChannel channel)
+        {
+            Logger.Debug("Connection from {0}", channel.RemoteAddress);
+            channel.Configuration.SetOption(ChannelOption.TcpNodelay, true);
+
+            var client = new NetworkClient
+            {
+                State = _handshakeState
+            };
+
+            channel.Pipeline
+                .AddLast("idle_timeout", new IdleStateHandler(
+                    ReadIdleTimeout,
+                    WriteIdleTimeout,
+                    0
+                ))
+                .AddLast(MessageFramingHandler.Name, new MessageFramingHandler())
+                .AddLast(MessageEncodingHandler.Name, new MessageEncodingHandler(client))
+                .AddLast(NetworkClient.Name, client);
+
+            _clients.Add(client);
         }
     }
 }

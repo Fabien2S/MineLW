@@ -37,11 +37,18 @@ namespace MineLW.Networking.Handlers
         {
             var state = _client.State;
             var id = msg.ReadVarInt32();
-            var message = state.Deserialize(msg, id);
-            
-            Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
-            
-            output.Add(message);
+
+            try
+            {
+                var message = state.Deserialize(msg, id);
+                output.Add(message);
+                
+                Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
+            }
+            catch (DecoderException e)
+            {
+                throw new DecoderException("Unable to decode message id " + id, e);
+            }
         }
     }
 }

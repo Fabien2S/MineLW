@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json;
 using DotNetty.Buffers;
+using MineLW.API.Text;
 
 namespace MineLW.Networking.IO
 {
@@ -29,10 +31,16 @@ namespace MineLW.Networking.IO
         {
             if (s.Length > short.MaxValue)
                 throw new IndexOutOfRangeException("String is too long");
-            
+
             var bytes = Encoding.UTF8.GetBytes(s);
             buffer.WriteVarInt32(bytes.Length);
             buffer.WriteBytes(bytes);
+        }
+
+        public static void WriteTextComponent(this IByteBuffer buffer, ITextComponent component)
+        {
+            var serialized = JsonSerializer.Serialize(component);
+            buffer.WriteUtf8(serialized);
         }
     }
 }
