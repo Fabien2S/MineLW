@@ -9,8 +9,8 @@ namespace MineLW.Networking.IO
         private const byte VarIntIndexMask = 0b10000000;
         private const byte VarIntContentMask = 0b01111111;
         private const byte VarIntContentBytesCount = 7;
-        
-        private const byte VarInt32MaxBytes = 5;
+
+        public const byte VarInt32MaxBytes = 5;
 
         public static bool TryReadVarInt32(this IByteBuffer buffer, out int result)
         {
@@ -30,7 +30,6 @@ namespace MineLW.Networking.IO
                 numBytes++;
                 if (numBytes > VarInt32MaxBytes)
                     return false;
-                
             } while ((read & VarIntIndexMask) != 0);
 
             return true;
@@ -43,18 +42,16 @@ namespace MineLW.Networking.IO
             throw new IOException("Invalid VarInt32");
         }
 
-        public static void WriteVarInt32(this IByteBuffer buffer, int value)
+        public static void WriteVarInt32(this IByteBuffer buffer, int i)
         {
-            var bigEndianValue = IPAddress.HostToNetworkOrder(value);
-
             do
             {
-                var tmp = (byte) (bigEndianValue & VarIntContentMask);
-                bigEndianValue >>= VarIntContentBytesCount;
-                if (bigEndianValue != 0)
-                    tmp |= VarIntIndexMask;
-                buffer.WriteByte(tmp);
-            } while (bigEndianValue != 0);
+                var temp = (byte) (i & VarIntContentMask);
+                i = (int) ((uint) i >> VarIntContentBytesCount);
+                if (i != 0)
+                    temp |= VarIntIndexMask;
+                buffer.WriteByte(temp);
+            } while (i != 0);
         }
     }
 }
