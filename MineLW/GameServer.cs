@@ -70,21 +70,24 @@
                 {
                     var elapsedMillis = (float) _stopWatch.ElapsedMilliseconds;
                     sinceLastUpsCheck += elapsedMillis;
-                    
-                    // reset the timer right after getting the elapsed ms
-                    _stopWatch.Restart();
-                    
-                    while (elapsedMillis >= DelayBetweenUpdate)
-                    {
-                        // compute delta time
-                        var deltaTime = elapsedMillis / MsPerSecond;
-                        
-                        // update elapsed ms
-                        elapsedMillis -= DelayBetweenUpdate;
 
-                        // handle update
-                        Update(deltaTime);
-                        updateCount++;
+                    if (elapsedMillis >= DelayBetweenUpdate)
+                    {
+                        // restart the timer on the first update call
+                        _stopWatch.Restart();
+
+                        do
+                        {
+                            // compute delta time
+                            var deltaTime = elapsedMillis / MsPerSecond;
+                        
+                            // update elapsed ms
+                            elapsedMillis -= DelayBetweenUpdate;
+
+                            // handle update
+                            Update(deltaTime);
+                            updateCount++;
+                        } while (elapsedMillis >= DelayBetweenUpdate);
                     }
                         
                     // check UPS
