@@ -21,9 +21,6 @@ namespace MineLW.Networking
         
         private readonly ServerBootstrap _bootstrap = new ServerBootstrap();
         private readonly HashSet<NetworkClient> _clients = new HashSet<NetworkClient>();
-        
-        private readonly HandshakeState _handshakeState = new HandshakeState();
-        private readonly Dictionary<uint, NetworkState> _adapters = new Dictionary<uint, NetworkState>();
 
         private IEventLoopGroup _bossGroup;
         private IEventLoopGroup _workerGroup;
@@ -75,7 +72,7 @@ namespace MineLW.Networking
 
             var client = new NetworkClient
             {
-                State = _handshakeState
+                State = HandshakeState.Instance
             };
 
             channel.Pipeline
