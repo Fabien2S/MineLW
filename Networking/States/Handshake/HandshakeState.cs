@@ -5,7 +5,9 @@ namespace MineLW.Networking.States.Handshake
 {
     public class HandshakeState : NetworkState
     {
-        public HandshakeState() : base(true)
+        public static readonly HandshakeState Instance = new HandshakeState();
+        
+        private HandshakeState() : base(true)
         {
         }
 
