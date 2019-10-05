@@ -26,8 +26,7 @@ namespace MineLW.Networking
             }
         }
 
-        private readonly ConcurrentQueue<IMessage> _receivedMessages = new ConcurrentQueue<IMessage>();
-        private readonly ConcurrentQueue<QueuedMessage> _queuedMessages = new ConcurrentQueue<QueuedMessage>();
+        private readonly ConcurrentQueue<Task> _tasks = new ConcurrentQueue<Task>();
 
         private IChannel _channel;
         private NetworkState _state;
@@ -50,37 +49,35 @@ namespace MineLW.Networking
             Disconnect(exception.Message);
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage message)
         {
             if (_state.Async)
-                _state.Handle(_controller, msg);
-            else
-                _receivedMessages.Enqueue(msg);
+            {
+                _state.Handle(_controller, message);
+                return;
+            }
+
+            var task = new Task(msg => _state.Handle(_controller, (IMessage) msg), message);
+            _tasks.Enqueue(task);
         }
 
         public void Update(float deltaTime)
         {
-            while (_receivedMessages.TryDequeue(out var message))
-                _state.Handle(_controller, message);
-
-            while (_queuedMessages.TryDequeue(out var message))
+            while (_tasks.TryDequeue(out var task))
             {
-                var task = _channel.WriteAndFlushAsync(message.Message);
-                if (message.Callback != null)
-                    task.ContinueWith(message.Callback);
+                task.RunSynchronously();
+                task.Wait();
             }
         }
 
-        public void Send(IMessage message, Action<Task> callback = null)
+        public Task Send(IMessage message)
         {
             if (_state.Async)
-            {
-                var task = _channel.WriteAndFlushAsync(message);
-                if (callback != null)
-                    task.ContinueWith(callback);
-            }
-            else
-                _queuedMessages.Enqueue(new QueuedMessage(message, callback));
+                return _channel.WriteAndFlushAsync(message);
+
+            var task = new Task(msg => _channel.WriteAndFlushAsync(msg), message);
+            _tasks.Enqueue(task);
+            return task;
         }
 
         public void Disconnect(string reason)
@@ -98,18 +95,6 @@ namespace MineLW.Networking
         public override string ToString()
         {
             return _channel.RemoteAddress.ToString();
-        }
-
-        private struct QueuedMessage
-        {
-            public readonly IMessage Message;
-            public readonly Action<Task> Callback;
-
-            public QueuedMessage(IMessage message, Action<Task> callback)
-            {
-                Message = message;
-                Callback = callback;
-            }
         }
     }
 }
