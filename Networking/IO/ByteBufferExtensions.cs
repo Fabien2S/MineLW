@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.Json;
 using DotNetty.Buffers;
-using MineLW.API.Text;
 
 namespace MineLW.Networking.IO
 {
@@ -37,9 +36,9 @@ namespace MineLW.Networking.IO
             buffer.WriteBytes(bytes);
         }
 
-        public static void WriteTextComponent(this IByteBuffer buffer, ITextComponent component)
+        public static void WriteJson(this IByteBuffer buffer, object @object, JsonSerializerOptions options = null)
         {
-            var serialized = JsonSerializer.Serialize(component);
+            var serialized = JsonSerializer.Serialize(@object, options);
             buffer.WriteUtf8(serialized);
         }
     }
