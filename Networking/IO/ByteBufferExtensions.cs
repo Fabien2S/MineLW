@@ -17,8 +17,8 @@ namespace MineLW.Networking.IO
             }
 
             offset = 0;
-            length = 0;
-            var bytes = new byte[buffer.ReadableBytes];
+            length = buffer.ReadableBytes;
+            var bytes = new byte[length];
             buffer.ReadBytes(bytes);
             return bytes;
         }
