@@ -4,17 +4,68 @@ using System.Text.Json.Serialization;
 namespace MineLW.API.Utils
 {
     [Serializable]
-    public struct GameVersion
+    public struct GameVersion : IComparable<GameVersion>
     {
-        [JsonPropertyName("name")]
-        public string Name { get; }
-        [JsonPropertyName("protocol")]
-        public int Protocol { get; }
+        [JsonPropertyName("name")] public string Name { get; }
+        [JsonPropertyName("protocol")] public int Protocol { get; }
 
         public GameVersion(string name, int protocol)
         {
+            if (protocol < 0)
+                throw new ArgumentOutOfRangeException(nameof(protocol));
+
             Name = name;
             Protocol = protocol;
+        }
+
+        public bool Equals(GameVersion other)
+        {
+            return Protocol == other.Protocol;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is GameVersion other && Equals(other);
+        }
+
+        public int CompareTo(GameVersion other)
+        {
+            return Protocol.CompareTo(other.Protocol);
+        }
+
+        public override int GetHashCode()
+        {
+            return Protocol;
+        }
+
+        public static bool operator >(GameVersion a, GameVersion b)
+        {
+            return a.Protocol > b.Protocol;
+        }
+
+        public static bool operator <(GameVersion a, GameVersion b)
+        {
+            return a.Protocol < b.Protocol;
+        }
+
+        public static bool operator >=(GameVersion a, GameVersion b)
+        {
+            return a.Protocol >= b.Protocol;
+        }
+
+        public static bool operator <=(GameVersion a, GameVersion b)
+        {
+            return a.Protocol <= b.Protocol;
+        }
+
+        public static bool operator ==(GameVersion a, GameVersion b)
+        {
+            return a.Protocol == b.Protocol;
+        }
+
+        public static bool operator !=(GameVersion a, GameVersion b)
+        {
+            return a.Protocol != b.Protocol;
         }
     }
 }
