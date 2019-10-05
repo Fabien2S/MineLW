@@ -1,30 +1,26 @@
 ﻿using System;
-using MineLW.Debugging;
+using MineLW.API.Utils;
 using MineLW.Networking.Messages;
+using MineLW.Networking.States.Login;
 using MineLW.Networking.States.Status;
 
 namespace MineLW.Networking.States.Handshake
 {
     public class HandshakeController : MessageController
     {
-        private static readonly Logger Logger = LogManager.GetLogger<HandshakeController>();
-
         public HandshakeController(NetworkClient client) : base(client)
         {
         }
 
         public void HandleHandshake(HandshakeMessage.Message message)
         {
-            Logger.Debug("Handshake received from {1} with state {2} ({0})", message.Protocol, Client, message.RequestedState);
-
-            switch (message.RequestedState)
+            Client.Version = new GameVersion("Unknown", message.Protocol);
+            Client.State = message.RequestedState switch
             {
-                case 1:
-                    Client.State = new StatusState();
-                    break;
-                default:
-                    throw new NotSupportedException("Invalid requested state: " + message.RequestedState);
-            }
+                1 => (NetworkState) StatusState.Instance,
+                2 => (NetworkState) LoginState.Instance,
+                _ => throw new NotSupportedException("Invalid requested state: " + message.RequestedState)
+            };
         }
     }
 }
