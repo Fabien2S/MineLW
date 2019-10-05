@@ -14,6 +14,7 @@ namespace MineLW.Networking
 
         private static readonly Logger Logger = LogManager.GetLogger<NetworkClient>();
 
+        public GameVersion Version { get; set; }
         public bool Closed { get; private set; }
 
         public NetworkState State
