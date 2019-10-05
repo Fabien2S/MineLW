@@ -13,21 +13,23 @@ namespace MineLW.Networking.States.Status
 
         public void HandleInfoRequest()
         {
-            Client.Send(new MessageClientServerInfo.Message(
-                new Version("MineLW v0.1a", 5),
-                0, 20, new PlayerProfile[0], new TextComponentString("Hi")
-                {
-                    Color = TextColor.Black
-                }, null
-            ));
+            var status = new ServerStatus
+            {
+                GameVersion = new GameVersion("MineLW", 557),
+                Description = new TextComponentString().WithValue("Hi!").WithColor(TextColor.Aqua)
+            };
+
+            var playerInfo = new PlayerInfo {Max = 20, Online = 10, Players = new PlayerProfile[0]};
+            status.Players = playerInfo;
+
+            Client.Send(new MessageClientServerInfo.Message(status));
         }
 
         public void HandlePing(in long payload)
         {
-            Client.Send(new MessageClientPong.Message(payload), task =>
-            {
-                Client.Disconnect("Pong sent");
-            });
+            Client
+                .Send(new MessageClientPong.Message(payload))
+                .ContinueWith(task => Client.Disconnect("Pong sent"));
         }
     }
 }
