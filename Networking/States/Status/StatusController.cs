@@ -13,9 +13,10 @@ namespace MineLW.Networking.States.Status
 
         public void HandleInfoRequest()
         {
+            var version = NetworkAdapter.IsSupported(Client.Version) ? Client.Version : NetworkAdapter.Default;
             var status = new ServerStatus
             {
-                GameVersion = new GameVersion("MineLW", 557),
+                GameVersion = version,
                 Description = new TextComponentString().WithValue("Hi!").WithColor(TextColor.Aqua)
             };
 
