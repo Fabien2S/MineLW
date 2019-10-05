@@ -1,16 +1,16 @@
 ﻿﻿using System;
 
-namespace MineLW.API.Text
+ namespace MineLW.API.Text
 {
     [Flags]
     public enum TextStyles
     {
-        None = 0,
-        Reset = 1,
-        Bold = 1 << 1,
-        Italic = 1 << 2,
-        Underlined = 1 << 3,
-        Strikethrough = 1 << 4,
-        Obfuscated = 1 << 5,
+        None = 0b00000000,
+        Reset = 0b00000001,
+        Bold = 0b00000010,
+        Italic = 0b00000100,
+        Underlined = 0b00001000,
+        Strikethrough = 0b00010000,
+        Obfuscated = 0b00100000
     }
 }

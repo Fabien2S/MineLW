@@ -33,9 +33,34 @@ namespace MineLW.API.Text
             Id = Convert.ToInt32(code.ToString(CultureInfo.InvariantCulture), 16);
         }
 
+        public bool Equals(TextColor other)
+        {
+            return Name == other.Name && Code == other.Code;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TextColor other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
         public override string ToString()
         {
             return Code.ToString();
+        }
+
+        public static bool operator ==(TextColor a, TextColor b)
+        {
+            return Equals(a, b);
+        }
+
+        public static bool operator !=(TextColor a, TextColor b)
+        {
+            return !Equals(a, b);
         }
     }
 }
