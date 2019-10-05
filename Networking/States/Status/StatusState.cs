@@ -7,7 +7,9 @@ namespace MineLW.Networking.States.Status
 {
     public class StatusState : NetworkState
     {
-        public StatusState() : base(true)
+        public static readonly StatusState Instance = new StatusState();
+        
+        private StatusState() : base(true)
         {
         }
 
