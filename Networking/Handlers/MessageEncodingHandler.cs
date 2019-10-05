@@ -41,6 +41,9 @@ namespace MineLW.Networking.Handlers
             try
             {
                 var message = state.Deserialize(msg, id);
+                if(msg.ReadableBytes > 0)
+                    throw new DecoderException("Too many bytes");
+                
                 output.Add(message);
                 
                 Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 using MineLW.API.Utils;
 using MineLW.Debugging;
+using MineLW.Networking.Handlers;
 using MineLW.Networking.Messages;
 
 namespace MineLW.Networking
@@ -26,6 +27,7 @@ namespace MineLW.Networking
                 _controller = value.CreateController(this);
             }
         }
+
 
         private readonly ConcurrentQueue<Task> _tasks = new ConcurrentQueue<Task>();
 
@@ -69,6 +71,31 @@ namespace MineLW.Networking
                 task.RunSynchronously();
                 task.Wait();
             }
+        }
+
+        public void EnableCompression(int threshold)
+        {
+            Logger.Debug("Enabling compression on {0} (threshold: {1})", this, threshold);
+            _channel.Pipeline.AddBefore(
+                MessageEncodingHandler.Name,
+                CompressionHandler.Name,
+                new CompressionHandler(threshold)
+            );
+        }
+
+        public void EnableEncryption(byte[] sharedSecret)
+        {
+            Logger.Debug("Enabling encryption on {0}", this);
+            _channel.Pipeline.AddBefore(
+                MessageFramingHandler.Name,
+                EncryptionHandler.Name,
+                new EncryptionHandler(sharedSecret)
+            );
+        }
+
+        internal void AddTask(Action task)
+        {
+            _tasks.Enqueue(new Task(task));
         }
 
         public Task Send(IMessage message)

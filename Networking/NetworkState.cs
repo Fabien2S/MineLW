@@ -9,14 +9,14 @@ namespace MineLW.Networking
     public abstract class NetworkState
     {
         public readonly bool Async;
-        
+
         private readonly IMessageSerializer[] _serializers;
         private readonly IMessageDeserializer[] _deserializers;
 
         protected NetworkState(bool async = false)
         {
             Async = async;
-            
+
             // ReSharper disable VirtualMemberCallInConstructor
             _serializers = GetSerializers();
             _deserializers = GetDeserializers();
