@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json.Serialization;
 using MineLW.API.Text.Serializers;
 
@@ -61,6 +62,14 @@ namespace MineLW.API.Text
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public static explicit operator string(TextComponent component)
+        {
+            var builder = new StringBuilder(component.Value);
+            foreach (var child in component)
+                builder.Append((string) child);
+            return builder.ToString();
         }
     }
 }
