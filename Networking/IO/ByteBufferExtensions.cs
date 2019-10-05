@@ -7,6 +7,35 @@ namespace MineLW.Networking.IO
 {
     public static class ByteBufferExtensions
     {
+        public static byte[] ToArray(this IByteBuffer buffer, out int offset, out int length)
+        {
+            if (buffer.HasArray)
+            {
+                offset = buffer.ArrayOffset;
+                length = buffer.ReadableBytes;
+                return buffer.Array;
+            }
+
+            offset = 0;
+            length = 0;
+            var bytes = new byte[buffer.ReadableBytes];
+            buffer.ReadBytes(bytes);
+            return bytes;
+        }
+        
+        public static byte[] ReadByteArray(this IByteBuffer buffer)
+        {
+            var bytes = new byte[buffer.ReadVarInt32()];
+            buffer.ReadBytes(bytes);
+            return bytes;
+        }
+
+        public static void WriteByteArray(this IByteBuffer buffer, byte[] bytes)
+        {
+            buffer.WriteVarInt32(bytes.Length);
+            buffer.WriteBytes(bytes);
+        }
+
         public static string ReadUtf8(this IByteBuffer buffer, short maxLen = short.MaxValue)
         {
             var len = buffer.ReadVarInt32();
