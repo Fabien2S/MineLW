@@ -1,6 +1,6 @@
 ﻿﻿﻿namespace MineLW.Debugging
 {
-    public enum LogLevel
+    public enum LogLevel : byte
     {
         Debug,
         Info,
