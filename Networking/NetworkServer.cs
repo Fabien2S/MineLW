@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -22,8 +23,8 @@ namespace MineLW.Networking
         private readonly ServerBootstrap _bootstrap = new ServerBootstrap();
         private readonly HashSet<NetworkClient> _clients = new HashSet<NetworkClient>();
 
-        private IEventLoopGroup _bossGroup;
-        private IEventLoopGroup _workerGroup;
+        private IEventLoopGroup _acceptorLoopGroup;
+        private IEventLoopGroup _clientLoopGroup;
 
         public void Update(float deltaTime)
         {
@@ -36,11 +37,11 @@ namespace MineLW.Networking
         {
             Logger.Debug("Starting network server asynchronously on {0}", endPoint);
             
-            _bossGroup = new MultithreadEventLoopGroup();
-            _workerGroup = new MultithreadEventLoopGroup();
+            _acceptorLoopGroup = new MultithreadEventLoopGroup(CreateEventLoop);
+            _clientLoopGroup = new MultithreadEventLoopGroup(CreateEventLoop);
 
             _bootstrap
-                .Group(_bossGroup, _workerGroup)
+                .Group(_acceptorLoopGroup, _clientLoopGroup)
                 .Channel<TcpServerSocketChannel>()
                 .ChildOption(ChannelOption.TcpNodelay, true)
                 .ChildOption(ChannelOption.SoKeepalive, true)
@@ -61,8 +62,8 @@ namespace MineLW.Networking
         public void Stop()
         {
             Logger.Debug("Stopping network server...");
-            _bossGroup.ShutdownGracefullyAsync();
-            _workerGroup.ShutdownGracefullyAsync();
+            _acceptorLoopGroup.ShutdownGracefullyAsync();
+            _clientLoopGroup.ShutdownGracefullyAsync();
         }
 
         protected override void InitChannel(TcpSocketChannel channel)
@@ -86,6 +87,11 @@ namespace MineLW.Networking
                 .AddLast(NetworkClient.Name, client);
 
             _clients.Add(client);
+        }
+
+        private static IEventLoop CreateEventLoop(IEventLoopGroup group)
+        {
+            return new SingleThreadEventLoop(group, "DotNetty");
         }
     }
 }
