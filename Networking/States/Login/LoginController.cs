@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using DotNetty.Common.Internal;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Debugging;
 using MineLW.Networking.Messages;
 using MineLW.Networking.States.Login.Client;
+using Newtonsoft.Json;
 
 namespace MineLW.Networking.States.Login
 {
@@ -17,7 +18,7 @@ namespace MineLW.Networking.States.Login
     {
         private const string HasJoinedUrl = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
         private const int CompressionThreshold = 256;
-        
+
         private static readonly Logger Logger = LogManager.GetLogger<LoginController>();
 
         private static readonly HttpClient HttpClient = new HttpClient();
@@ -25,8 +26,6 @@ namespace MineLW.Networking.States.Login
         private string _username;
         private byte[] _signature;
         private byte[] _sharedSecret;
-
-        private PlayerProfile _profile;
 
         public LoginController(NetworkClient client) : base(client)
         {
@@ -41,7 +40,7 @@ namespace MineLW.Networking.States.Login
                     .WithColor(TextColor.Red);
                 Client
                     .Send(new MessageClientDisconnect.Message(reason))
-                    .ContinueWith(task => Client.Disconnect((string) reason));
+                    .ContinueWith(task => Client.Disconnect(reason));
                 return;
             }
 
@@ -65,7 +64,7 @@ namespace MineLW.Networking.States.Login
             var decryptedSignature = Cryptography.CryptoServiceProvider.Decrypt(encryptedSignature, false);
             if (!decryptedSignature.SequenceEqual(_signature))
             {
-                Client.Disconnect("Invalid signature");
+                Client.Close("Invalid signature");
                 return;
             }
 
@@ -74,10 +73,7 @@ namespace MineLW.Networking.States.Login
 
             Client
                 .Send(new MessageClientEnableCompression.Message(CompressionThreshold))
-                .ContinueWith(task =>
-                {
-                    Client.EnableCompression(CompressionThreshold);
-                });
+                .ContinueWith(task => { Client.EnableCompression(CompressionThreshold); });
 
             RequestSession();
         }
@@ -99,51 +95,64 @@ namespace MineLW.Networking.States.Login
             };
             if (ip != null)
                 queryString["ip"] = ip;
-            urlBuilder.Query = queryString.ToString();
+            urlBuilder.Query = string.Join("&", queryString.AllKeys.Select(key => key + '=' + queryString.Get(key)));
 
-            Logger.Debug("Requesting player profile for user \"{0}\"", _username);
+            Logger.Debug("Requesting player profile for user \"{0}\" (query: {1})", _username, urlBuilder.Query);
+
             HttpClient
                 .GetAsync(urlBuilder.Uri)
-                .ContinueWith(HandleSessionResponse);
-        }
-
-        private void HandleSessionResponse(Task<HttpResponseMessage> response)
-        {
-            var responseMessage = response.Result;
-            if (!responseMessage.IsSuccessStatusCode)
-            {
-                Client.Disconnect("Invalid profile");
-                return;
-            }
-
-            var httpContent = responseMessage.Content;
-            var responseContent = httpContent.ReadAsStringAsync().Result;
-            //_profile = JsonConvert.DeserializeObject<PlayerProfile>(responseContent);
-            _profile = new PlayerProfile("TheWhoosher", Guid.NewGuid());
-
-            if (!_username.Equals(_profile.Name))
-            {
-                Client.Disconnect("Invalid username");
-                return;
-            }
-
-            Logger.Info("UUID of {0} is {1}", _profile.Name, _profile.Uuid);
-
-            Client
-                .Send(new MessageClientLoginResponse.Message(
-                    _profile.Uuid.ToString(),
-                    _profile.Name
-                )).ContinueWith(task =>
+                .ContinueWith(requestTask =>
                 {
-                    Client.State = NetworkAdapter.Resolve(Client.Version);
-                    Client.AddTask(FinalizeLogin);
+                    if (requestTask.IsFaulted)
+                        throw requestTask.Exception;
+
+                    var responseMessage = requestTask.Result;
+                    if (responseMessage.StatusCode != HttpStatusCode.OK)
+                        throw new HttpRequestException("Unexpected response from the session server (" +
+                                                       responseMessage.StatusCode + ')');
+
+                    var httpContent = responseMessage.Content;
+                    httpContent
+                        .ReadAsStringAsync()
+                        .ContinueWith(readTask =>
+                        {
+                            var profile = JsonConvert.DeserializeObject<PlayerProfile>(readTask.Result);
+
+                            if (!_username.Equals(profile.Name))
+                            {
+                                Client.Close("Invalid username");
+                                return;
+                            }
+
+                            Client.Profile = profile;
+                            Logger.Info("UUID of {0} is {1}", profile.Name, profile.Id);
+
+                            Client
+                                .Send(new MessageClientLoginResponse.Message(
+                                    profile.Id.ToString("D"),
+                                    profile.Name
+                                )).ContinueWith(task =>
+                                {
+                                    Client.State = NetworkAdapter.Resolve(Client.Version);
+                                    Client.AddTask(FinalizeLogin);
+                                });
+                        });
+                }).ContinueWith(task =>
+                {
+                    if (!task.IsFaulted)
+                        return;
+
+                    var taskException = task.Exception;
+                    var exception = taskException.InnerException;
+
+                    Logger.Error("Unable to complete the login sequence of {0}. Exception: {1}", Client, exception);
+                    Client.Close("Error");
                 });
         }
 
         private void FinalizeLogin()
         {
-            /*var playerManager = server.PlayerManager;
-            playerManager.InitializePlayer(_profile, Connection);*/
+            Logger.Info("Logged in as {0} from {1}", Client.Profile, Client);
         }
     }
 }
