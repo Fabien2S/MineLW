@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
 using MineLW.API.Text.Serializers;
+using Newtonsoft.Json;
 
 namespace MineLW.API.Text
 {
@@ -13,13 +13,13 @@ namespace MineLW.API.Text
         public abstract string Id { get; }
 
         public string Value { get; protected set; }
-        
+
         public bool HasColor { get; private set; }
         public TextColor Color { get; private set; } = TextColor.White;
-        
+
         public bool HasStyle { get; private set; }
         public TextStyles Style { get; private set; } = TextStyles.None;
-        
+
         public int ChildCount => _children.Count;
 
         private readonly List<TextComponent> _children = new List<TextComponent>();

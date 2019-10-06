@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using MineLW.API.Extensions;
+using Newtonsoft.Json;
 
 namespace MineLW.API.Text.Serializers
 {
@@ -25,33 +25,38 @@ namespace MineLW.API.Text.Serializers
             }
         }
 
-        public override TextComponent Read(ref Utf8JsonReader reader, Type typeToConvert,
-            JsonSerializerOptions options)
+        public override void WriteJson(JsonWriter writer, TextComponent value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
-        }
-
-
-        public override void Write(Utf8JsonWriter writer, TextComponent component, JsonSerializerOptions options)
-        {
-            var current = component;
+            var current = value;
             while (current.Parent != null)
                 current = current.Parent;
 
             WriteComponent(writer, current, TextColor.White, TextStyles.None);
         }
 
-        private static void WriteComponent(Utf8JsonWriter writer, TextComponent component, TextColor currentColor,
+        public override TextComponent ReadJson(JsonReader reader, Type objectType, TextComponent existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void WriteComponent(JsonWriter writer, TextComponent component, TextColor currentColor,
             TextStyles currentStyle)
         {
             writer.WriteStartObject();
-            writer.WriteString(component.Id, component.Value);
+
+            writer.WritePropertyName(component.Id);
+            writer.WriteValue(component.Value);
 
             if (component.HasColor)
             {
                 var color = component.Color;
                 if (color != currentColor)
-                    writer.WriteString("color", component.Color.Name);
+                {
+                    writer.WritePropertyName("color");
+                    writer.WriteValue(color.GetName());
+                }
             }
 
             if (component.HasStyle)
@@ -64,13 +69,15 @@ namespace MineLW.API.Text.Serializers
                     if (hasStyle == parentHasStyle)
                         continue;
 
-                    writer.WriteBoolean(StyleNames[i], hasStyle);
+                    writer.WritePropertyName(StyleNames[i]);
+                    writer.WriteValue(hasStyle);
                 }
             }
 
             if (component.ChildCount > 0)
             {
-                writer.WriteStartArray("extra");
+                writer.WritePropertyName("extra");
+                writer.WriteStartArray();
                 foreach (var child in component)
                     WriteComponent(writer, child, component.Color, component.Style);
                 writer.WriteEndArray();

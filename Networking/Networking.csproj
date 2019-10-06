@@ -16,6 +16,7 @@
       <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
       <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
       <PackageReference Include="Iconic.Zlib.Netstandard" Version="1.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     </ItemGroup>
 
 </Project>

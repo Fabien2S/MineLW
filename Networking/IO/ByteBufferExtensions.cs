@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
-using System.Text.Json;
 using DotNetty.Buffers;
+using Newtonsoft.Json;
 
 namespace MineLW.Networking.IO
 {
@@ -22,7 +22,7 @@ namespace MineLW.Networking.IO
             buffer.ReadBytes(bytes);
             return bytes;
         }
-        
+
         public static byte[] ReadByteArray(this IByteBuffer buffer)
         {
             var bytes = new byte[buffer.ReadVarInt32()];
@@ -65,9 +65,9 @@ namespace MineLW.Networking.IO
             buffer.WriteBytes(bytes);
         }
 
-        public static void WriteJson(this IByteBuffer buffer, object @object, JsonSerializerOptions options = null)
+        public static void WriteJson(this IByteBuffer buffer, object @object)
         {
-            var serialized = JsonSerializer.Serialize(@object, options);
+            var serialized = JsonConvert.SerializeObject(@object);
             buffer.WriteUtf8(serialized);
         }
     }
