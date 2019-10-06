@@ -5,18 +5,18 @@ namespace MineLW.API.Utils
     [Serializable]
     public struct PlayerProfile
     {
+        public readonly Guid Id;
         public readonly string Name;
-        public readonly Guid Uuid;
 
-        public PlayerProfile(string name, Guid uuid)
+        public PlayerProfile(Guid id, string name)
         {
+            Id = id;
             Name = name;
-            Uuid = uuid;
         }
 
         public override string ToString()
         {
-            return Name + '{' + Uuid + ')';
+            return Name + '{' + Id + ')';
         }
 
         [Serializable]
