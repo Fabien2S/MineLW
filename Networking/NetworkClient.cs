@@ -16,7 +16,8 @@ namespace MineLW.Networking
 
         private static readonly Logger Logger = LogManager.GetLogger<NetworkClient>();
 
-        public GameVersion Version { get; set; }
+        public GameVersion Version { get; internal set; }
+        public PlayerProfile Profile { get; internal set; }
         public bool Closed { get; private set; }
 
         public NetworkState State
@@ -28,7 +29,6 @@ namespace MineLW.Networking
                 _controller = value.CreateController(this);
             }
         }
-
 
         private readonly ConcurrentQueue<Task> _tasks = new ConcurrentQueue<Task>();
 
@@ -67,10 +67,18 @@ namespace MineLW.Networking
 
         public void Update(float deltaTime)
         {
-            while (_tasks.TryDequeue(out var task))
+            try
             {
-                task.RunSynchronously();
-                task.Wait();
+                while (_tasks.TryDequeue(out var task))
+                {
+                    Logger.Debug("Processing task " + task.Id);
+                    task.RunSynchronously();
+                    task.Wait();
+                }
+            }
+            catch
+            {
+                Close("An internal error occurred with the client");
             }
         }
 
