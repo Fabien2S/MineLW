@@ -15,6 +15,7 @@ namespace MineLW.API.Text
         public readonly List<TextComponent> Children;
 
         public bool HasColor { get; private set; }
+
         public TextColor Color
         {
             get => _color;
@@ -26,6 +27,7 @@ namespace MineLW.API.Text
         }
 
         public bool HasStyle { get; private set; }
+
         public TextStyles Style
         {
             get => _style;
@@ -45,11 +47,41 @@ namespace MineLW.API.Text
             Children = new List<TextComponent>();
         }
 
-        public static explicit operator string(TextComponent component)
+        public override string ToString()
         {
-            var builder = new StringBuilder(component.Value);
-            foreach (var child in component.Children)
-                builder.Append((string) child);
+            var builder = new StringBuilder("TextComponent{");
+
+            builder
+                .Append(Id)
+                .Append('=')
+                .Append('"')
+                .Append(Value)
+                .Append('"');
+
+            if (HasColor)
+                builder
+                    .Append(",color=\"")
+                    .Append(_color)
+                    .Append('"');
+            
+            if (HasStyle)
+            {
+                var styleName = Enum.GetName(typeof(TextStyles), _style);
+                builder
+                    .Append(",style=\"")
+                    .Append(styleName)
+                    .Append('"');
+            }
+
+            if (Children.Count > 0)
+            {
+                builder.Append(",extra=");
+                foreach (var textComponent in Children)
+                    builder.Append(textComponent);
+            }
+
+            builder.Append('}');
+            
             return builder.ToString();
         }
     }

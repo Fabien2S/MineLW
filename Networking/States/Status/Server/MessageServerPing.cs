@@ -13,7 +13,7 @@ namespace MineLW.Networking.States.Status.Server
             );
         }
 
-        public override void Handle(StatusController controller, Message message)
+        protected override void Handle(StatusController controller, Message message)
         {
             controller.HandlePing(message.Payload);
         }

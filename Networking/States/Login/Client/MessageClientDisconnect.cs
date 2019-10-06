@@ -8,7 +8,7 @@ namespace MineLW.Networking.States.Login.Client
 {
     public class MessageClientDisconnect : MessageSerializer<MessageClientDisconnect.Message>
     {
-        public override void Serialize(IByteBuffer buffer, Message message)
+        protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteJson(message.Reason);
         }

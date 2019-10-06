@@ -7,7 +7,7 @@ namespace MineLW.Networking.States.Login.Client
 {
     public class MessageClientEnableCompression : MessageSerializer<MessageClientEnableCompression.Message>
     {
-        public override void Serialize(IByteBuffer buffer, Message message)
+        protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteVarInt32(message.Threshold);
         }

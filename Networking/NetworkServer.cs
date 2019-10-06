@@ -65,7 +65,6 @@ namespace MineLW.Networking
         protected override void InitChannel(TcpSocketChannel channel)
         {
             Logger.Debug("Connection from {0}", channel.RemoteAddress);
-            channel.Configuration.SetOption(ChannelOption.TcpNodelay, true);
 
             var client = new NetworkClient
             {

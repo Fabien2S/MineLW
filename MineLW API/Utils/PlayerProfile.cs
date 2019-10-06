@@ -16,7 +16,7 @@ namespace MineLW.API.Utils
 
         public override string ToString()
         {
-            return Name + '{' + Id + ')';
+            return Name;
         }
 
         [Serializable]

@@ -32,6 +32,13 @@ namespace MineLW
 
         private static void ConfigureLibraries()
         {
+#if DEBUG
+            LogManager.GlobalLevel = LogLevel.Debug;
+#else
+            LogManager.GlobalLevel = LogLevel.Info;
+#endif
+
+            
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),

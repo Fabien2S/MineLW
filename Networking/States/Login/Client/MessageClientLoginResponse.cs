@@ -7,7 +7,7 @@ namespace MineLW.Networking.States.Login.Client
 {
     public class MessageClientLoginResponse : MessageSerializer<MessageClientLoginResponse.Message>
     {
-        public override void Serialize(IByteBuffer buffer, Message message)
+        protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteUtf8(message.Uuid);
             buffer.WriteUtf8(message.Username);

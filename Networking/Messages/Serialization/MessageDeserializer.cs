@@ -12,7 +12,7 @@ namespace MineLW.Networking.Messages.Serialization
         where TController : MessageController where TMessage : IMessage
     {
         public abstract IMessage Deserialize(IByteBuffer buffer);
-        public abstract void Handle(TController controller, TMessage message);
+        protected abstract void Handle(TController controller, TMessage message);
 
         public void Handle(MessageController controller, IMessage message)
         {

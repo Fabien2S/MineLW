@@ -7,7 +7,7 @@ namespace MineLW.Networking.States.Status.Client
 {
     public class MessageClientServerInfo : MessageSerializer<MessageClientServerInfo.Message>
     {
-        public override void Serialize(IByteBuffer buffer, Message message)
+        protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteJson(message.Status);
         }

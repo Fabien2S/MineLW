@@ -17,7 +17,7 @@ namespace MineLW.Networking.States.Handshake
             );
         }
 
-        public override void Handle(HandshakeController controller, Message message)
+        protected override void Handle(HandshakeController controller, Message message)
         {
             controller.HandleHandshake(message);
         }

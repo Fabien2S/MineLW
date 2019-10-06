@@ -14,8 +14,8 @@ namespace MineLW.Networking.Messages.Serialization
         {
             return message is T;
         }
-        
-        public abstract void Serialize(IByteBuffer buffer, T message);
+
+        protected abstract void Serialize(IByteBuffer buffer, T message);
 
         public void Serialize(IByteBuffer buffer, IMessage message)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using MineLW.API.Text;
+﻿using MineLW.API.Text;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
@@ -8,7 +7,7 @@ namespace MineLW.Networking.States.Handshake
     public class HandshakeState : NetworkState
     {
         public static readonly HandshakeState Instance = new HandshakeState();
-        
+
         private HandshakeState() : base(true)
         {
         }

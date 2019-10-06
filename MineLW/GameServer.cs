@@ -2,7 +2,6 @@
  using System.Diagnostics;
  using System.Globalization;
  using System.Net;
- using System.Threading;
  using MineLW.API;
  using MineLW.Debugging;
  using MineLW.Networking;
@@ -16,7 +15,7 @@
         
         private const uint UpdatePerSecond = 20;
         private const float UpsWarnPercentage = 10 / 100f;
-        private const uint UpsWarn = (uint) (UpdatePerSecond - UpdatePerSecond * UpsWarnPercentage);
+        private const uint UpsWarnThreshold = (uint) (UpdatePerSecond - UpdatePerSecond * UpsWarnPercentage);
 
         private const float MsPerSecond = 1_000;
         private const float DelayBetweenUpdate = MsPerSecond / UpdatePerSecond;
@@ -26,7 +25,6 @@
         private readonly Stopwatch _stopWatch;
         private readonly NetworkServer _networkServer;
 
-        private Thread _serverThread;
         private bool _running;
 
         public GameServer()
@@ -41,7 +39,6 @@
                 return;
 
             _running = true;
-            _serverThread = Thread.CurrentThread;
             
             _stopWatch.Start();
 
@@ -90,27 +87,27 @@
                         } while (elapsedMillis >= DelayBetweenUpdate);
                     }
                         
+                    if (sinceLastUpsCheck > MsPerSecond)
+                        continue;
+                    
                     // check UPS
-                    if (sinceLastUpsCheck <= MsPerSecond)
+
+                    // handle update per second
+                    var updatePerSecond = updateCount / (sinceLastUpsCheck / MsPerSecond);
+                    if (updatePerSecond < UpsWarnThreshold)
                     {
-                        var updatePerSecond = updateCount / (sinceLastUpsCheck / MsPerSecond);
+                        var ratio = updatePerSecond / (double) UpdatePerSecond;
 
-                        // handle update per second
-                        if (updatePerSecond < UpsWarn)
-                        {
-                            var ratio = updatePerSecond / (double) UpdatePerSecond;
+                        var formattedRatio = (ratio * 100f).ToString("F", CultureInfo.InvariantCulture);
+                        var formattedUps = updatePerSecond.ToString("F", CultureInfo.InvariantCulture);
 
-                            var formattedRatio = (ratio * 100f).ToString("F", CultureInfo.InvariantCulture);
-                            var formattedUps = updatePerSecond.ToString("F", CultureInfo.InvariantCulture);
-
-                            Logger.Warn("The server is running at {0}%  ({1} / {2} ups)", formattedRatio,
-                                formattedUps,
-                                UpdatePerSecond);
-                        }
-
-                        sinceLastUpsCheck = 0;
-                        updateCount = 1;
+                        Logger.Warn("The server is running at {0}%  ({1} / {2} ups)", formattedRatio,
+                            formattedUps,
+                            UpdatePerSecond);
                     }
+
+                    sinceLastUpsCheck = 0;
+                    updateCount = 1;
                 }
             }
             catch (Exception e)
@@ -143,8 +140,7 @@
             Logger.Info("Shutting down...");
             
             _networkServer.Stop();
-
-            _serverThread = null;
+            
             _running = false;
         }
     }

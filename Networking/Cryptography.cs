@@ -84,7 +84,7 @@ namespace MineLW.Networking
 
         private static byte[] LengthToByteArray(int octetsLength)
         {
-            byte[] length = null;
+            byte[] length;
 
             // Length: 0 <= l < 0x80
             if (octetsLength < 0x80)
@@ -97,7 +97,7 @@ namespace MineLW.Networking
             {
                 length = new byte[2];
                 length[0] = 0x81;
-                length[1] = (byte) ((octetsLength & 0xFF));
+                length[1] = (byte) (octetsLength & 0xFF);
             }
 
             //
@@ -110,7 +110,7 @@ namespace MineLW.Networking
                 length = new byte[3];
                 length[0] = 0x82;
                 length[1] = (byte) ((octetsLength & 0xFF00) >> 8);
-                length[2] = (byte) ((octetsLength & 0xFF));
+                length[2] = (byte) (octetsLength & 0xFF);
             }
 
             // 0xFFFF < length <= 0xFFFFFF
@@ -120,7 +120,7 @@ namespace MineLW.Networking
                 length[0] = 0x83;
                 length[1] = (byte) ((octetsLength & 0xFF0000) >> 16);
                 length[2] = (byte) ((octetsLength & 0xFF00) >> 8);
-                length[3] = (byte) ((octetsLength & 0xFF));
+                length[3] = (byte) (octetsLength & 0xFF);
             }
             // 0xFFFFFF < length <= 0xFFFFFFFF
             else
@@ -130,7 +130,7 @@ namespace MineLW.Networking
                 length[1] = (byte) ((octetsLength & 0xFF000000) >> 24);
                 length[2] = (byte) ((octetsLength & 0xFF0000) >> 16);
                 length[3] = (byte) ((octetsLength & 0xFF00) >> 8);
-                length[4] = (byte) ((octetsLength & 0xFF));
+                length[4] = (byte) (octetsLength & 0xFF);
             }
 
             return length;

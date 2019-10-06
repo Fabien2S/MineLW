@@ -6,7 +6,7 @@ namespace MineLW.Networking.States.Status.Client
 {
     public class MessageClientPong : MessageSerializer<MessageClientPong.Message>
     {
-        public override void Serialize(IByteBuffer buffer, Message message)
+        protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteLong(message.Payload);
         }

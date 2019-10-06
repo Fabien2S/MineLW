@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Net;
 using DotNetty.Buffers;
 
 namespace MineLW.Networking.IO

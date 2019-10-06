@@ -11,7 +11,7 @@ namespace MineLW.Networking.States.Status.Server
             return new Message();
         }
 
-        public override void Handle(StatusController controller, Message message)
+        protected override void Handle(StatusController controller, Message message)
         {
             controller.HandleInfoRequest();
         }

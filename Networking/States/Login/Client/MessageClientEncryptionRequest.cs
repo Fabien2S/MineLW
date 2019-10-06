@@ -7,7 +7,7 @@ namespace MineLW.Networking.States.Login.Client
 {
     public class MessageClientEncryptionRequest : MessageSerializer<MessageClientEncryptionRequest.Message>
     {
-        public override void Serialize(IByteBuffer buffer, Message message)
+        protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteUtf8(message.ServerId);
             buffer.WriteByteArray(message.PublicKey);
