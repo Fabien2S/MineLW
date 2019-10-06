@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 
@@ -8,16 +7,30 @@ namespace MineLW.Networking.States.Status
     [Serializable]
     public struct ServerStatus
     {
-        [JsonPropertyName("version")] public GameVersion GameVersion { get; set; }
-        [JsonPropertyName("players")] public PlayerInfo Players { get; set; }
-        [JsonPropertyName("description")] public TextComponent Description { get; set; }
+        public readonly GameVersion Version;
+        public readonly PlayerInfo Players;
+        public readonly TextComponent Description;
+
+        public ServerStatus(GameVersion version, PlayerInfo players, TextComponent description)
+        {
+            Version = version;
+            Players = players;
+            Description = description;
+        }
     }
 
     [Serializable]
     public struct PlayerInfo
     {
-        [JsonPropertyName("online")] public int Online { get; set; }
-        [JsonPropertyName("max")] public int Max { get; set; }
-        [JsonPropertyName("sample")] public PlayerProfile[] Players { get; set; }
+        public readonly int Online;
+        public readonly int Max;
+        public readonly PlayerProfile[] Players;
+
+        public PlayerInfo(int online, int max, PlayerProfile[] players)
+        {
+            Online = online;
+            Max = max;
+            Players = players;
+        }
     }
 }
