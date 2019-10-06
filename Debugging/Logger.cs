@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
+ using JetBrains.Annotations;
 
-namespace MineLW.Debugging
+ namespace MineLW.Debugging
 {
     public class Logger
     {
@@ -26,6 +27,7 @@ namespace MineLW.Debugging
             _level = level;
         }
 
+        [StringFormatMethod("message")]
         private void Log(LogLevel level, string message, params object[] args)
         {
             var numericalLevel = (int) level;
@@ -55,27 +57,32 @@ namespace MineLW.Debugging
             Console.ResetColor();
         }
 
+        [StringFormatMethod("message")]
         [Conditional("DEBUG")]
         public void Debug(string message, params object[] args)
         {
             Log(LogLevel.Debug, message, args);
         }
 
+        [StringFormatMethod("message")]
         public void Info(string message, params object[] args)
         {
             Log(LogLevel.Info, message, args);
         }
 
+        [StringFormatMethod("message")]
         public void Success(string message, params object[] args)
         {
             Log(LogLevel.Success, message, args);
         }
 
+        [StringFormatMethod("message")]
         public void Warn(string message, params object[] args)
         {
             Log(LogLevel.Warn, message, args);
         }
 
+        [StringFormatMethod("message")]
         public void Error(string message, params object[] args)
         {
             Log(LogLevel.Error, message, args);
