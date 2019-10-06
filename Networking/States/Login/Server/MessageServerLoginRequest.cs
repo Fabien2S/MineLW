@@ -14,7 +14,7 @@ namespace MineLW.Networking.States.Login.Server
             );
         }
 
-        public override void Handle(LoginController controller, Message message)
+        protected override void Handle(LoginController controller, Message message)
         {
             controller.HandleLoginRequest(message.Username);
         }
