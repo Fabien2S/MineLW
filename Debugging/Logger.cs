@@ -1,8 +1,8 @@
 ﻿﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using System.Threading;
+ using System.Diagnostics;
+ using System.Globalization;
+ using System.Text;
+ using System.Threading;
  using JetBrains.Annotations;
 
  namespace MineLW.Debugging
@@ -37,6 +37,7 @@ using System.Threading;
             var date = DateTime.Now;
             var levelType = typeof(LogLevel);
             var levelName = Enum.GetName(levelType, level);
+            var currentThread = Thread.CurrentThread;
 
             var builder = new StringBuilder()
                 .Append('[')
@@ -44,17 +45,9 @@ using System.Threading;
                 .Append(' ')
                 .Append(levelName)
                 .Append('/')
-                .Append(_name);
-
-            var threadName = Thread.CurrentThread.Name;
-            if (!string.IsNullOrEmpty(threadName))
-            {
-                builder
-                    .Append('/')
-                    .Append(threadName);
-            }
-            
-            builder
+                .Append(_name)
+                .Append('/')
+                .Append(string.IsNullOrEmpty(currentThread.Name) ? "ManagedThread-" + currentThread.ManagedThreadId : currentThread.Name)
                 .Append(']')
                 .Append(' ')
                 .AppendFormat(CultureInfo.InvariantCulture, message, args);
