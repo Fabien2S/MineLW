@@ -21,17 +21,13 @@ namespace MineLW.API.Text.Serializers
                 var name = Enum.GetName(typeof(TextStyles), style);
                 if (name == null)
                     throw new NullReferenceException("No name for style " + style);
-                StyleNames[i] = name.ToLowerInvariant();
+                StyleNames[i] = name.ToUnderscoreCase();
             }
         }
 
         public override void WriteJson(JsonWriter writer, TextComponent value, JsonSerializer serializer)
         {
-            var current = value;
-            while (current.Parent != null)
-                current = current.Parent;
-
-            WriteComponent(writer, current, TextColor.White, TextStyles.None);
+            WriteComponent(writer, value);
         }
 
         public override TextComponent ReadJson(JsonReader reader, Type objectType, TextComponent existingValue,
@@ -41,8 +37,12 @@ namespace MineLW.API.Text.Serializers
             throw new NotImplementedException();
         }
 
-        private static void WriteComponent(JsonWriter writer, TextComponent component, TextColor currentColor,
-            TextStyles currentStyle)
+        public static void WriteComponent(
+            JsonWriter writer,
+            TextComponent component,
+            TextColor currentColor = TextColor.White,
+            TextStyles currentStyle = TextStyles.None
+        )
         {
             writer.WriteStartObject();
 
@@ -74,13 +74,32 @@ namespace MineLW.API.Text.Serializers
                 }
             }
 
-            if (component.ChildCount > 0)
+            var children = component.Children;
+            if (children.Count > 0)
             {
                 writer.WritePropertyName("extra");
                 writer.WriteStartArray();
-                foreach (var child in component)
+                foreach (var child in children)
                     WriteComponent(writer, child, component.Color, component.Style);
                 writer.WriteEndArray();
+            }
+
+            switch (component)
+            {
+                case TextComponentTranslate componentTranslate:
+                {
+                    var parameters = componentTranslate.Parameters;
+                    if (parameters.Length > 0)
+                    {
+                        writer.WritePropertyName("with");
+                        writer.WriteStartArray();
+                        foreach (var parameter in parameters)
+                            writer.WriteValue(parameter);
+                        writer.WriteEndArray();
+                    }
+
+                    break;
+                }
             }
 
             writer.WriteEndObject();

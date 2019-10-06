@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using MineLW.API.Text.Serializers;
@@ -7,67 +7,48 @@ using Newtonsoft.Json;
 namespace MineLW.API.Text
 {
     [JsonConverter(typeof(TextComponentSerializer))]
-    public abstract class TextComponent : IEnumerable<TextComponent>
+    public abstract class TextComponent
     {
-        public TextComponent Parent { get; private set; }
         public abstract string Id { get; }
 
-        public string Value { get; protected set; }
+        public readonly string Value;
+        public readonly List<TextComponent> Children;
 
         public bool HasColor { get; private set; }
-        public TextColor Color { get; private set; } = TextColor.White;
+        public TextColor Color
+        {
+            get => _color;
+            set
+            {
+                HasColor = true;
+                _color = value;
+            }
+        }
 
         public bool HasStyle { get; private set; }
-        public TextStyles Style { get; private set; } = TextStyles.None;
-
-        public int ChildCount => _children.Count;
-
-        private readonly List<TextComponent> _children = new List<TextComponent>();
-
-        public TextComponent WithValue(string value)
+        public TextStyles Style
         {
-            Value = value;
-            return this;
-        }
-
-        public TextComponent WithColor(TextColor color)
-        {
-            HasColor = true;
-            Color = color;
-            return this;
-        }
-
-        public TextComponent WithStyle(TextStyles style)
-        {
-            HasStyle = true;
-            Style = style;
-            return this;
-        }
-
-        public T Append<T>() where T : TextComponent, new()
-        {
-            var child = new T
+            get => _style;
+            set
             {
-                Parent = this
-            };
-            _children.Add(child);
-            return child;
+                HasStyle = true;
+                _style = value;
+            }
         }
 
-        public IEnumerator<TextComponent> GetEnumerator()
-        {
-            return _children.GetEnumerator();
-        }
+        private TextColor _color;
+        private TextStyles _style;
 
-        IEnumerator IEnumerable.GetEnumerator()
+        protected TextComponent(string value = null)
         {
-            return GetEnumerator();
+            Value = value ?? string.Empty;
+            Children = new List<TextComponent>();
         }
 
         public static explicit operator string(TextComponent component)
         {
             var builder = new StringBuilder(component.Value);
-            foreach (var child in component)
+            foreach (var child in component.Children)
                 builder.Append((string) child);
             return builder.ToString();
         }
