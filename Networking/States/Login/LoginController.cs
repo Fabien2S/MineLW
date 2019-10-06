@@ -35,12 +35,10 @@ namespace MineLW.Networking.States.Login
         {
             if (!NetworkAdapter.IsSupported(Client.Version))
             {
-                var reason = new TextComponentString()
-                    .WithValue("Unsupported version " + Client.Version.Protocol)
-                    .WithColor(TextColor.Red);
-                Client
-                    .Send(new MessageClientDisconnect.Message(reason))
-                    .ContinueWith(task => Client.Disconnect(reason));
+                Client.Disconnect(new TextComponentString("Unsupported version " + Client.Version.Protocol)
+                {
+                    Color = TextColor.Red
+                });
                 return;
             }
 

@@ -19,9 +19,22 @@ namespace MineLW.Networking.States.Status
                 new PlayerInfo(
                     0, 20, new PlayerProfile[0]
                 ),
-                new TextComponentString()
-                    .WithValue("Hi!")
-                    .WithColor(TextColor.DarkGreen)
+                new TextComponentString("Minecraft ")
+                {
+                    Color = TextColor.Blue,
+                    Children =
+                    {
+                        new TextComponentString("#" + version.Protocol)
+                        {
+                            Color = TextColor.Gold,
+                            Style = TextStyles.None
+                        },
+                        new TextComponentString("\nThe server is now live!")
+                        {
+                            Style = TextStyles.Italic | TextStyles.Underlined
+                        }
+                    }
+                }
             );
 
             Client.Send(new MessageClientServerInfo.Message(status));
