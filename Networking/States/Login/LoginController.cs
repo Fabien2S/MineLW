@@ -106,8 +106,13 @@ namespace MineLW.Networking.States.Login
 
                     var responseMessage = requestTask.Result;
                     if (responseMessage.StatusCode != HttpStatusCode.OK)
-                        throw new HttpRequestException("Unexpected response from the session server (" +
-                                                       responseMessage.StatusCode + ')');
+                    {
+                        Client.Disconnect(new TextComponentTranslate("multiplayer.disconnect.authservers_down")
+                        {
+                            Color = TextColor.Red
+                        });
+                        return;
+                    }
 
                     var httpContent = responseMessage.Content;
                     httpContent
@@ -118,12 +123,15 @@ namespace MineLW.Networking.States.Login
 
                             if (!_username.Equals(profile.Name))
                             {
-                                Client.Close("Invalid username");
+                                Client.Disconnect(new TextComponentTranslate("multiplayer.disconnect.unverified_username")
+                                {
+                                    Color = TextColor.Red
+                                });
                                 return;
                             }
 
                             Client.Profile = profile;
-                            Logger.Info("UUID of {0} is {1}", profile.Name, profile.Id);
+                            Logger.Info("UUID of player {0} is {1}", profile.Name, profile.Id);
 
                             Client
                                 .Send(new MessageClientLoginResponse.Message(
@@ -144,13 +152,13 @@ namespace MineLW.Networking.States.Login
                     var exception = taskException.InnerException;
 
                     Logger.Error("Unable to complete the login sequence of {0}. Exception: {1}", Client, exception);
-                    Client.Close("Error");
+                    Client.Disconnect();
                 });
         }
 
         private void FinalizeLogin()
         {
-            Logger.Info("Logged in as {0} from {1}", Client.Profile, Client);
+            Logger.Info("{0} logged in", Client);
         }
     }
 }

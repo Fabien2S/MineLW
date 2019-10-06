@@ -15,6 +15,10 @@ namespace MineLW.Networking
         public const string Name = "message_handler";
 
         private static readonly Logger Logger = LogManager.GetLogger<NetworkClient>();
+        private static readonly TextComponent DefaultDisconnectReason = new TextComponentTranslate("multiplayer.disconnect.generic")
+        {
+            Color = TextColor.Red
+        };
 
         public GameVersion Version { get; internal set; }
         public PlayerProfile Profile { get; internal set; }
@@ -50,7 +54,10 @@ namespace MineLW.Networking
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             Logger.Error("Network exception: {0}", exception);
-            Close(exception.Message);
+            Disconnect(new TextComponentString(exception.Message)
+            {
+                Color = TextColor.Red
+            });
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage message)
@@ -71,14 +78,13 @@ namespace MineLW.Networking
             {
                 while (_tasks.TryDequeue(out var task))
                 {
-                    Logger.Debug("Processing task " + task.Id);
                     task.RunSynchronously();
                     task.Wait();
                 }
             }
             catch
             {
-                Close("An internal error occurred with the client");
+                Disconnect();
             }
         }
 
@@ -117,19 +123,25 @@ namespace MineLW.Networking
             return task;
         }
 
-        public void Disconnect(TextComponent reason)
+        public void Disconnect(TextComponent reasonComponent = null)
         {
             if(Closed)
                 return;
 
-            var message = _state.CreateDisconnectMessage(reason);
+            reasonComponent ??= DefaultDisconnectReason;
+            
+            var message = _state.CreateDisconnectMessage(reasonComponent);
             if (message == null)
             {
-                Close((string) reason);
+                Close(reasonComponent.ToString());
                 return;
             }
 
-            Send(message).ContinueWith(task => Close((string) reason));
+            Send(message).ContinueWith(task =>
+            {
+                Logger.Info("{0} ({1}) disconnected (reason: {2})", Profile, _channel.RemoteAddress, reasonComponent);
+                Close(reasonComponent.ToString());
+            });
         }
 
         public void Close(string reason)
@@ -137,7 +149,7 @@ namespace MineLW.Networking
             if (Closed)
                 return;
 
-            Logger.Info("Closing connection {0} (reason: {1})", this, reason);
+            Logger.Debug("Closing connection {0} (reason: {1})", this, reason);
 
             Closed = true;
             _channel?.CloseAsync();
@@ -146,7 +158,7 @@ namespace MineLW.Networking
 
         public override string ToString()
         {
-            return _channel.RemoteAddress.ToString();
+            return Profile.Name + '[' + _channel.RemoteAddress + ']';
         }
     }
 }
