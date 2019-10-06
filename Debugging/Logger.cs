@@ -34,10 +34,9 @@ using System.Threading;
             if (numericalLevel < (int) _level)
                 return;
 
+            var date = DateTime.Now;
             var levelType = typeof(LogLevel);
             var levelName = Enum.GetName(levelType, level);
-            var date = DateTime.Now;
-            var currentThread = Thread.CurrentThread;
 
             var builder = new StringBuilder()
                 .Append('[')
@@ -45,9 +44,17 @@ using System.Threading;
                 .Append(' ')
                 .Append(levelName)
                 .Append('/')
-                .Append(_name)
-                .Append('/')
-                .Append(currentThread.Name)
+                .Append(_name);
+
+            var threadName = Thread.CurrentThread.Name;
+            if (!string.IsNullOrEmpty(threadName))
+            {
+                builder
+                    .Append('/')
+                    .Append(threadName);
+            }
+            
+            builder
                 .Append(']')
                 .Append(' ')
                 .AppendFormat(CultureInfo.InvariantCulture, message, args);
