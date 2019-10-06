@@ -15,17 +15,17 @@ namespace MineLW
 
         private static void Main(string[] args)
         {
-            Logger.Debug("Program started with {0} arguments", args.Length);
-
             Console.Title = GameServer.Name;
             Thread.CurrentThread.Name = "Main";
+            
+            Logger.Debug("Program started with {0} arguments", args.Length);
 
             Console.CancelKeyPress += HandleCancelKeyPressed;
 
-            Logger.Debug("Configure libraries...");
+            Logger.Debug("Configuring libraries...");
             ConfigureLibraries();
 
-            Logger.Debug("Server is ready to start");
+            Logger.Debug("The server is now ready to start.");
             _server = new GameServer();
             _server.Start();
         }
