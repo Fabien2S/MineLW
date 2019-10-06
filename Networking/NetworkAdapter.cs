@@ -11,6 +11,9 @@ namespace MineLW.Networking
 
         public static bool IsSupported(GameVersion version)
         {
+            // TODO implement a proper versioning system
+            return true;
+
             return Versions.ContainsKey(version.Protocol);
         }
 
