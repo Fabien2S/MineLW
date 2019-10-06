@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -23,8 +22,7 @@ namespace MineLW.Networking
         private readonly ServerBootstrap _bootstrap = new ServerBootstrap();
         private readonly HashSet<NetworkClient> _clients = new HashSet<NetworkClient>();
 
-        private IEventLoopGroup _acceptorLoopGroup;
-        private IEventLoopGroup _clientLoopGroup;
+        private IEventLoopGroup _eventLoopGroup;
 
         public void Update(float deltaTime)
         {
@@ -37,11 +35,10 @@ namespace MineLW.Networking
         {
             Logger.Debug("Starting network server asynchronously on {0}", endPoint);
             
-            _acceptorLoopGroup = new MultithreadEventLoopGroup(CreateEventLoop);
-            _clientLoopGroup = new MultithreadEventLoopGroup(CreateEventLoop);
+            _eventLoopGroup = new MultithreadEventLoopGroup(CreateEventLoop);
 
             _bootstrap
-                .Group(_acceptorLoopGroup, _clientLoopGroup)
+                .Group(_eventLoopGroup)
                 .Channel<TcpServerSocketChannel>()
                 .ChildOption(ChannelOption.TcpNodelay, true)
                 .ChildOption(ChannelOption.SoKeepalive, true)
@@ -62,8 +59,7 @@ namespace MineLW.Networking
         public void Stop()
         {
             Logger.Debug("Stopping network server...");
-            _acceptorLoopGroup.ShutdownGracefullyAsync();
-            _clientLoopGroup.ShutdownGracefullyAsync();
+            _eventLoopGroup.ShutdownGracefullyAsync();
         }
 
         protected override void InitChannel(TcpSocketChannel channel)
