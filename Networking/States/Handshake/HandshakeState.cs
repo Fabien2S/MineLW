@@ -1,4 +1,6 @@
-﻿using MineLW.Networking.Messages;
+﻿using System;
+using MineLW.API.Text;
+using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
 namespace MineLW.Networking.States.Handshake
@@ -9,6 +11,11 @@ namespace MineLW.Networking.States.Handshake
         
         private HandshakeState() : base(true)
         {
+        }
+
+        public override IMessage CreateDisconnectMessage(TextComponent reason)
+        {
+            return null;
         }
 
         protected override IMessageSerializer[] GetSerializers()

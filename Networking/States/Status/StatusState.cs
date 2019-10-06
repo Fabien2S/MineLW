@@ -1,3 +1,4 @@
+using MineLW.API.Text;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 using MineLW.Networking.States.Status.Client;
@@ -11,6 +12,11 @@ namespace MineLW.Networking.States.Status
         
         private StatusState() : base(true)
         {
+        }
+
+        public override IMessage CreateDisconnectMessage(TextComponent reason)
+        {
+            return null;
         }
 
         protected override IMessageSerializer[] GetSerializers()

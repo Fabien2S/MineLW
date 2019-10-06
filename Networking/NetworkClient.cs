@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
+using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Debugging;
 using MineLW.Networking.Handlers;
@@ -43,13 +44,13 @@ namespace MineLW.Networking
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            Disconnect("End of stream");
+            Close("End of stream");
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             Logger.Error("Network exception: {0}", exception);
-            Disconnect(exception.Message);
+            Close(exception.Message);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage message)
@@ -108,7 +109,22 @@ namespace MineLW.Networking
             return task;
         }
 
-        public void Disconnect(string reason)
+        public void Disconnect(TextComponent reason)
+        {
+            if(Closed)
+                return;
+
+            var message = _state.CreateDisconnectMessage(reason);
+            if (message == null)
+            {
+                Close((string) reason);
+                return;
+            }
+
+            Send(message).ContinueWith(task => Close((string) reason));
+        }
+
+        public void Close(string reason)
         {
             if (Closed)
                 return;

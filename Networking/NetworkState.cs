@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetty.Buffers;
+using MineLW.API.Text;
 using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
@@ -22,6 +23,7 @@ namespace MineLW.Networking
             _deserializers = GetDeserializers();
         }
 
+        public abstract IMessage CreateDisconnectMessage(TextComponent reason);
         protected abstract IMessageSerializer[] GetSerializers();
         protected abstract IMessageDeserializer[] GetDeserializers();
         protected internal abstract MessageController CreateController(NetworkClient client);

@@ -14,14 +14,15 @@ namespace MineLW.Networking.States.Status
         public void HandleInfoRequest()
         {
             var version = NetworkAdapter.IsSupported(Client.Version) ? Client.Version : NetworkAdapter.Default;
-            var status = new ServerStatus
-            {
-                GameVersion = version,
-                Description = new TextComponentString().WithValue("Hi!").WithColor(TextColor.Aqua)
-            };
-
-            var playerInfo = new PlayerInfo {Max = 20, Online = 10, Players = new PlayerProfile[0]};
-            status.Players = playerInfo;
+            var status = new ServerStatus(
+                version,
+                new PlayerInfo(
+                    0, 20, new PlayerProfile[0]
+                ),
+                new TextComponentString()
+                    .WithValue("Hi!")
+                    .WithColor(TextColor.DarkGreen)
+            );
 
             Client.Send(new MessageClientServerInfo.Message(status));
         }
@@ -30,7 +31,7 @@ namespace MineLW.Networking.States.Status
         {
             Client
                 .Send(new MessageClientPong.Message(payload))
-                .ContinueWith(task => Client.Disconnect("Pong sent"));
+                .ContinueWith(task => Client.Close("Pong sent"));
         }
     }
 }
