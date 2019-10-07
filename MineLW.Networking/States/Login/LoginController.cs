@@ -33,6 +33,10 @@ namespace MineLW.Networking.States.Login
 
         public void HandleLoginRequest(string username)
         {
+            // "Login request" message already received
+            if (_username != null)
+                return;
+
             if (!NetworkAdapter.IsSupported(Client.Version))
             {
                 Client.Disconnect(new TextComponentString("Unsupported version " + Client.Version.Protocol)
@@ -59,6 +63,10 @@ namespace MineLW.Networking.States.Login
 
         public void HandleEncryptionResponse(byte[] encryptedSharedSecret, byte[] encryptedSignature)
         {
+            // "Login request" message not received OR "Encryption response" already received
+            if (_username == null || _signature == null)
+                return;
+
             var decryptedSignature = Cryptography.CryptoServiceProvider.Decrypt(encryptedSignature, false);
             if (!decryptedSignature.SequenceEqual(_signature))
             {
@@ -66,6 +74,7 @@ namespace MineLW.Networking.States.Login
                 return;
             }
 
+            _signature = null;
             _sharedSecret = Cryptography.CryptoServiceProvider.Decrypt(encryptedSharedSecret, false);
             Client.EnableEncryption(_sharedSecret);
 
