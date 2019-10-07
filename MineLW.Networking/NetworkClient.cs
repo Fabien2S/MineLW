@@ -53,11 +53,7 @@ namespace MineLW.Networking
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            Logger.Error("Network exception: {0}", exception);
-            Disconnect(new TextComponentString(exception.Message)
-            {
-                Color = TextColor.Red
-            });
+            Close(exception.Message);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage message)
@@ -139,8 +135,9 @@ namespace MineLW.Networking
 
             Send(message).ContinueWith(task =>
             {
-                Logger.Info("{0} ({1}) disconnected (reason: {2})", Profile, _channel.RemoteAddress, reasonComponent);
-                Close(reasonComponent.ToString());
+                var reason = reasonComponent.ToString();
+                Logger.Info("{0} disconnected (reason: {1})", this, reason);
+                Close(reason);
             });
         }
 
