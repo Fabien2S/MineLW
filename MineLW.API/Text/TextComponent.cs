@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using MineLW.API.Text.Serializers;
 using Newtonsoft.Json;
@@ -9,8 +10,6 @@ namespace MineLW.API.Text
     [JsonConverter(typeof(TextComponentSerializer))]
     public abstract class TextComponent
     {
-        public abstract string Id { get; }
-
         public readonly string Value;
         public readonly List<TextComponent> Children;
 
@@ -47,14 +46,35 @@ namespace MineLW.API.Text
             Children = new List<TextComponent>();
         }
 
+        private bool Equals(TextComponent other)
+        {
+            return
+                Value.Equals(other.Value, StringComparison.Ordinal) &&
+                HasColor == other.HasColor &&
+                _color == other._color &&
+                HasStyle == other.HasStyle &&
+                _style == other._style &&
+                Children.SequenceEqual(other.Children);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TextComponent other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         public override string ToString()
         {
-            var builder = new StringBuilder("TextComponent{");
+            var builder = new StringBuilder();
 
             builder
-                .Append(Id)
-                .Append('=')
-                .Append('"')
+                .Append(GetType().Name)
+                .Append('{')
+                .Append("value=\"")
                 .Append(Value)
                 .Append('"');
 
@@ -63,7 +83,7 @@ namespace MineLW.API.Text
                     .Append(",color=\"")
                     .Append(_color)
                     .Append('"');
-            
+
             if (HasStyle)
             {
                 var styleName = Enum.GetName(typeof(TextStyles), _style);
@@ -81,7 +101,7 @@ namespace MineLW.API.Text
             }
 
             builder.Append('}');
-            
+
             return builder.ToString();
         }
     }

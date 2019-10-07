@@ -21,5 +21,13 @@ namespace MineLW.API.Extensions
         {
             return ColorNames[(byte) color];
         }
+
+        public static TextColor FromName(string name)
+        {
+            var index = Array.IndexOf(ColorNames, name);
+            if (index == -1)
+                throw new ArgumentOutOfRangeException(nameof(name), "Invalid color name");
+            return (TextColor) index;
+        }
     }
 }
