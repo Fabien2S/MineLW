@@ -2,13 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW", "MineLW\MineLW.csproj", "{8007382A-B14A-4C0F-A1CF-95B6ACD2BCF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW API", "MineLW API\MineLW API.csproj", "{359B762E-DA18-4F56-9AD0-E304DF39E6A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.API", "MineLW.API\MineLW.API.csproj", "{359B762E-DA18-4F56-9AD0-E304DF39E6A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization", "Serialization\Serialization.csproj", "{BF13DC72-157B-4BE5-A95C-19EF55029496}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Serialization", "MineLW.Serialization\MineLW.Serialization.csproj", "{BF13DC72-157B-4BE5-A95C-19EF55029496}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugging", "Debugging\Debugging.csproj", "{DFF08DAA-9D68-46F8-AE91-8462BF7B3DC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Debugging", "MineLW.Debugging\MineLW.Debugging.csproj", "{DFF08DAA-9D68-46F8-AE91-8462BF7B3DC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{BEBC1940-97E8-4B73-87D3-568A805FDB53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Networking", "MineLW.Networking\MineLW.Networking.csproj", "{BEBC1940-97E8-4B73-87D3-568A805FDB53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

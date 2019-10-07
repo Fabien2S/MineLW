@@ -6,8 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Debugging\Debugging.csproj" />
-      <ProjectReference Include="..\MineLW API\MineLW API.csproj" />
+      <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
+      <ProjectReference Include="..\MineLW.Debugging\MineLW.Debugging.csproj" />
     </ItemGroup>
 
     <ItemGroup>
