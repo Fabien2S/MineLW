@@ -6,6 +6,7 @@ namespace MineLW.Blocks.Properties
     public abstract class BlockProperty<T> : IBlockProperty
     {
         public string Name { get; }
+        public int ValueCount => Values.Count;
 
         protected readonly ReadOnlyCollection<T> Values;
 
@@ -25,11 +26,6 @@ namespace MineLW.Blocks.Properties
         public object GetValue(int index)
         {
             return Values[index];
-        }
-
-        public int GetValueCount()
-        {
-            return Values.Count;
         }
 
         public override string ToString()

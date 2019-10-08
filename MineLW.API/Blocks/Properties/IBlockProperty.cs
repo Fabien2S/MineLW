@@ -3,10 +3,10 @@
     public interface IBlockProperty
     {
         string Name { get; }
+        int ValueCount { get; }
 
         object Parse(string source);
         int GetIndex(object value);
         object GetValue(int index);
-        int GetValueCount();
     }
 }

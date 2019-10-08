@@ -25,7 +25,7 @@ namespace MineLW.Blocks
             Properties = new ReadOnlyCollection<IBlockProperty>(properties);
             DefaultValues = defaultValues;
 
-            StateCount = properties.Aggregate(1, (current, property) => current * property.GetValueCount());
+            StateCount = properties.Aggregate(1, (current, property) => current * property.ValueCount);
         }
 
         public override string ToString()
@@ -42,7 +42,7 @@ namespace MineLW.Blocks
             {
                 var property = Properties[i];
 
-                var propertySize = property.GetValueCount();
+                var propertySize = property.ValueCount;
                 var valueIndex = blockData % propertySize;
                 blockData /= propertySize;
 
