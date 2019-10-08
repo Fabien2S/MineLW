@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
@@ -24,15 +25,15 @@ namespace MineLW.Networking.Handlers
 
         protected override void Encode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
-            var sourceBuffer = msg.ToArray(out var sourceOffset, out var sourceLength);
-            var outputBuffer = _encryptCipher.ProcessBytes(sourceBuffer, sourceOffset, sourceLength);
+            var input = msg.ToArray(out var inputOffset, out var inputLength);
+            var outputBuffer = _encryptCipher.ProcessBytes(input, inputOffset, inputLength);
             output.Add(outputBuffer);
         }
 
         protected override void Decode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
-            var sourceBuffer = msg.ToArray(out var sourceOffset, out var sourceLength);
-            var outputBuffer = _decryptCipher.ProcessBytes(sourceBuffer, sourceOffset, sourceLength);
+            var input = msg.ToArray(out var inputOffset, out var inputLength);
+            var outputBuffer = _decryptCipher.ProcessBytes(input, inputOffset, inputLength);
             output.Add(outputBuffer);
         }
 
