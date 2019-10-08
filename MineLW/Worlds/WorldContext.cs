@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using MineLW.API.Blocks;
+using MineLW.API.Math;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Context;
+using MineLW.Blocks;
 
 namespace MineLW.Worlds
 {
@@ -14,6 +18,16 @@ namespace MineLW.Worlds
         public WorldContext(World world)
         {
             _world = world;
+        }
+        
+        public IBlockState GetBlock(Vector3Int position)
+        {
+            return BlockState.Air;
+        }
+
+        public void SetBlock(Vector3Int position, IBlockState blockState)
+        {
+            throw new NotSupportedException();
         }
 
         public T GetOptionRaw<T>(WorldOption<T> option)
