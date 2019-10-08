@@ -10,7 +10,7 @@ namespace MineLW.Client.MC498.Client
     {
         protected override void Serialize(IByteBuffer buffer, Message message)
         {
-            buffer.WriteVector3F(message.Position);
+            buffer.WriteVector3D(message.Position);
             buffer.WriteVector2F(message.Rotation);
             buffer.WriteByte(0);
             buffer.WriteVarInt32(message.TeleportId);
