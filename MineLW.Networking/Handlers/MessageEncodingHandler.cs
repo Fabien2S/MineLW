@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
-using MineLW.Debugging;
 using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
+using NLog;
 
 namespace MineLW.Networking.Handlers
 {
@@ -13,7 +13,7 @@ namespace MineLW.Networking.Handlers
     {
         public const string Name = "message_encoding";
         
-        private static readonly Logger Logger = LogManager.GetLogger<MessageEncodingHandler>();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly NetworkClient _client;
 
@@ -52,7 +52,7 @@ namespace MineLW.Networking.Handlers
 #if DEBUG
             catch (NullReferenceException e)
             {
-                Logger.Warn("NullReferenceException: {0}", e.Message);
+                Logger.Error(e);
             }
 #endif
             catch (DecoderException e)

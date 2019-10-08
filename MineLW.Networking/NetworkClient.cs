@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 using MineLW.API.Text;
 using MineLW.API.Utils;
-using MineLW.Debugging;
 using MineLW.Networking.Handlers;
 using MineLW.Networking.Messages;
+using NLog;
 
 namespace MineLW.Networking
 {
     public class NetworkClient : SimpleChannelInboundHandler<IMessage>, IUpdatable
     {
         public const string Name = "message_handler";
-
-        private static readonly Logger Logger = LogManager.GetLogger<NetworkClient>();
+        
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly TextComponent DefaultDisconnectReason = new TextComponentTranslate("multiplayer.disconnect.generic")
         {
             Color = TextColor.Red

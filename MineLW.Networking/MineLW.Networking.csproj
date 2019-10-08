@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>MineLW.Networking</RootNamespace>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +18,7 @@
       <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
       <PackageReference Include="Iconic.Zlib.Netstandard" Version="1.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+      <PackageReference Include="NLog.Extensions.Logging" Version="1.6.0" />
     </ItemGroup>
 
 </Project>

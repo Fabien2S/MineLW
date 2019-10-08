@@ -3,8 +3,8 @@
  using System.Globalization;
  using System.Net;
  using MineLW.API;
- using MineLW.Debugging;
  using MineLW.Networking;
+ using NLog;
 
  namespace MineLW
 {
@@ -19,8 +19,8 @@
 
         private const float MsPerSecond = 1_000;
         private const float DelayBetweenUpdate = MsPerSecond / UpdatePerSecond;
-        
-        private static readonly Logger Logger = LogManager.GetLogger<GameServer>();
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
         private readonly Stopwatch _stopWatch;
         private readonly NetworkServer _networkServer;
@@ -49,7 +49,7 @@
 
             var elapsed = _stopWatch.ElapsedMilliseconds / MsPerSecond;
             var formattedElapsed = elapsed.ToString("F", CultureInfo.InvariantCulture);
-            Logger.Success("Server started in {0}s (running at {1} ups)",formattedElapsed, UpdatePerSecond);
+            Logger.Info("Server started in {0}s (running at {1} ups)",formattedElapsed, UpdatePerSecond);
 
             _stopWatch.Stop();
             
@@ -112,7 +112,7 @@
             }
             catch (Exception e)
             {
-                Logger.Error("Unable to process the update of the server.\n\n\t-> {0}", e);
+                Logger.Error(e, "Unable to process the update of the server.");
             }
             finally
             {

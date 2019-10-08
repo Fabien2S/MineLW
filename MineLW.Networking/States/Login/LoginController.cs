@@ -7,10 +7,11 @@ using System.Security.Cryptography;
 using DotNetty.Common.Internal;
 using MineLW.API.Text;
 using MineLW.API.Utils;
-using MineLW.Debugging;
 using MineLW.Networking.Messages;
+using MineLW.Networking.States.Game;
 using MineLW.Networking.States.Login.Client;
 using Newtonsoft.Json;
+using NLog;
 
 namespace MineLW.Networking.States.Login
 {
@@ -19,7 +20,7 @@ namespace MineLW.Networking.States.Login
         private const string HasJoinedUrl = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
         private const int CompressionThreshold = 256;
 
-        private static readonly Logger Logger = LogManager.GetLogger<LoginController>();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly HttpClient HttpClient = new HttpClient();
 
@@ -177,6 +178,9 @@ namespace MineLW.Networking.States.Login
         private void FinalizeLogin()
         {
             Logger.Info("{0} logged in successfully using game version {1}", Client, Client.State);
+            
+            var gameState = (GameState) Client.State;
+            var gameClient = gameState.CreateClient(Client);
         }
     }
 }

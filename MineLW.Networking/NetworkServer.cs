@@ -6,9 +6,9 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using MineLW.API.Utils;
-using MineLW.Debugging;
 using MineLW.Networking.Handlers;
 using MineLW.Networking.States.Handshake;
+using NLog;
 
 namespace MineLW.Networking
 {
@@ -17,7 +17,7 @@ namespace MineLW.Networking
         private const int ReadIdleTimeout = 20;
         private const int WriteIdleTimeout = 15;
 
-        private static readonly Logger Logger = LogManager.GetLogger<NetworkServer>();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
         private readonly ServerBootstrap _bootstrap = new ServerBootstrap();
         private readonly HashSet<NetworkClient> _clients = new HashSet<NetworkClient>();
@@ -47,7 +47,7 @@ namespace MineLW.Networking
                 .ContinueWith(task =>
                 {
                     if (task.IsCompletedSuccessfully)
-                        Logger.Success("Network server started on {0}", endPoint);
+                        Logger.Info("Network server started on {0}", endPoint);
                     else
                     {
                         Logger.Error("Unable to start the network server: {0}", task.Exception);

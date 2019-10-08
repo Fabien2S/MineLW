@@ -3,16 +3,16 @@ using System.Threading;
 using MineLW.API;
 using MineLW.API.Utils;
 using MineLW.Client.MC498;
-using MineLW.Debugging;
 using MineLW.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
 
 namespace MineLW
 {
     internal static class Program
     {
-        private static readonly Logger Logger = LogManager.GetLogger(typeof(Program));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static IServer _server;
 
@@ -39,9 +39,9 @@ namespace MineLW
         private static void ConfigureLibraries()
         {
 #if DEBUG
-            LogManager.GlobalLevel = LogLevel.Debug;
+            LogManager.GlobalThreshold = LogLevel.Debug;
 #else
-            LogManager.GlobalLevel = LogLevel.Info;
+            LogManager.GlobalThreshold = LogLevel.Info;
 #endif
 
             
@@ -51,7 +51,7 @@ namespace MineLW
                 Error = (sender, args) =>
                 {
                     var context = args.ErrorContext;
-                    Logger.Error("An error occurred while processing JSON data: {0}", context.Error);
+                    Logger.Error(context.Error, "An error occurred while processing JSON data: {0}");
                     context.Handled = true;
                 }
             };
