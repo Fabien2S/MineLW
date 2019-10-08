@@ -19,10 +19,8 @@ namespace MineLW.Client.MC498
                 0,
                 0,
                 0,
-                0,
                 "default",
                 8,
-                false,
                 false
             ));
             NetworkClient.Send(new MessageClientPlayerTeleport.Message(
