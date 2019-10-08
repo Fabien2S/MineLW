@@ -19,7 +19,7 @@ namespace MineLW
         private static void Main(string[] args)
         {
             // TODO implement that properly
-            NetworkAdapter.Register<GameState>(new GameVersion("1.14.4", 498));
+            NetworkAdapter.Register<GameState498>(new GameVersion("1.14.4", 498));
             
             Console.Title = GameServer.Name;
             Thread.CurrentThread.Name = "Main";

@@ -3,9 +3,9 @@ using MineLW.Networking.Messages;
 
 namespace MineLW.Client.MC498
 {
-    public class GameController : MessageController
+    public class GameController498 : MessageController
     {
-        public GameController(NetworkClient client) : base(client)
+        public GameController498(NetworkClient client) : base(client)
         {
         }
     }

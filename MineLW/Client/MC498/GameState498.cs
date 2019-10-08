@@ -4,10 +4,11 @@ using MineLW.Client.MC498.Client;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
+using MineLW.Networking.States.Game;
 
 namespace MineLW.Client.MC498
 {
-    public class GameState : Networking.States.Game.GameState
+    public class GameState498 : GameState
     {
         public override IMessage CreateDisconnectMessage(TextComponent reason)
         {
@@ -82,12 +83,12 @@ namespace MineLW.Client.MC498
 
         protected override MessageController CreateController(NetworkClient client)
         {
-            return new GameController(client);
+            return new GameController498(client);
         }
         
         public override IClient CreateClient(NetworkClient networkClient)
         {
-            return new GameClient(networkClient);
+            return new GameClient498(networkClient);
         }
     }
 }

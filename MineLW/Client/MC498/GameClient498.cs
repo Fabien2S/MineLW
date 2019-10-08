@@ -2,16 +2,14 @@
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
 using MineLW.Client.MC498.Client;
-using MineLW.Entities.Living.Player;
 using MineLW.Networking;
 
 namespace MineLW.Client.MC498
 {
-    public class GameClient : MineLW.Client.GameClient
+    public class GameClient498 : GameClient
     {
-        public GameClient(NetworkClient networkClient) : base(networkClient)
+        public GameClient498(NetworkClient networkClient) : base(networkClient)
         {
-            var entityPlayer = new EntityPlayer(this);
         }
 
         protected internal override void InitGame(IEntityPlayer player)
