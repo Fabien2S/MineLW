@@ -9,6 +9,7 @@ using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Debugging;
 using MineLW.Networking.Messages;
+using MineLW.Networking.States.Game;
 using MineLW.Networking.States.Login.Client;
 using Newtonsoft.Json;
 
@@ -144,7 +145,7 @@ namespace MineLW.Networking.States.Login
 
                             Client
                                 .Send(new MessageClientLoginResponse.Message(
-                                    profile.Id.ToString("D"),
+                                    profile.Id.ToString(),
                                     profile.Name
                                 )).ContinueWith(task =>
                                 {
@@ -168,6 +169,10 @@ namespace MineLW.Networking.States.Login
         private void FinalizeLogin()
         {
             Logger.Info("{0} logged in", Client);
+            
+            var gameState = (GameState) Client.State;
+            var gameClient = gameState.CreateClient(Client);
+            //gameClient.Kick(new TextComponentString("YIKES!"));
         }
     }
 }

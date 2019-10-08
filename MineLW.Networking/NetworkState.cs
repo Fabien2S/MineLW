@@ -33,6 +33,12 @@ namespace MineLW.Networking
             for (var i = 0; i < _serializers.Length; i++)
             {
                 var serializer = _serializers[i];
+                
+#if DEBUG
+                if(serializer == null)
+                    continue;
+#endif
+                
                 if (!serializer.CanSerialize(message))
                     continue;
 
