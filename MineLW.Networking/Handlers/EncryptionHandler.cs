@@ -27,14 +27,14 @@ namespace MineLW.Networking.Handlers
         {
             var input = msg.ToArray(out var inputOffset, out var inputLength);
             var outputBuffer = _encryptCipher.ProcessBytes(input, inputOffset, inputLength);
-            output.Add(outputBuffer);
+            output.Add(Unpooled.WrappedBuffer(outputBuffer));
         }
 
         protected override void Decode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
             var input = msg.ToArray(out var inputOffset, out var inputLength);
             var outputBuffer = _decryptCipher.ProcessBytes(input, inputOffset, inputLength);
-            output.Add(outputBuffer);
+            output.Add(Unpooled.WrappedBuffer(outputBuffer));
         }
 
         private static IBufferedCipher CreateCipher(byte[] key, bool encryption)
