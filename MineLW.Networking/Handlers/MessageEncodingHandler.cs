@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
@@ -41,13 +42,19 @@ namespace MineLW.Networking.Handlers
             try
             {
                 var message = state.Deserialize(msg, id);
-                if(msg.ReadableBytes > 0)
+                if (msg.ReadableBytes > 0)
                     throw new DecoderException("Too many bytes");
-                
+
                 output.Add(message);
-                
+
                 Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
             }
+#if DEBUG
+            catch (NullReferenceException e)
+            {
+                Logger.Warn("NullReferenceException: {0}", e.Message);
+            }
+#endif
             catch (DecoderException e)
             {
                 throw new DecoderException("Unable to decode message id " + id, e);
