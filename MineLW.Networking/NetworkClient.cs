@@ -53,6 +53,9 @@ namespace MineLW.Networking
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
+            #if DEBUG
+            Logger.Error("An error occurred with {0}: {1}", this, exception);
+            #endif
             Close(exception.Message);
         }
 
