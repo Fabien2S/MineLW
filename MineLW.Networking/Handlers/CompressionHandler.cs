@@ -64,10 +64,9 @@ namespace MineLW.Networking.Handlers
                 var length = msg.ReadableBytes;
                 if (length >= _compressionThreshold)
                     throw new DecoderException("Badly compressed message");
-
-                var buffer = ctx.Allocator.Buffer(length);
-                buffer.ReadBytes(msg, length);
-                output.Add(buffer);
+                
+                msg.Retain();
+                output.Add(msg);
             }
             else
             {
