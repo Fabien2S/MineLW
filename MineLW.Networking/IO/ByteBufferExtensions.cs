@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Text;
 using DotNetty.Buffers;
 using Newtonsoft.Json;
@@ -65,10 +66,29 @@ namespace MineLW.Networking.IO
             buffer.WriteBytes(bytes);
         }
 
+        public static T ReadJson<T>(this IByteBuffer buffer)
+        {
+            var serialized = buffer.ReadUtf8();
+            return JsonConvert.DeserializeObject<T>(serialized);
+        }
+
         public static void WriteJson(this IByteBuffer buffer, object @object)
         {
             var serialized = JsonConvert.SerializeObject(@object);
             buffer.WriteUtf8(serialized);
+        }
+
+        public static void WriteVector3F(this IByteBuffer buffer, Vector3 vector3)
+        {
+            buffer.WriteFloat(vector3.X);
+            buffer.WriteFloat(vector3.Y);
+            buffer.WriteFloat(vector3.Z);
+        }
+
+        public static void WriteVector2F(this IByteBuffer buffer, Vector2 vector3)
+        {
+            buffer.WriteFloat(vector3.X);
+            buffer.WriteFloat(vector3.Y);
         }
     }
 }
