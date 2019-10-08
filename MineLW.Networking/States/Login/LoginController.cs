@@ -9,7 +9,6 @@ using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Debugging;
 using MineLW.Networking.Messages;
-using MineLW.Networking.States.Game;
 using MineLW.Networking.States.Login.Client;
 using Newtonsoft.Json;
 
@@ -149,6 +148,15 @@ namespace MineLW.Networking.States.Login
                                     profile.Name
                                 )).ContinueWith(task =>
                                 {
+                                    if (task.IsFaulted)
+                                    {
+                                        var exception = task.Exception;
+                                        Logger.Error("Unable to complete the login sequence of {0}: {1}", Client, exception.Message);
+                                        Client.Disconnect();
+                                        Client.Close(exception.Message);
+                                        return;
+                                    }
+                                    
                                     Client.State = NetworkAdapter.Resolve(Client.Version);
                                     Client.AddTask(FinalizeLogin);
                                 });
@@ -168,11 +176,7 @@ namespace MineLW.Networking.States.Login
 
         private void FinalizeLogin()
         {
-            Logger.Info("{0} logged in", Client);
-            
-            var gameState = (GameState) Client.State;
-            var gameClient = gameState.CreateClient(Client);
-            //gameClient.Kick(new TextComponentString("YIKES!"));
+            Logger.Info("{0} logged in successfully using game version {1}", Client, Client.State);
         }
     }
 }
