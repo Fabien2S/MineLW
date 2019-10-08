@@ -85,6 +85,13 @@ namespace MineLW.Networking.IO
             buffer.WriteFloat(vector3.Z);
         }
 
+        public static void WriteVector3D(this IByteBuffer buffer, Vector3 vector3)
+        {
+            buffer.WriteDouble(vector3.X);
+            buffer.WriteDouble(vector3.Y);
+            buffer.WriteDouble(vector3.Z);
+        }
+
         public static void WriteVector2F(this IByteBuffer buffer, Vector2 vector3)
         {
             buffer.WriteFloat(vector3.X);
