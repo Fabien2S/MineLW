@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using MineLW.API;
+using MineLW.API.Worlds;
 using MineLW.Networking;
 using MineLW.Protocols.Handshake;
+using MineLW.Worlds;
 using NLog;
 
 namespace MineLW.Server
@@ -22,7 +24,9 @@ namespace MineLW.Server
         private const float DelayBetweenUpdate = MsPerSecond / UpdatePerSecond;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
+        public IWorldManager WorldManager { get; } = new WorldManager();
+
         private readonly Stopwatch _stopWatch;
         private readonly NetworkServer _networkServer;
 
@@ -45,6 +49,10 @@ namespace MineLW.Server
 
             Logger.Info("Starting {0} (Press Ctrl+C to quit)", Name);
 
+            // create the default world
+            WorldManager.CreateWorld(WorldManager.DefaultWorld);
+
+            // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);
             _networkServer.Start(ipEndPoint);
 

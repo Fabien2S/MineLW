@@ -1,4 +1,5 @@
 ﻿using MineLW.API.Blocks;
+using MineLW.API.Entities;
 using MineLW.API.Math;
 
 namespace MineLW.API.Worlds.Context
@@ -6,6 +7,7 @@ namespace MineLW.API.Worlds.Context
     public interface IWorldContext
     {
         IWorld World { get; }
+        IEntityManager EntityManager { get; }
 
         IBlockState GetBlock(Vector3Int position);
         void SetBlock(Vector3Int position, IBlockState blockState);
