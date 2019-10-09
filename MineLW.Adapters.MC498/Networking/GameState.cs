@@ -7,7 +7,7 @@ using MineLW.Networking.Messages.Serialization;
 
 namespace MineLW.Adapters.MC498.Networking
 {
-    public class GameState498 : NetworkState
+    public class GameState : NetworkState
     {
         public override IMessage CreateDisconnectMessage(TextComponent reason)
         {
@@ -82,7 +82,7 @@ namespace MineLW.Adapters.MC498.Networking
 
         public override MessageController CreateController(NetworkClient client)
         {
-            return new GameController498(client);
+            return new GameController(client);
         }
     }
 }
