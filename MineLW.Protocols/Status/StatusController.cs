@@ -1,9 +1,11 @@
+using MineLW.Adapter;
 using MineLW.API.Text;
 using MineLW.API.Utils;
+using MineLW.Networking;
 using MineLW.Networking.Messages;
-using MineLW.Networking.States.Status.Client;
+using MineLW.Protocols.Status.Client;
 
-namespace MineLW.Networking.States.Status
+namespace MineLW.Protocols.Status
 {
     public class StatusController : MessageController
     {
@@ -13,7 +15,7 @@ namespace MineLW.Networking.States.Status
 
         public void HandleInfoRequest()
         {
-            var version = NetworkAdapter.IsSupported(Client.Version) ? Client.Version : NetworkAdapter.Default;
+            var version = GameAdapter.IsSupported(Client.Version) ? Client.Version : GameAdapter.Default;
             var status = new ServerStatus(
                 version,
                 new PlayerInfo(

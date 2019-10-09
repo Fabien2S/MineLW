@@ -3,7 +3,7 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.States.Login.Server
+namespace MineLW.Protocols.Login.Server
 {
     public class MessageServerLoginRequest : MessageDeserializer<LoginController, MessageServerLoginRequest.Message>
     {

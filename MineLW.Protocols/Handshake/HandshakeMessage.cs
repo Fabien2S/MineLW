@@ -3,7 +3,7 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.States.Handshake
+namespace MineLW.Protocols.Handshake
 {
     public class HandshakeMessage : MessageDeserializer<HandshakeController, HandshakeMessage.Message>
     {

@@ -1,10 +1,11 @@
 using MineLW.API.Text;
+using MineLW.Networking;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
-using MineLW.Networking.States.Login.Client;
-using MineLW.Networking.States.Login.Server;
+using MineLW.Protocols.Login.Client;
+using MineLW.Protocols.Login.Server;
 
-namespace MineLW.Networking.States.Login
+namespace MineLW.Protocols.Login
 {
     public class LoginState : NetworkState
     {
@@ -38,7 +39,7 @@ namespace MineLW.Networking.States.Login
             };
         }
 
-        protected internal override MessageController CreateController(NetworkClient client)
+        public override MessageController CreateController(NetworkClient client)
         {
             return new LoginController(client);
         }

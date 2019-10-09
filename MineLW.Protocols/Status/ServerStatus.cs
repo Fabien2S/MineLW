@@ -2,7 +2,7 @@ using System;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 
-namespace MineLW.Networking.States.Status
+namespace MineLW.Protocols.Status
 {
     [Serializable]
     public struct ServerStatus

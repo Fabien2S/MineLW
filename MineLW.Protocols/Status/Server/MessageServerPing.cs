@@ -2,7 +2,7 @@ using DotNetty.Buffers;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.States.Status.Server
+namespace MineLW.Protocols.Status.Server
 {
     public class MessageServerPing : MessageDeserializer<StatusController, MessageServerPing.Message>
     {

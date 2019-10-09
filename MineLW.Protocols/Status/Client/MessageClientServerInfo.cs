@@ -3,7 +3,7 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.States.Status.Client
+namespace MineLW.Protocols.Status.Client
 {
     public class MessageClientServerInfo : MessageSerializer<MessageClientServerInfo.Message>
     {

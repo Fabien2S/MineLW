@@ -6,15 +6,17 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DotNetty.Common.Internal;
+using MineLW.Adapter;
+using MineLW.API.Client;
 using MineLW.API.Text;
 using MineLW.API.Utils;
+using MineLW.Networking;
 using MineLW.Networking.Messages;
-using MineLW.Networking.States.Game;
-using MineLW.Networking.States.Login.Client;
+using MineLW.Protocols.Login.Client;
 using Newtonsoft.Json;
 using NLog;
 
-namespace MineLW.Networking.States.Login
+namespace MineLW.Protocols.Login
 {
     public class LoginController : MessageController
     {
@@ -30,6 +32,7 @@ namespace MineLW.Networking.States.Login
         private byte[] _sharedSecret;
 
         private PlayerProfile _profile;
+        private IClient _client;
 
         public LoginController(NetworkClient client) : base(client)
         {
@@ -41,7 +44,7 @@ namespace MineLW.Networking.States.Login
             if (_username != null)
                 return;
 
-            if (!NetworkAdapter.IsSupported(Client.Version))
+            if (!GameAdapter.IsSupported(Client.Version))
             {
                 Client.Disconnect(new TextComponentString("Unsupported version " + Client.Version.Protocol)
                 {
@@ -157,8 +160,12 @@ namespace MineLW.Networking.States.Login
                                     // if an error occurred
                                     if(Client.Closed)
                                        return;
+
+                                    var gameAdapter = GameAdapter.Resolve(Client.Version);
+                                    _client = gameAdapter.CreateClient(_profile, Client);
                                     
-                                    Client.State = NetworkAdapter.Resolve(Client.Version);
+                                    Client.State = gameAdapter.NetworkState;
+                                    
                                     Client.AddTask(FinalizeLogin);
                                 });
                         }).ContinueWith(CheckErrors);
@@ -180,9 +187,7 @@ namespace MineLW.Networking.States.Login
         private void FinalizeLogin()
         {
             Logger.Info("{0} logged in successfully using game version {1}", _profile, Client.State);
-
-            var gameState = (GameState) Client.State;
-            var gameClient = gameState.CreateClient(Client);
+            _client.Kick(new TextComponentString("Logged successfully"));
         }
     }
 }

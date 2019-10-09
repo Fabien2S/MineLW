@@ -3,7 +3,7 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.States.Login.Client
+namespace MineLW.Protocols.Login.Client
 {
     public class MessageClientEncryptionRequest : MessageSerializer<MessageClientEncryptionRequest.Message>
     {

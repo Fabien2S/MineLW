@@ -1,10 +1,11 @@
 ﻿using System;
 using MineLW.API.Utils;
+using MineLW.Networking;
 using MineLW.Networking.Messages;
-using MineLW.Networking.States.Login;
-using MineLW.Networking.States.Status;
+using MineLW.Protocols.Login;
+using MineLW.Protocols.Status;
 
-namespace MineLW.Networking.States.Handshake
+namespace MineLW.Protocols.Handshake
 {
     public class HandshakeController : MessageController
     {

@@ -2,7 +2,7 @@ using DotNetty.Buffers;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Networking.States.Status.Client
+namespace MineLW.Protocols.Status.Client
 {
     public class MessageClientPong : MessageSerializer<MessageClientPong.Message>
     {
