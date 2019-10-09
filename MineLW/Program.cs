@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
+using MineLW.Adapter;
+using MineLW.Adapter.MC498;
 using MineLW.API;
 using MineLW.API.Utils;
-using MineLW.Client.MC498;
-using MineLW.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
@@ -19,11 +19,11 @@ namespace MineLW
         private static void Main(string[] args)
         {
             // TODO implement that properly
-            NetworkAdapter.Register<GameState498>(new GameVersion("1.14.4", 498));
-            
+            GameAdapter.Register<GameAdapter498>();
+
             Console.Title = GameServer.Name;
             Thread.CurrentThread.Name = "Main";
-            
+
             Logger.Debug("Program started with {0} arguments", args.Length);
 
             Console.CancelKeyPress += HandleCancelKeyPressed;
@@ -44,7 +44,7 @@ namespace MineLW
             LogManager.GlobalThreshold = LogLevel.Info;
 #endif
 
-            
+
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),

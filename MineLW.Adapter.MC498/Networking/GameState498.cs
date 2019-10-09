@@ -1,18 +1,17 @@
-﻿using MineLW.API.Client;
+using MineLW.Adapter.MC498.Networking.Client;
+using MineLW.Adapter.MC498.Networking.Networking.Client;
 using MineLW.API.Text;
-using MineLW.Client.MC498.Client;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
-using MineLW.Networking.States.Game;
 
-namespace MineLW.Client.MC498
+namespace MineLW.Adapter.MC498.Networking
 {
-    public class GameState498 : GameState
+    public class GameState498 : NetworkState
     {
         public override IMessage CreateDisconnectMessage(TextComponent reason)
         {
-            return null;
+            return new MessageClientDisconnect.Message(reason);
         }
 
         protected override IMessageSerializer[] GetSerializers()
@@ -84,11 +83,6 @@ namespace MineLW.Client.MC498
         protected override MessageController CreateController(NetworkClient client)
         {
             return new GameController498(client);
-        }
-        
-        public override IClient CreateClient(NetworkClient networkClient)
-        {
-            return new GameClient498(networkClient);
         }
     }
 }

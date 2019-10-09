@@ -7,11 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MineLW.Adapter.MC498\MineLW.Adapter.MC498.csproj" />
+      <ProjectReference Include="..\MineLW.Adapter\MineLW.Adapter.csproj" />
       <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
       <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="McMaster.NETCore.Plugins" Version="0.3.0" />
       <PackageReference Include="NLog.Extensions.Logging" Version="1.6.0" />
     </ItemGroup>
 
