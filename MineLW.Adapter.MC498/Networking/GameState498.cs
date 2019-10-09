@@ -80,7 +80,7 @@ namespace MineLW.Adapter.MC498.Networking
             return new IMessageDeserializer[0];
         }
 
-        protected override MessageController CreateController(NetworkClient client)
+        public override MessageController CreateController(NetworkClient client)
         {
             return new GameController498(client);
         }

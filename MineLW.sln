@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Adapter", "MineLW.Ad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Adapter.MC498", "MineLW.Adapter.MC498\MineLW.Adapter.MC498.csproj", "{1488484D-54B4-460C-8C7D-0C531C03BEF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Protocols", "MineLW.Protocols\MineLW.Protocols.csproj", "{15F5488E-51C7-494D-935D-4D36A63DCD96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{1488484D-54B4-460C-8C7D-0C531C03BEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1488484D-54B4-460C-8C7D-0C531C03BEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1488484D-54B4-460C-8C7D-0C531C03BEF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15F5488E-51C7-494D-935D-4D36A63DCD96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F5488E-51C7-494D-935D-4D36A63DCD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F5488E-51C7-494D-935D-4D36A63DCD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F5488E-51C7-494D-935D-4D36A63DCD96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

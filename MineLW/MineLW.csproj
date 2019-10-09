@@ -11,6 +11,7 @@
       <ProjectReference Include="..\MineLW.Adapter\MineLW.Adapter.csproj" />
       <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
       <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj" />
+      <ProjectReference Include="..\MineLW.Protocols\MineLW.Protocols.csproj" />
     </ItemGroup>
 
     <ItemGroup>

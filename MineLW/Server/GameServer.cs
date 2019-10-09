@@ -1,12 +1,13 @@
-﻿﻿using System;
- using System.Diagnostics;
- using System.Globalization;
- using System.Net;
- using MineLW.API;
- using MineLW.Networking;
- using NLog;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using MineLW.API;
+using MineLW.Networking;
+using MineLW.Protocols.Handshake;
+using NLog;
 
- namespace MineLW
+namespace MineLW.Server
 {
     public class GameServer : IServer
     {
@@ -30,7 +31,7 @@
         public GameServer()
         {
             _stopWatch = new Stopwatch();
-            _networkServer = new NetworkServer();
+            _networkServer = new NetworkServer(HandshakeState.Instance);
         }
 
         public void Start()

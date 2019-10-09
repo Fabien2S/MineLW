@@ -7,7 +7,6 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using MineLW.API.Utils;
 using MineLW.Networking.Handlers;
-using MineLW.Networking.States.Handshake;
 using NLog;
 
 namespace MineLW.Networking
@@ -18,11 +17,17 @@ namespace MineLW.Networking
         private const int WriteIdleTimeout = 15;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
+        private readonly NetworkState _defaultState;
         private readonly ServerBootstrap _bootstrap = new ServerBootstrap();
         private readonly HashSet<NetworkClient> _clients = new HashSet<NetworkClient>();
 
         private IEventLoopGroup _eventLoopGroup;
+
+        public NetworkServer(NetworkState defaultState)
+        {
+            _defaultState = defaultState;
+        }
 
         public void Update(float deltaTime)
         {
@@ -68,7 +73,7 @@ namespace MineLW.Networking
 
             var client = new NetworkClient
             {
-                State = HandshakeState.Instance
+                State = _defaultState
             };
 
             channel.Pipeline

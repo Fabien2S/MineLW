@@ -17,8 +17,8 @@ namespace MineLW.Adapter.MC498.Networking
         public GameClient498(PlayerProfile profile, NetworkClient client)
         {
             Profile = profile;
-
-            _client = new NetworkClient();
+            
+            _client = client;
         }
 
         public void Init(IEntityPlayer player)

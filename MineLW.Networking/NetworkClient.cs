@@ -20,7 +20,7 @@ namespace MineLW.Networking
             Color = TextColor.Red
         };
 
-        public GameVersion Version { get; internal set; }
+        public GameVersion Version { get; set; }
         public bool Closed { get; private set; }
 
         public NetworkState State
@@ -106,7 +106,7 @@ namespace MineLW.Networking
             );
         }
 
-        internal void AddTask(Action task)
+        public void AddTask(Action task)
         {
             _tasks.Enqueue(new Task(task));
         }

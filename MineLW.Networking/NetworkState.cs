@@ -26,7 +26,7 @@ namespace MineLW.Networking
         public abstract IMessage CreateDisconnectMessage(TextComponent reason);
         protected abstract IMessageSerializer[] GetSerializers();
         protected abstract IMessageDeserializer[] GetDeserializers();
-        protected internal abstract MessageController CreateController(NetworkClient client);
+        public abstract MessageController CreateController(NetworkClient client);
 
         public void Serialize(IByteBuffer buffer, IMessage message)
         {
