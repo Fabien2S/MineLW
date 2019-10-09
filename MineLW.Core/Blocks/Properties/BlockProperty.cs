@@ -13,7 +13,7 @@ namespace MineLW.Blocks.Properties
         protected BlockProperty(string name, ReadOnlyCollection<T> values)
         {
             Name = name;
-            this.Values = values;
+            Values = values;
         }
 
         public abstract object Parse(string source);
@@ -40,10 +40,7 @@ namespace MineLW.Blocks.Properties
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((BlockProperty<T>) obj);
+            return obj is BlockProperty<T> other && Equals(other);
         }
 
         public override int GetHashCode()

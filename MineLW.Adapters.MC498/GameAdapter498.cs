@@ -1,5 +1,4 @@
 using MineLW.Adapters.MC498.Networking;
-using MineLW.API.Client;
 using MineLW.API.Utils;
 using MineLW.Networking;
 

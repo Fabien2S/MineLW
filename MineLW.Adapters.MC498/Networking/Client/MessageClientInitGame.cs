@@ -3,7 +3,7 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Adapters.MC498.Networking.Networking.Client
+namespace MineLW.Adapters.MC498.Networking.Client
 {
     public class MessageClientInitGame : MessageSerializer<MessageClientInitGame.Message>
     {

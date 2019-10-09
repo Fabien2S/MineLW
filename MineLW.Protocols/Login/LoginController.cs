@@ -157,11 +157,10 @@ namespace MineLW.Protocols.Login
                                 .ContinueWith(task =>
                                 {
                                     // if an error occurred
-                                    if(Client.Closed)
-                                       return;
+                                    if (Client.Closed)
+                                        return;
 
                                     _adapter = GameAdapter.Resolve(Client.Version);
-                                    Logger.Debug("Using game adapter {0} for player {1}", _adapter.Version, _profile);
                                     Client.State = _adapter.NetworkState;
                                     Client.AddTask(FinalizeLogin);
                                 });
@@ -176,7 +175,7 @@ namespace MineLW.Protocols.Login
 
             var taskException = task.Exception;
             var exception = taskException.InnerException;
-            
+
             Logger.Error(exception, "Unable to complete the login sequence of {0}. Exception: {1}", _profile);
             Client.Disconnect();
         }
@@ -186,7 +185,7 @@ namespace MineLW.Protocols.Login
             var gameClient = _adapter.CreateClient(_profile, Client);
             Logger.Info("{0} logged on successfully in {1}", gameClient, _adapter.Version);
             
-            gameClient.Kick(new TextComponentString("Logged successfully"));
+            gameClient.Disconnect(new TextComponentString("LOGIN SUCCESS"));
         }
     }
 }

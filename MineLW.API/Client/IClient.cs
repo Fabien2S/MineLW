@@ -10,6 +10,6 @@ namespace MineLW.API.Client
 
         void Init(IEntityPlayer player);
         void SendMessage(TextComponent message);
-        void Kick(TextComponentString reason);
+        void Disconnect(TextComponentString reason);
     }
 }

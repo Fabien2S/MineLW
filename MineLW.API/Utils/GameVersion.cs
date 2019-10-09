@@ -32,6 +32,11 @@ namespace MineLW.API.Utils
             return Protocol.CompareTo(other.Protocol);
         }
 
+        public override int GetHashCode()
+        {
+            return Protocol;
+        }
+
         public override string ToString()
         {
             return Name + '[' + Protocol + ']';

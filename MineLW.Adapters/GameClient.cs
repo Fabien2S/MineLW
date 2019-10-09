@@ -19,7 +19,7 @@ namespace MineLW.Adapters
 
         public abstract void Init(IEntityPlayer player);
         public abstract void SendMessage(TextComponent message);
-        public abstract void Kick(TextComponentString reason);
+        public abstract void Disconnect(TextComponentString reason);
 
         public sealed override string ToString()
         {
