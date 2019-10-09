@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
+      <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj" />
+    </ItemGroup>
+
+</Project>
