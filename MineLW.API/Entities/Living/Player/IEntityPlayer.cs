@@ -5,5 +5,7 @@ namespace MineLW.API.Entities.Living.Player
     public interface IEntityPlayer : IEntityLiving
     {
         PlayerProfile Profile { get; }
+        
+        GameMode GameMode { get; set; }
     }
 }
