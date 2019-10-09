@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using DotNetty.Common.Internal;
 using MineLW.API.Text;
 using MineLW.API.Utils;
@@ -27,6 +28,8 @@ namespace MineLW.Networking.States.Login
         private string _username;
         private byte[] _signature;
         private byte[] _sharedSecret;
+
+        private PlayerProfile _profile;
 
         public LoginController(NetworkClient client) : base(client)
         {
@@ -129,56 +132,55 @@ namespace MineLW.Networking.States.Login
                         .ReadAsStringAsync()
                         .ContinueWith(readTask =>
                         {
-                            var profile = JsonConvert.DeserializeObject<PlayerProfile>(readTask.Result);
+                            _profile = JsonConvert.DeserializeObject<PlayerProfile>(readTask.Result);
 
-                            if (!_username.Equals(profile.Name))
+                            if (!_username.Equals(_profile.Name))
                             {
-                                Client.Disconnect(new TextComponentTranslate("multiplayer.disconnect.unverified_username")
-                                {
-                                    Color = TextColor.Red
-                                });
+                                Client.Disconnect(
+                                    new TextComponentTranslate("multiplayer.disconnect.unverified_username")
+                                    {
+                                        Color = TextColor.Red
+                                    });
                                 return;
                             }
 
-                            Client.Profile = profile;
-                            Logger.Info("UUID of player {0} is {1}", profile.Name, profile.Id);
+                            Logger.Info("UUID of player {0} is {1}", _profile.Name, _profile.Id);
 
                             Client
                                 .Send(new MessageClientLoginResponse.Message(
-                                    profile.Id.ToString(),
-                                    profile.Name
-                                )).ContinueWith(task =>
+                                    _profile.Id.ToString(),
+                                    _profile.Name
+                                ))
+                                .ContinueWith(CheckErrors)
+                                .ContinueWith(task =>
                                 {
-                                    if (task.IsFaulted)
-                                    {
-                                        var exception = task.Exception;
-                                        Logger.Error("Unable to complete the login sequence of {0}: {1}", Client, exception.Message);
-                                        Client.Disconnect();
-                                        Client.Close(exception.Message);
-                                        return;
-                                    }
+                                    // if an error occurred
+                                    if(Client.Closed)
+                                       return;
                                     
                                     Client.State = NetworkAdapter.Resolve(Client.Version);
                                     Client.AddTask(FinalizeLogin);
                                 });
-                        });
-                }).ContinueWith(task =>
-                {
-                    if (!task.IsFaulted)
-                        return;
+                        }).ContinueWith(CheckErrors);
+                }).ContinueWith(CheckErrors);
+        }
 
-                    var taskException = task.Exception;
-                    var exception = taskException.InnerException;
+        private void CheckErrors(Task task)
+        {
+            if (!task.IsFaulted)
+                return;
 
-                    Logger.Error("Unable to complete the login sequence of {0}. Exception: {1}", Client, exception);
-                    Client.Disconnect();
-                });
+            var taskException = task.Exception;
+            var exception = taskException.InnerException;
+            
+            Logger.Error(exception, "Unable to complete the login sequence of {0}. Exception: {1}", _profile);
+            Client.Disconnect();
         }
 
         private void FinalizeLogin()
         {
-            Logger.Info("{0} logged in successfully using game version {1}", Client, Client.State);
-            
+            Logger.Info("{0} logged in successfully using game version {1}", _profile, Client.State);
+
             var gameState = (GameState) Client.State;
             var gameClient = gameState.CreateClient(Client);
         }
