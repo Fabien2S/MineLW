@@ -33,7 +33,7 @@ namespace MineLW.Blocks
             return Name.ToString();
         }
 
-        public BlockState CreateState(int blockData)
+        public IBlockState CreateState(int blockData)
         {
             var propertyCount = Properties.Count;
 

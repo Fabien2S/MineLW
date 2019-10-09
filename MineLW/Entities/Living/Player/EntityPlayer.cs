@@ -1,6 +1,6 @@
-﻿using MineLW.API.Entities.Living.Player;
+﻿using MineLW.API.Client;
+using MineLW.API.Entities.Living.Player;
 using MineLW.API.Utils;
-using MineLW.Client;
 
 namespace MineLW.Entities.Living.Player
 {
@@ -8,14 +8,13 @@ namespace MineLW.Entities.Living.Player
     {
         public PlayerProfile Profile { get; }
 
-        private GameClient _client;
+        private IClient _client;
 
-        public EntityPlayer(GameClient client = null)
+        public EntityPlayer(IClient client = null)
         {
             if (client != null)
             {
-                var networkClient = client.NetworkClient;
-                Profile = networkClient.Profile;
+                Profile = client.Profile;
             }
 
             _client = client;
