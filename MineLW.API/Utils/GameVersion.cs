@@ -32,9 +32,9 @@ namespace MineLW.API.Utils
             return Protocol.CompareTo(other.Protocol);
         }
 
-        public override int GetHashCode()
+        public override string ToString()
         {
-            return Protocol;
+            return Name + '[' + Protocol + ']';
         }
 
         public static bool operator >(GameVersion a, GameVersion b)
