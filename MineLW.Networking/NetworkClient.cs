@@ -21,7 +21,6 @@ namespace MineLW.Networking
         };
 
         public GameVersion Version { get; internal set; }
-        public PlayerProfile Profile { get; internal set; }
         public bool Closed { get; private set; }
 
         public NetworkState State
@@ -158,7 +157,7 @@ namespace MineLW.Networking
 
         public override string ToString()
         {
-            return Profile.Name + '[' + _channel.RemoteAddress + ']';
+            return _channel.RemoteAddress.ToString();
         }
     }
 }
