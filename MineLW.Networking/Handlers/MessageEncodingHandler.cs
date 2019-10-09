@@ -49,7 +49,7 @@ namespace MineLW.Networking.Handlers
                 Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
             }
 #if DEBUG
-            catch (NullReferenceException e)
+            catch (System.NullReferenceException e)
             {
                 Logger.Error(e);
             }
