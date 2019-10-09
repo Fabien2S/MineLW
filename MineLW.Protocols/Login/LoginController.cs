@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DotNetty.Common.Internal;
 using MineLW.Adapters;
-using MineLW.API.Client;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Networking;
@@ -32,7 +31,7 @@ namespace MineLW.Protocols.Login
         private byte[] _sharedSecret;
 
         private PlayerProfile _profile;
-        private IClient _client;
+        private IGameAdapter _adapter;
 
         public LoginController(NetworkClient client) : base(client)
         {
@@ -161,11 +160,9 @@ namespace MineLW.Protocols.Login
                                     if(Client.Closed)
                                        return;
 
-                                    var gameAdapter = GameAdapter.Resolve(Client.Version);
-                                    _client = gameAdapter.CreateClient(_profile, Client);
-                                    
-                                    Client.State = gameAdapter.NetworkState;
-                                    
+                                    _adapter = GameAdapter.Resolve(Client.Version);
+                                    Logger.Debug("Using game adapter {0} for player {1}", _adapter.Version, _profile);
+                                    Client.State = _adapter.NetworkState;
                                     Client.AddTask(FinalizeLogin);
                                 });
                         }).ContinueWith(CheckErrors);
@@ -186,8 +183,10 @@ namespace MineLW.Protocols.Login
 
         private void FinalizeLogin()
         {
-            Logger.Info("{0} logged in successfully using game version {1}", _profile, Client.State);
-            _client.Kick(new TextComponentString("Logged successfully"));
+            var gameClient = _adapter.CreateClient(_profile, Client);
+            Logger.Info("{0} logged on successfully in {1}", gameClient, _adapter.Version);
+            
+            gameClient.Kick(new TextComponentString("Logged successfully"));
         }
     }
 }
