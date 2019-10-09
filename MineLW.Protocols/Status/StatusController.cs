@@ -1,4 +1,4 @@
-using MineLW.Adapter;
+using MineLW.Adapters;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Networking;

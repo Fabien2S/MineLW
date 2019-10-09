@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MineLW.Adapter.MC498\MineLW.Adapter.MC498.csproj" />
-      <ProjectReference Include="..\MineLW.Adapter\MineLW.Adapter.csproj" />
+      <ProjectReference Include="..\MineLW.Adapters.MC498\MineLW.Adapters.MC498.csproj" />
+      <ProjectReference Include="..\MineLW.Adapters\MineLW.Adapters.csproj" />
       <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
       <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj" />
       <ProjectReference Include="..\MineLW.Protocols\MineLW.Protocols.csproj" />

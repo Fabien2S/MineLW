@@ -1,7 +1,7 @@
 using MineLW.Networking;
 using MineLW.Networking.Messages;
 
-namespace MineLW.Adapter.MC498.Networking
+namespace MineLW.Adapters.MC498.Networking
 {
     public class GameController498 : MessageController
     {

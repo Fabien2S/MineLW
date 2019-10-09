@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MineLW.API.Utils;
 using NLog;
 
-namespace MineLW.Adapter
+namespace MineLW.Adapters
 {
     public static class GameAdapter
     {

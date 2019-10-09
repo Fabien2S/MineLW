@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DotNetty.Common.Internal;
-using MineLW.Adapter;
+using MineLW.Adapters;
 using MineLW.API.Client;
 using MineLW.API.Text;
 using MineLW.API.Utils;

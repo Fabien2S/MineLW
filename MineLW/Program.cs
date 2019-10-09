@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
-using MineLW.Adapter;
-using MineLW.Adapter.MC498;
+using MineLW.Adapters;
+using MineLW.Adapters.MC498;
 using MineLW.API;
 using MineLW.Server;
 using Newtonsoft.Json;

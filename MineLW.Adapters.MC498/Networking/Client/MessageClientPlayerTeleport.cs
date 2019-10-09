@@ -4,7 +4,7 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Adapter.MC498.Networking.Networking.Client
+namespace MineLW.Adapters.MC498.Networking.Networking.Client
 {
     public class MessageClientPlayerTeleport : MessageSerializer<MessageClientPlayerTeleport.Message>
     {

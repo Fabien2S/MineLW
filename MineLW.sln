@@ -8,9 +8,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Serialization", "Min
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Networking", "MineLW.Networking\MineLW.Networking.csproj", "{BEBC1940-97E8-4B73-87D3-568A805FDB53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Adapter", "MineLW.Adapter\MineLW.Adapter.csproj", "{A27C8CC4-7F6D-478E-9DD0-9BB1C0C8F5DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Adapters", "MineLW.Adapters\MineLW.Adapters.csproj", "{A27C8CC4-7F6D-478E-9DD0-9BB1C0C8F5DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Adapter.MC498", "MineLW.Adapter.MC498\MineLW.Adapter.MC498.csproj", "{1488484D-54B4-460C-8C7D-0C531C03BEF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Adapters.MC498", "MineLW.Adapters.MC498\MineLW.Adapters.MC498.csproj", "{1488484D-54B4-460C-8C7D-0C531C03BEF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Protocols", "MineLW.Protocols\MineLW.Protocols.csproj", "{15F5488E-51C7-494D-935D-4D36A63DCD96}"
 EndProject

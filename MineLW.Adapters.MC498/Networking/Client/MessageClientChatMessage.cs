@@ -4,9 +4,9 @@ using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
-namespace MineLW.Adapter.MC498.Networking.Networking.Client
+namespace MineLW.Adapters.MC498.Networking.Client
 {
-    public class MessageClientDisconnect : MessageSerializer<MessageClientDisconnect.Message>
+    public class MessageClientChatMessage : MessageSerializer<MessageClientChatMessage.Message>
     {
         protected override void Serialize(IByteBuffer buffer, Message message)
         {

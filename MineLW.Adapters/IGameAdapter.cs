@@ -2,7 +2,7 @@ using MineLW.API.Client;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
-namespace MineLW.Adapter
+namespace MineLW.Adapters
 {
     public interface IGameAdapter
     {

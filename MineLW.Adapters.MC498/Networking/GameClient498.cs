@@ -1,12 +1,12 @@
-using MineLW.Adapter.MC498.Networking.Client;
-using MineLW.Adapter.MC498.Networking.Networking.Client;
+using MineLW.Adapters.MC498.Networking.Client;
+using MineLW.Adapters.MC498.Networking.Networking.Client;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
-namespace MineLW.Adapter.MC498.Networking
+namespace MineLW.Adapters.MC498.Networking
 {
     public class GameClient498 : IClient
     {
