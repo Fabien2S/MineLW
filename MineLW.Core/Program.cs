@@ -43,8 +43,7 @@ namespace MineLW
 #else
             LogManager.GlobalThreshold = LogLevel.Info;
 #endif
-
-
+            
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),

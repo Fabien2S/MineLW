@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW", "MineLW\MineLW.csproj", "{8007382A-B14A-4C0F-A1CF-95B6ACD2BCF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Core", "MineLW.Core\MineLW.Core.csproj", "{8007382A-B14A-4C0F-A1CF-95B6ACD2BCF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.API", "MineLW.API\MineLW.API.csproj", "{359B762E-DA18-4F56-9AD0-E304DF39E6A8}"
 EndProject
