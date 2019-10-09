@@ -8,11 +8,11 @@ namespace MineLW.Adapters.MC498
     public class GameAdapter498 : IGameAdapter
     {
         public GameVersion Version { get; } = new GameVersion("1.14.4", 498);
-        public NetworkState NetworkState { get; } = new GameState498();
+        public NetworkState NetworkState { get; } = new GameState();
 
-        public IClient CreateClient(PlayerProfile profile, NetworkClient client)
+        public GameClient CreateClient(PlayerProfile profile, NetworkClient client)
         {
-            return new GameClient498(profile, client);
+            return new Networking.GameClient(profile, client);
         }
     }
 }

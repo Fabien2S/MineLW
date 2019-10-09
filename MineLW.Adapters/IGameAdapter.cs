@@ -1,4 +1,3 @@
-using MineLW.API.Client;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
@@ -9,6 +8,6 @@ namespace MineLW.Adapters
         GameVersion Version { get; }
         NetworkState NetworkState { get; }
 
-        IClient CreateClient(PlayerProfile profile, NetworkClient client);
+        GameClient CreateClient(PlayerProfile profile, NetworkClient client);
     }
 }
