@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using MineLW.Adapters;
 using MineLW.Adapters.MC498;
@@ -18,21 +19,27 @@ namespace MineLW
 
         private static void Main(string[] args)
         {
-            // TODO implement that properly
-            GameAdapter.Register<GameAdapter498>();
-
-            Console.Title = GameServer.Name;
-            Thread.CurrentThread.Name = "Main";
-
             Logger.Debug("Program started with {0} arguments", args.Length);
 
+            var currentThread = Thread.CurrentThread;
+            currentThread.Name = "Main";
+            
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var assemblyName = executingAssembly.GetName();
+            Console.Title = assemblyName.Name + " " + assemblyName.Version;
             Console.CancelKeyPress += HandleCancelKeyPressed;
 
-            Logger.Debug("Configuring libraries...");
+            Logger.Info("Configuring libraries...");
             ConfigureLibraries();
-
+            
+            Logger.Info("Loading game adapters...");
+            // TODO implement that properly
+            GameAdapter.Register<GameAdapter498>();
+            
             Logger.Debug("The server is now ready to start.");
             _server = new GameServer();
+            Console.Title = _server.Name;
+            
             _server.Start();
         }
 
@@ -44,7 +51,7 @@ namespace MineLW
                 Error = (sender, args) =>
                 {
                     var context = args.ErrorContext;
-                    Logger.Error(context.Error, "An error occurred while processing JSON data: {0}");
+                    Logger.Error(context.Error, "Unable to process JSON data");
                     context.Handled = true;
                 }
             };
