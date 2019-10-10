@@ -13,36 +13,21 @@ namespace MineLW.Worlds.Chunks
         public const int SectionCount = Height / SectionHeight;
 
         private readonly ChunkSection[] _sections = new ChunkSection[SectionCount];
-        private int _sectionMask = 0;
-
-        private int SectionIndex(int y)
-        {
-            var index = (int) Math.Floor((float) y / SectionHeight);
-            if (0 <= index && index < SectionCount)
-                return index;
-            throw new ArgumentOutOfRangeException(nameof(y), "Invalid Y (" + y + ')');
-        }
 
         public bool HasSection(int index)
         {
-            return (_sectionMask & (1 << index)) != 0;
+            return _sections[index] != null;
         }
 
         public IChunkSection CreateSection(int index)
         {
             if (HasSection(index))
                 return _sections[index];
-
-            _sectionMask |= 1 << index;
             return _sections[index] = new ChunkSection();
         }
 
         public void RemoveSection(int index)
         {
-            if (!HasSection(index))
-                return;
-
-            _sectionMask &= ~(1 << index);
             _sections[index] = null;
         }
 
@@ -54,6 +39,14 @@ namespace MineLW.Worlds.Chunks
                 blockPosition.X / Size,
                 blockPosition.Z / Size
             );
+        }
+
+        public static int SectionIndex(int y)
+        {
+            var index = (int) Math.Floor((float) y / SectionHeight);
+            if (0 <= index && index < SectionCount)
+                return index;
+            throw new ArgumentOutOfRangeException(nameof(y), "Invalid Y (" + y + ')');
         }
     }
 }
