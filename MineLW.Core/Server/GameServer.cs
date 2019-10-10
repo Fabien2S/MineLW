@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using MineLW.API;
+using MineLW.API.Client;
 using MineLW.API.Worlds;
+using MineLW.Client;
 using MineLW.Networking;
 using MineLW.Protocols.Handshake;
 using MineLW.Worlds;
@@ -13,9 +15,8 @@ namespace MineLW.Server
 {
     public class GameServer : IServer
     {
-        public const string Name = "MineLW " + Version;
         private const string Version = "0.1a";
-        
+
         private const uint UpdatePerSecond = 20;
         private const float UpsWarnPercentage = 10 / 100f;
         private const uint UpsWarnThreshold = (uint) (UpdatePerSecond - UpdatePerSecond * UpsWarnPercentage);
@@ -25,7 +26,9 @@ namespace MineLW.Server
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public IWorldManager WorldManager { get; } = new WorldManager();
+        public string Name { get; } = "MineLW " + Version;
+        public IWorldManager WorldManager { get; }
+        public IClientManager ClientManager { get; }
 
         private readonly Stopwatch _stopWatch;
         private readonly NetworkServer _networkServer;
@@ -35,7 +38,10 @@ namespace MineLW.Server
         public GameServer()
         {
             _stopWatch = new Stopwatch();
-            _networkServer = new NetworkServer(HandshakeState.Instance);
+            _networkServer = new NetworkServer(this, HandshakeState.Instance);
+
+            WorldManager = new WorldManager();
+            ClientManager = new ClientManager(this);
         }
 
         public void Start()
@@ -44,13 +50,10 @@ namespace MineLW.Server
                 return;
 
             _running = true;
-            
+
             _stopWatch.Start();
 
             Logger.Info("Starting {0} (Press Ctrl+C to quit)", Name);
-
-            // create the default world
-            WorldManager.CreateWorld(WorldManager.DefaultWorld);
 
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);
@@ -58,10 +61,10 @@ namespace MineLW.Server
 
             var elapsed = _stopWatch.ElapsedMilliseconds / MsPerSecond;
             var formattedElapsed = elapsed.ToString("F", CultureInfo.InvariantCulture);
-            Logger.Info("Server started in {0}s (running at {1} ups)",formattedElapsed, UpdatePerSecond);
+            Logger.Info("Server started in {0}s (running at {1} ups)", formattedElapsed, UpdatePerSecond);
 
             _stopWatch.Stop();
-            
+
             HandleUpdate();
         }
 
@@ -86,7 +89,7 @@ namespace MineLW.Server
                         {
                             // compute delta time
                             var deltaTime = elapsedMillis / MsPerSecond;
-                        
+
                             // update elapsed ms
                             elapsedMillis -= DelayBetweenUpdate;
 
@@ -95,10 +98,10 @@ namespace MineLW.Server
                             updateCount++;
                         } while (elapsedMillis >= DelayBetweenUpdate);
                     }
-                        
+
                     if (sinceLastUpsCheck > MsPerSecond)
                         continue;
-                    
+
                     // check UPS
 
                     // handle update per second
@@ -139,17 +142,19 @@ namespace MineLW.Server
         private void Update(float deltaTime)
         {
             _networkServer.Update(deltaTime);
+            
+            ClientManager.Update(deltaTime);
         }
 
         public void Shutdown()
         {
             if (!_running)
                 return;
-            
+
             Logger.Info("Shutting down...");
-            
+
             _networkServer.Stop();
-            
+
             _running = false;
         }
     }
