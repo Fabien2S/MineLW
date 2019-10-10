@@ -1,3 +1,5 @@
+using MineLW.Adapters.Networking;
+using MineLW.API.Blocks;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
@@ -9,5 +11,6 @@ namespace MineLW.Adapters
         NetworkState NetworkState { get; }
 
         GameClient CreateClient(PlayerProfile profile, NetworkClient client);
+        IBlockStorage CreateBlockStorage();
     }
 }

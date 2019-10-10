@@ -1,6 +1,9 @@
+using MineLW.Adapters.MC498.Blocks;
 using MineLW.Adapters.MC498.Networking;
+using MineLW.API.Blocks;
 using MineLW.API.Utils;
 using MineLW.Networking;
+using GameClient = MineLW.Adapters.Networking.GameClient;
 
 namespace MineLW.Adapters.MC498
 {
@@ -12,6 +15,11 @@ namespace MineLW.Adapters.MC498
         public GameClient CreateClient(PlayerProfile profile, NetworkClient client)
         {
             return new Networking.GameClient(profile, client);
+        }
+
+        public IBlockStorage CreateBlockStorage()
+        {
+            return new BlockStorage();
         }
     }
 }

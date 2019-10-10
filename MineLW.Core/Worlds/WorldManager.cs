@@ -20,7 +20,7 @@ namespace MineLW.Worlds
             if (_worlds.ContainsKey(name))
                 return _worlds[name];
 
-            var world = new World();
+            var world = new World(this);
             WorldCreated?.Invoke(this, new WorldEventArgs(world));
             return _worlds[name] = world;
         }
