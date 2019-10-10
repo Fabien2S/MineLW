@@ -35,6 +35,11 @@ namespace MineLW
 
             Logger.Info("Loading game adapters...");
             LoadGameAdapters();
+            if (GameAdapter.Default == GameAdapter.Invalid)
+            {
+                Logger.Error("No game adapter found");
+                return;
+            }
 
             _server = new GameServer();
             Console.Title = _server.Name;
@@ -58,8 +63,11 @@ namespace MineLW
 
         private static void LoadGameAdapters()
         {
-            var adaptersPath = Path.Combine(AppContext.BaseDirectory, "adapters");
-            var files = Directory.EnumerateFiles(adaptersPath, "*.dll");
+            var adaptersPath = Path.Combine(Environment.CurrentDirectory, "adapters");
+
+            Directory.CreateDirectory(adaptersPath);
+            
+            var files = Directory.EnumerateFiles(adaptersPath, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var file in files)
             {
                 var pluginLoader = PluginLoader.CreateFromAssemblyFile(file, new []{typeof(IGameAdapter)});
