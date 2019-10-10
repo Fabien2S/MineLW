@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
-      <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj" />
+        <ProjectReference Include="..\MineLW.API\MineLW.API.csproj"/>
+        <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj"/>
     </ItemGroup>
 
 </Project>

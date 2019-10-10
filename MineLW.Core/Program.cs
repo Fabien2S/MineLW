@@ -1,8 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
+using McMaster.NETCore.Plugins;
 using MineLW.Adapters;
-using MineLW.Adapters.MC498;
 using MineLW.API;
 using MineLW.Server;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ namespace MineLW
 
             var currentThread = Thread.CurrentThread;
             currentThread.Name = "Main";
-            
+
             var executingAssembly = Assembly.GetExecutingAssembly();
             var assemblyName = executingAssembly.GetName();
             Console.Title = assemblyName.Name + " " + assemblyName.Version;
@@ -31,15 +32,13 @@ namespace MineLW
 
             Logger.Info("Configuring libraries...");
             ConfigureLibraries();
-            
+
             Logger.Info("Loading game adapters...");
-            // TODO implement that properly
-            GameAdapter.Register<GameAdapter498>();
-            
-            Logger.Debug("The server is now ready to start.");
+            LoadGameAdapters();
+
             _server = new GameServer();
             Console.Title = _server.Name;
-            
+
             _server.Start();
         }
 
@@ -55,6 +54,28 @@ namespace MineLW
                     context.Handled = true;
                 }
             };
+        }
+
+        private static void LoadGameAdapters()
+        {
+            var adaptersPath = Path.Combine(AppContext.BaseDirectory, "adapters");
+            var files = Directory.EnumerateFiles(adaptersPath, "*.dll");
+            foreach (var file in files)
+            {
+                var pluginLoader = PluginLoader.CreateFromAssemblyFile(file, new []{typeof(IGameAdapter)});
+                var defaultAssembly = pluginLoader.LoadDefaultAssembly();
+                var exportedTypes = defaultAssembly.GetExportedTypes();
+                foreach (var exportedType in exportedTypes)
+                {
+                    if (!typeof(IGameAdapter).IsAssignableFrom(exportedType))
+                        continue;
+                    if (exportedType.IsAbstract)
+                        continue;
+                    
+                    var gameAdapter = Activator.CreateInstance(exportedType);
+                    GameAdapter.Register((IGameAdapter) gameAdapter);
+                }
+            }
         }
 
         private static void HandleCancelKeyPressed(object sender, ConsoleCancelEventArgs e)

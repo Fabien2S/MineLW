@@ -53,7 +53,7 @@ namespace MineLW.Server
 
             _stopWatch.Start();
 
-            Logger.Info("Starting {0} (Press Ctrl+C to quit)", Name);
+            Logger.Info("Starting {0}...", Name);
 
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);

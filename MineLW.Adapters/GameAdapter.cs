@@ -17,14 +17,12 @@ namespace MineLW.Adapters
             return Versions.ContainsKey(version.Protocol);
         }
 
-        public static void Register<T>() where T : IGameAdapter, new()
+        public static void Register(IGameAdapter gameAdapter)
         {
-            var adapter = new T();
+            var version = gameAdapter.Version;
+            Logger.Info("Registering game adapter {0}", version);
 
-            var version = adapter.Version;
-            Logger.Debug("Registering version {0}", version.Protocol);
-
-            Versions[version.Protocol] = adapter;
+            Versions[version.Protocol] = gameAdapter;
 
             if (Default >= version)
                 Default = version;

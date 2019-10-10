@@ -1,5 +1,4 @@
-﻿using DotNetty.Buffers;
-using MineLW.API.Client;
+﻿using MineLW.API.Client;
 using MineLW.API.Worlds;
 
 namespace MineLW.API

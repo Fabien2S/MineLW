@@ -1,4 +1,4 @@
-﻿namespace MineLW.API.Plugin
+﻿namespace MineLW.API.Plugins
 {
     public interface IPlugin
     {

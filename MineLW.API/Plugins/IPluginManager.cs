@@ -1,8 +1,8 @@
-﻿namespace MineLW.API.Plugin
+﻿namespace MineLW.API.Plugins
 {
     public interface IPluginManager
     {
-        void LoadPlugin(IPlugin plugin);
+        void LoadPlugins();
         void UnloadPlugin(IPlugin plugin);
 
         void EnablePlugin(IPlugin plugin);
