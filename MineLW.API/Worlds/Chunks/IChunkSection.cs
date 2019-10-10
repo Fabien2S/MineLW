@@ -2,7 +2,7 @@
 
 namespace MineLW.API.Worlds.Chunks
 {
-    public interface IChunkSection : IBlockStorage
+    public interface IChunkSection
     {
         IBlockStorage BlockStorage { get; }
     }

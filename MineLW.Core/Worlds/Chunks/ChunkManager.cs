@@ -1,37 +1,33 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using MineLW.API.Math;
-using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
 
 namespace MineLW.Worlds.Chunks
 {
     public class ChunkManager : IChunkManager
     {
-        private readonly IWorld _world;
-
-        public ChunkManager(IWorld world)
-        {
-            _world = world;
-        }
+        private readonly Dictionary<Vector2Int, IChunk> _loadedChunks = new Dictionary<Vector2Int, IChunk>();
 
         public bool IsLoaded(Vector2Int position)
         {
-            throw new NotImplementedException();
+            return _loadedChunks.ContainsKey(position);
         }
 
         public IChunk LoadChunk(Vector2Int position)
         {
-            throw new NotImplementedException();
+            if (IsLoaded(position))
+                return GetChunk(position);
+            return _loadedChunks[position] = new Chunk();
         }
 
-        public IChunk UnloadChunk(Vector2Int position)
+        public void UnloadChunk(Vector2Int position)
         {
-            throw new NotImplementedException();
+            _loadedChunks.Remove(position);
         }
 
         public IChunk GetChunk(Vector2Int position)
         {
-            throw new NotImplementedException();
+            return _loadedChunks[position];
         }
     }
 }

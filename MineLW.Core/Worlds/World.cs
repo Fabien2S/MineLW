@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MineLW.API.Blocks;
 using MineLW.API.Math;
 using MineLW.API.Utils;
@@ -14,13 +13,11 @@ namespace MineLW.Worlds
     {
         public IChunkManager ChunkManager { get; }
 
-        private readonly IWorldManager _worldManager;
         private readonly Dictionary<Identifier, WorldContext> _contexts = new Dictionary<Identifier, WorldContext>();
 
-        public World(IWorldManager worldManager) : base(null)
+        public World() : base(null)
         {
-            _worldManager = worldManager;
-            ChunkManager = new ChunkManager(this);
+            ChunkManager = new ChunkManager();
         }
 
         public IBlockState GetBlock(Vector3Int position)
@@ -30,13 +27,35 @@ namespace MineLW.Worlds
                 return BlockState.Air;
 
             var chunk = ChunkManager.GetChunk(chunkPos);
+            var index = Chunk.SectionIndex(position.Y);
             
-            return BlockState.Air;
+            if(!chunk.HasSection(index))
+                return BlockState.Air;
+
+            var section = chunk[index];
+            return section.BlockStorage.GetBlock(
+                position.X % Chunk.Size,
+                position.Y % Chunk.SectionHeight,
+                position.Z % Chunk.Size
+            );
         }
 
         public void SetBlock(Vector3Int position, IBlockState blockState)
         {
-            throw new NotSupportedException("Not implemented yet");
+            var chunkPos = Chunk.BlockToChunkPosition(position);
+            if(!ChunkManager.IsLoaded(chunkPos))
+                return;
+
+            var chunk = ChunkManager.GetChunk(chunkPos);
+            var index = Chunk.SectionIndex(position.Y);
+
+            var section = chunk.CreateSection(index);
+            section.BlockStorage.SetBlock(
+                position.X % Chunk.Size,
+                position.Y % Chunk.SectionHeight,
+                position.Z % Chunk.Size,
+                blockState
+            );
         }
 
         public IWorldContext CreateContext(Identifier name)

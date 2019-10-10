@@ -11,7 +11,6 @@ namespace MineLW.Worlds
         public Identifier DefaultWorld { get; set; } = Minecraft.CreateKey("overworld");
 
         public event EventHandler<WorldEventArgs> WorldCreated;
-        public event EventHandler<WorldEventArgs> WorldDeleted;
 
         private readonly Dictionary<Identifier, IWorld> _worlds = new Dictionary<Identifier, IWorld>();
 
@@ -20,7 +19,7 @@ namespace MineLW.Worlds
             if (_worlds.ContainsKey(name))
                 return _worlds[name];
 
-            var world = new World(this);
+            var world = new World();
             WorldCreated?.Invoke(this, new WorldEventArgs(world));
             return _worlds[name] = world;
         }
