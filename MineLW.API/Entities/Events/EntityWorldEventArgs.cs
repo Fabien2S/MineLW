@@ -1,10 +1,12 @@
-﻿using MineLW.API.Entities;
+﻿using MineLW.API.Utils;
 using MineLW.API.Worlds.Context;
 
-namespace MineLW.API.Events.Entities
+namespace MineLW.API.Entities.Events
 {
-    public class EntityWorldEventArgs : EntityEventArgs
+    public class EntityWorldEventArgs : EntityEventArgs, ICancellable
     {
+        public bool Canceled { get; set; }
+        
         public readonly IWorldContext From;
         public readonly IWorldContext To;
 

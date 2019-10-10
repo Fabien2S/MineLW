@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using MineLW.API.Events.Entities;
+using MineLW.API.Entities.Events;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Context;
 

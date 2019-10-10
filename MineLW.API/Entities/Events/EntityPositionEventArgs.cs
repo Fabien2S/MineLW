@@ -1,10 +1,12 @@
 ﻿using System.Numerics;
-using MineLW.API.Entities;
+using MineLW.API.Utils;
 
-namespace MineLW.API.Events.Entities
+namespace MineLW.API.Entities.Events
 {
-    public class EntityPositionEventArgs : EntityEventArgs
+    public class EntityPositionEventArgs : EntityEventArgs, ICancellable
     {
+        public bool Canceled { get; set; }
+        
         public readonly Vector3 From;
         public readonly Vector3 To;
         

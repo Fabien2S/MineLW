@@ -1,7 +1,6 @@
 ﻿using System;
-using MineLW.API.Entities;
 
-namespace MineLW.API.Events.Entities
+namespace MineLW.API.Entities.Events
 {
     public class EntityEventArgs : EventArgs
     {
