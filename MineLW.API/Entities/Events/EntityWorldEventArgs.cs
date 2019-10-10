@@ -1,5 +1,5 @@
 ﻿using MineLW.API.Utils;
-using MineLW.API.Worlds.Context;
+using MineLW.API.Worlds;
 
 namespace MineLW.API.Entities.Events
 {

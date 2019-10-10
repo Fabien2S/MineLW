@@ -2,7 +2,7 @@
 using System.Numerics;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
-using MineLW.API.Worlds.Context;
+using MineLW.API.Worlds;
 
 namespace MineLW.Entities
 {
