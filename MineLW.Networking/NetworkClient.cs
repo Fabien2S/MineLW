@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
+using MineLW.API;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Networking.Handlers;
@@ -33,11 +34,18 @@ namespace MineLW.Networking
             }
         }
 
+        public readonly IServer Server;
+        
         private readonly ConcurrentQueue<Task> _tasks = new ConcurrentQueue<Task>();
 
         private IChannel _channel;
         private NetworkState _state;
         private MessageController _controller;
+
+        public NetworkClient(IServer server)
+        {
+            Server = server;
+        }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {

@@ -182,10 +182,13 @@ namespace MineLW.Protocols.Login
 
         private void FinalizeLogin()
         {
+            var gameServer = Client.Server;
+            var clientManager = gameServer.ClientManager;
+            
             var gameClient = _adapter.CreateClient(_profile, Client);
             Logger.Info("{0} logged on successfully in {1}", gameClient, _adapter.Version);
             
-            gameClient.Disconnect(new TextComponentString("LOGIN SUCCESS"));
+            clientManager.Initialize(gameClient);
         }
     }
 }
