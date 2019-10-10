@@ -1,3 +1,4 @@
+using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
@@ -32,6 +33,11 @@ namespace MineLW.Adapters.MC498.Networking
                 player.Rotation,
                 0
             ));
+        }
+
+        public override void SendCustom(Identifier channel, IByteBuffer buffer)
+        {
+            NetworkClient.Send(new MessageClientCustomData.Message(channel, buffer));
         }
 
         public override void SendMessage(TextComponent message)

@@ -1,4 +1,5 @@
-﻿using MineLW.API.Client;
+﻿using DotNetty.Buffers;
+using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
 using MineLW.API.Utils;
@@ -17,7 +18,12 @@ namespace MineLW.Adapters
             NetworkClient = networkClient;
         }
 
+        public void Update(float deltaTime)
+        {
+        }
+
         public abstract void Init(IEntityPlayer player);
+        public abstract void SendCustom(Identifier channel, IByteBuffer buffer);
         public abstract void SendMessage(TextComponent message);
         public abstract void Disconnect(TextComponentString reason);
 

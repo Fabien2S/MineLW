@@ -41,7 +41,7 @@ namespace MineLW.Adapters.MC498.Networking
                 null,
                 null,
                 null,
-                null,
+                new MessageClientCustomData(),
                 null,
                 new MessageClientDisconnect(),
                 null,
