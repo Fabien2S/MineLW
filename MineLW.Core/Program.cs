@@ -35,11 +35,12 @@ namespace MineLW
 
             Logger.Info("Loading game adapters...");
             LoadGameAdapters();
-            if (GameAdapter.Default == GameAdapter.Invalid)
+            if (GameAdapter.ServerVersion == GameAdapter.Invalid)
             {
                 Logger.Error("No game adapter found");
                 return;
             }
+            GameAdapter.Lock();
 
             _server = new GameServer();
             Console.Title = _server.Name;
