@@ -5,9 +5,10 @@ namespace MineLW.API
 {
     public interface IServer
     {
+        string Name { get; }
+
         IWorldManager WorldManager { get; }
         IClientManager ClientManager { get; }
-        string Name { get; }
 
         void Start();
         void Shutdown();

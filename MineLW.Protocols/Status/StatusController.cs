@@ -15,7 +15,7 @@ namespace MineLW.Protocols.Status
 
         public void HandleInfoRequest()
         {
-            var version = GameAdapter.IsSupported(Client.Version.Protocol) ? Client.Version : GameAdapter.Default;
+            var version = GameAdapter.IsSupported(Client.Version.Protocol) ? Client.Version : GameAdapter.ServerVersion;
             var status = new ServerStatus(
                 version,
                 new PlayerInfo(

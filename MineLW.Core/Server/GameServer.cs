@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
+using MineLW.Adapters;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Worlds;
@@ -27,6 +28,7 @@ namespace MineLW.Server
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public string Name { get; } = "MineLW " + Version;
+        
         public IWorldManager WorldManager { get; }
         public IClientManager ClientManager { get; }
 
@@ -53,7 +55,7 @@ namespace MineLW.Server
 
             _stopWatch.Start();
 
-            Logger.Info("Starting {0}...", Name);
+            Logger.Info("Starting {0} (Minecraft {1})...", Name, GameAdapter.ServerVersion);
 
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);

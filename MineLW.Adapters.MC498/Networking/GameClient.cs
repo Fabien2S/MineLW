@@ -8,7 +8,7 @@ using MineLW.Networking;
 
 namespace MineLW.Adapters.MC498.Networking
 {
-    public class GameClient : Adapters.GameClient
+    public class GameClient : Adapters.Networking.GameClient
     {
         public GameClient(PlayerProfile profile, NetworkClient client) : base(profile, client)
         {

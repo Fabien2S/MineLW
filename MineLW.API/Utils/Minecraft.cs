@@ -6,9 +6,14 @@
 
         public static class Units
         {
-            public static float ToMeterPerSeconds(float minecraftMetric)
+            /// <summary>
+            /// Convert a Minecraft metric value (e.g. a player's walk speed) and convert it to meter per seconds
+            /// </summary>
+            /// <param name="mcMetricValue"></param>
+            /// <returns>The Minecraft metric value in m/s</returns>
+            public static float ToMeterPerSeconds(float mcMetricValue)
             {
-                return (float) (43.178 * minecraftMetric - 0.02141);
+                return (float) (43.178 * mcMetricValue - 0.02141);
             }
         }
 

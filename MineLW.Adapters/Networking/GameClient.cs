@@ -5,7 +5,7 @@ using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
-namespace MineLW.Adapters
+namespace MineLW.Adapters.Networking
 {
     public abstract class GameClient : IClient
     {
