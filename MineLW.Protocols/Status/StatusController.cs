@@ -15,26 +15,18 @@ namespace MineLW.Protocols.Status
 
         public void HandleInfoRequest()
         {
-            var version = GameAdapter.IsSupported(Client.Version) ? Client.Version : GameAdapter.Default;
+            var version = GameAdapter.IsSupported(Client.Version.Protocol) ? Client.Version : GameAdapter.Default;
             var status = new ServerStatus(
                 version,
                 new PlayerInfo(
                     0, 20, new PlayerProfile[0]
                 ),
-                new TextComponentString("Minecraft ")
+                new TextComponentString("Using game adapter ")
                 {
-                    Color = TextColor.Blue,
+                    Color = TextColor.Green,
                     Children =
                     {
-                        new TextComponentString("#" + version.Protocol)
-                        {
-                            Color = TextColor.Gold,
-                            Style = TextStyles.None
-                        },
-                        new TextComponentString("\nThe server is now live!")
-                        {
-                            Style = TextStyles.Italic | TextStyles.Underlined
-                        }
+                        new TextComponentString(version.ToString())
                     }
                 }
             );

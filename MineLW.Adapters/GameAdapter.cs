@@ -8,14 +8,10 @@ namespace MineLW.Adapters
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static GameVersion Default { get; private set; } = new GameVersion(string.Empty, 0);
+        public static readonly GameVersion Invalid = new GameVersion("Unknown", -1);
+        public static GameVersion Default { get; private set; } = Invalid;
 
         private static readonly Dictionary<int, IGameAdapter> Versions = new Dictionary<int, IGameAdapter>();
-
-        public static bool IsSupported(GameVersion version)
-        {
-            return Versions.ContainsKey(version.Protocol);
-        }
 
         public static void Register(IGameAdapter gameAdapter)
         {
@@ -24,13 +20,23 @@ namespace MineLW.Adapters
 
             Versions[version.Protocol] = gameAdapter;
 
-            if (Default >= version)
+            if (version >= Default)
                 Default = version;
         }
 
-        public static IGameAdapter Resolve(GameVersion version)
+        public static bool IsSupported(int protocol)
         {
-            return Versions[version.Protocol];
+            return Versions.ContainsKey(protocol);
+        }
+
+        public static IGameAdapter Resolve(int protocol)
+        {
+            return Versions[protocol];
+        }
+
+        public static GameVersion GetVersion(int protocol)
+        {
+            return Resolve(protocol).Version;
         }
     }
 }

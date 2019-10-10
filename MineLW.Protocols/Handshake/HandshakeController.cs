@@ -1,4 +1,5 @@
 ﻿using System;
+using MineLW.Adapters;
 using MineLW.API.Utils;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
@@ -15,7 +16,7 @@ namespace MineLW.Protocols.Handshake
 
         public void HandleHandshake(HandshakeMessage.Message message)
         {
-            Client.Version = new GameVersion("Unknown", message.Protocol);
+            Client.Version = GameAdapter.IsSupported(message.Protocol) ? GameAdapter.GetVersion(message.Protocol) : new GameVersion("Unknown", message.Protocol);
             Client.State = message.RequestedState switch
             {
                 1 => (NetworkState) StatusState.Instance,

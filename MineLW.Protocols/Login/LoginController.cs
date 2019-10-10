@@ -43,7 +43,7 @@ namespace MineLW.Protocols.Login
             if (_username != null)
                 return;
 
-            if (!GameAdapter.IsSupported(Client.Version))
+            if (!GameAdapter.IsSupported(Client.Version.Protocol))
             {
                 Client.Disconnect(new TextComponentString("Unsupported version " + Client.Version.Protocol)
                 {
@@ -160,7 +160,7 @@ namespace MineLW.Protocols.Login
                                     if (Client.Closed)
                                         return;
 
-                                    _adapter = GameAdapter.Resolve(Client.Version);
+                                    _adapter = GameAdapter.Resolve(Client.Version.Protocol);
                                     Client.State = _adapter.NetworkState;
                                     Client.AddTask(FinalizeLogin);
                                 });

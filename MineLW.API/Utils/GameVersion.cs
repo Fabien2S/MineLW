@@ -10,9 +10,6 @@ namespace MineLW.API.Utils
 
         public GameVersion(string name, int protocol)
         {
-            if (protocol < 0)
-                throw new ArgumentOutOfRangeException(nameof(protocol));
-
             Name = name;
             Protocol = protocol;
         }

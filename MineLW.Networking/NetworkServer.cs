@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
@@ -59,7 +58,7 @@ namespace MineLW.Networking
                     else
                     {
                         Logger.Error("Unable to start the network server: {0}", task.Exception);
-                        Environment.Exit(1);
+                        _server.Shutdown();
                     }
                 });
         }
