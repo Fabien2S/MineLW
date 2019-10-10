@@ -1,4 +1,6 @@
-﻿using MineLW.API.Utils;
+﻿using System;
+using MineLW.API.Utils;
+using MineLW.API.Worlds.Events;
 
 namespace MineLW.API.Worlds
 {
@@ -8,6 +10,8 @@ namespace MineLW.API.Worlds
         /// The world name where the player will spawn on log in.
         /// </summary>
         Identifier DefaultWorld { get; set; }
+
+        event EventHandler<WorldEventArgs> WorldCreated;
 
         /// <summary>
         /// Create a new world.
