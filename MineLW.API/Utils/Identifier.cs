@@ -2,7 +2,7 @@
 
 namespace MineLW.API.Utils
 {
-    public struct Identifier
+    public struct Identifier : IComparable<Identifier>
     {
         private readonly string _namespace;
         private readonly string _key;
@@ -16,14 +16,9 @@ namespace MineLW.API.Utils
             _hash = (@namespace, key).GetHashCode();
         }
 
-        public override string ToString()
+        public int CompareTo(Identifier other)
         {
-            return _namespace + ':' + _key;
-        }
-
-        public override int GetHashCode()
-        {
-            return _hash;
+            return _hash.CompareTo(other._hash);
         }
 
         public bool Equals(Identifier other)
@@ -34,6 +29,16 @@ namespace MineLW.API.Utils
         public override bool Equals(object obj)
         {
             return obj is Identifier other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return _hash;
+        }
+
+        public override string ToString()
+        {
+            return _namespace + ':' + _key;
         }
     }
 }

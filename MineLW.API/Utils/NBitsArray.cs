@@ -34,13 +34,11 @@ namespace MineLW.API.Utils
             get
             {
                 if (index < 0 || index >= Capacity)
-                {
                     throw new ArgumentOutOfRangeException(nameof(index), "Invalid index");
-                }
 
                 index *= BitsPerValue;
                 var i0 = index >> 6;
-                var i1 = index & 0x3f;
+                var i1 = index & 0b111111;
 
                 var value = (long) ((ulong) Backing[i0] >> i1);
                 var i2 = i1 + BitsPerValue;
@@ -57,7 +55,7 @@ namespace MineLW.API.Utils
 
                 index *= BitsPerValue;
                 var i0 = index >> 6;
-                var i1 = index & 0x3f;
+                var i1 = index & 0b111111;
 
                 Backing[i0] = Backing[i0] & ~(_valueMask << i1) | (value & _valueMask) << i1;
                 var i2 = i1 + BitsPerValue;
