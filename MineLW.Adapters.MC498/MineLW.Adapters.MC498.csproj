@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MineLW.Adapters\MineLW.Adapters.csproj"/>
+        <ProjectReference Include="..\MineLW.Adapters\MineLW.Adapters.csproj" />
     </ItemGroup>
 
 </Project>
