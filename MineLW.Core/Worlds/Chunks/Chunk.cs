@@ -1,7 +1,9 @@
 ﻿using System;
 using MineLW.API;
+using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Worlds.Chunks;
+using MineLW.Blocks;
 
 namespace MineLW.Worlds.Chunks
 {
@@ -13,6 +15,38 @@ namespace MineLW.Worlds.Chunks
         public Chunk(IBlockPalette globalPalette)
         {
             _globalPalette = globalPalette;
+        }
+
+        public bool HasBlock(int x, int y, int z)
+        {
+            var index = SectionIndex(y);
+            if (!HasSection(index))
+                return false;
+            
+            var section = _sections[index];
+            var blockStorage = section.BlockStorage;
+            return blockStorage.HasBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
+        }
+
+        public void SetBlock(int x, int y, int z, IBlockState blockState)
+        {
+            var index = SectionIndex(y);
+            var section = CreateSection(index);
+            var blockStorage = section.BlockStorage;
+            blockStorage.SetBlock(
+                x, y / Minecraft.Units.Chunk.SectionHeight, z, blockState
+            );
+        }
+
+        public IBlockState GetBlock(int x, int y, int z)
+        {
+            var index = SectionIndex(y);
+            if (!HasSection(index))
+                return BlockState.Air;
+            
+            var section = _sections[index];
+            var blockStorage = section.BlockStorage;
+            return blockStorage.GetBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
         }
 
         public bool HasSection(int index)

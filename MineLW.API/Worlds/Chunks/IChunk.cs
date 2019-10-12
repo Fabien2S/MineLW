@@ -1,6 +1,8 @@
-﻿namespace MineLW.API.Worlds.Chunks
+﻿using MineLW.API.Blocks;
+
+namespace MineLW.API.Worlds.Chunks
 {
-    public interface IChunk
+    public interface IChunk : IBlockStorage
     {
         bool HasSection(int index);
         IChunkSection CreateSection(int index);
