@@ -15,6 +15,6 @@ namespace MineLW.Adapters
         Registry<Identifier, IBlock> Blocks { get; }
         Registry<int, IBlockState> BlockStates { get; }
 
-        GameClient CreateClient(PlayerProfile profile, NetworkClient client);
+        GameClient CreateClient(NetworkClient client, PlayerProfile profile);
     }
 }

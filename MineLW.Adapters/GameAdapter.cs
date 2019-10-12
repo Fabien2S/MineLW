@@ -18,11 +18,11 @@ namespace MineLW.Adapters
 
         public static void Register(IGameAdapter gameAdapter)
         {
-            if (ServerAdapter == null)
+            if (ServerAdapter != null)
                 throw new InvalidOperationException("GameAdapter is locked");
 
             var version = gameAdapter.Version;
-            Logger.Info("Registering game adapter {0}", version);
+            Logger.Info("Using Minecraft version {0}", version);
 
             Versions[version.Protocol] = gameAdapter;
 
