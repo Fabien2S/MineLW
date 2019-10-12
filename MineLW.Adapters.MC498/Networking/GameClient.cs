@@ -10,11 +10,13 @@ namespace MineLW.Adapters.MC498.Networking
 {
     public class GameClient : Adapters.Networking.GameClient
     {
-        public GameClient(PlayerProfile profile, NetworkClient client) : base(profile, client)
+        private const string LevelType = "default";
+        
+        public GameClient(PlayerProfile profile, NetworkClient client) : base(client, profile)
         {
         }
 
-        public override void Init(IEntityPlayer player)
+        protected override void _Init(IEntityPlayer player)
         {
             var worldContext = player.WorldContext;
             var environment = worldContext.GetOption(WorldOption.Environment);
@@ -24,8 +26,8 @@ namespace MineLW.Adapters.MC498.Networking
                 (byte) player.PlayerMode,
                 environment.Id,
                 0,
-                "default",
-                8,
+                LevelType,
+                World.RenderDistance,
                 false
             ));
             NetworkClient.Send(new MessageClientPlayerTeleport.Message(
@@ -48,6 +50,16 @@ namespace MineLW.Adapters.MC498.Networking
         public override void Disconnect(TextComponentString reason)
         {
             NetworkClient.Send(new MessageClientDisconnect.Message(reason));
+        }
+
+        public override void Respawn(IWorldContext worldContext)
+        {
+            var environment = worldContext.GetOption(WorldOption.Environment);
+            NetworkClient.Send(new MessageClientRespawn.Message(
+                environment.Id,
+                Player.PlayerMode,
+                LevelType
+            ));
         }
     }
 }

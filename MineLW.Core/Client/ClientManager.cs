@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Numerics;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Worlds;
@@ -20,6 +19,8 @@ namespace MineLW.Client
 
         public void Initialize(IClient client)
         {
+            client.World = new ClientWorld(client);
+            
             var worldManager = _server.WorldManager;
             var defaultWorld = worldManager.CreateWorld(worldManager.DefaultWorld);
             var spawnPosition = defaultWorld.GetOption(WorldOption.SpawnPosition);

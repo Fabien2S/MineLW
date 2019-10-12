@@ -70,7 +70,12 @@ namespace MineLW.Adapters.MC498.Networking
                 null,
                 null,
                 null,
-                new MessageClientPlayerTeleport()
+                new MessageClientPlayerTeleport(),
+                null,
+                null,
+                null,
+                null,
+                new MessageClientRespawn()
             };
         }
 
