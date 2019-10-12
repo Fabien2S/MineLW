@@ -1,17 +1,19 @@
-﻿using MineLW.Adapters;
-using MineLW.API.Blocks;
+﻿using MineLW.API.Blocks;
+using MineLW.API.Blocks.Palette;
 using MineLW.API.Worlds.Chunks;
+using MineLW.Blocks;
 
 namespace MineLW.Worlds.Chunks
 {
     public class ChunkSection : IChunkSection
     {
+        public const int BlockCount = Chunk.Size * Chunk.SectionCount * Chunk.Size;
+        
         public IBlockStorage BlockStorage { get; }
 
-        public ChunkSection()
+        public ChunkSection(IBlockPalette globalPalette)
         {
-            var serverAdapter = GameAdapter.ServerAdapter;
-            BlockStorage = serverAdapter.CreateBlockStorage();
+            BlockStorage = new BlockStorage(globalPalette);
         }
     }
 }

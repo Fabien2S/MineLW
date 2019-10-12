@@ -1,4 +1,5 @@
 ﻿using System;
+using MineLW.API.Blocks.Palette;
 using MineLW.API.Math;
 using MineLW.API.Worlds.Chunks;
 
@@ -12,7 +13,13 @@ namespace MineLW.Worlds.Chunks
         public const int SectionHeight = 16;
         public const int SectionCount = Height / SectionHeight;
 
+        private readonly IBlockPalette _globalPalette;
         private readonly ChunkSection[] _sections = new ChunkSection[SectionCount];
+
+        public Chunk(IBlockPalette globalPalette)
+        {
+            _globalPalette = globalPalette;
+        }
 
         public bool HasSection(int index)
         {
@@ -23,7 +30,7 @@ namespace MineLW.Worlds.Chunks
         {
             if (HasSection(index))
                 return _sections[index];
-            return _sections[index] = new ChunkSection();
+            return _sections[index] = new ChunkSection(_globalPalette);
         }
 
         public void RemoveSection(int index)

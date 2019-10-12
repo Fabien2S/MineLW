@@ -8,11 +8,11 @@ namespace MineLW.Blocks
 {
     public class BlockState : IBlockState
     {
-        public static readonly BlockState Air = new BlockState(
+        public static readonly IBlockState Air = new BlockState(
             0,
             new Block(
                 0,
-                Minecraft.CreateKey("air"),
+                Minecraft.CreateIdentifier("air"),
                 new IBlockProperty[0],
                 EmptyArrays.EmptyObjects
             )
@@ -43,14 +43,14 @@ namespace MineLW.Blocks
             return Type.ToString() + '[' + string.Join(",", Properties) + ']';
         }
 
-        protected bool Equals(BlockState other)
+        protected bool Equals(IBlockState other)
         {
             return Id == other.Id;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is BlockState other && other.Id == Id;
+            return obj is IBlockState other && other.Id == Id;
         }
 
         public override int GetHashCode()
@@ -60,12 +60,12 @@ namespace MineLW.Blocks
 
         public object this[IBlockProperty property] => Properties[PropertyIndex(property)];
 
-        public static bool operator ==(BlockState obj, BlockState other)
+        public static bool operator ==(BlockState obj, IBlockState other)
         {
             return obj?.Id == other?.Id;
         }
 
-        public static bool operator !=(BlockState obj, BlockState other)
+        public static bool operator !=(BlockState obj, IBlockState other)
         {
             return obj?.Id != other?.Id;
         }

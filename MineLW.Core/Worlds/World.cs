@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MineLW.API.Blocks;
+using MineLW.API.Blocks.Palette;
 using MineLW.API.Math;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
@@ -15,9 +16,9 @@ namespace MineLW.Worlds
 
         private readonly Dictionary<Identifier, WorldContext> _contexts = new Dictionary<Identifier, WorldContext>();
 
-        public World() : base(null)
+        public World(IBlockPalette globalPalette) : base(null)
         {
-            ChunkManager = new ChunkManager();
+            ChunkManager = new ChunkManager(globalPalette);
         }
 
         public IBlockState GetBlock(Vector3Int position)
