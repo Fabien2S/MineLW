@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using MineLW.API.Math;
 
 namespace MineLW.API.Worlds
 {
@@ -11,8 +12,8 @@ namespace MineLW.API.Worlds
         public static readonly WorldOption<WorldEnvironment> Environment =
             new WorldOption<WorldEnvironment>(WorldEnvironment.Normal);
 
-        public static readonly WorldOption<Vector3> SpawnPosition = new WorldOption<Vector3>(Vector3.Zero);
-        public static readonly WorldOption<Vector2> SpawnRotation = new WorldOption<Vector2>(Vector2.Zero);
+        public static readonly WorldOption<Vector3> SpawnPosition = new WorldOption<Vector3>(Vector3.One);
+        public static readonly WorldOption<Rotation> SpawnRotation = new WorldOption<Rotation>(Rotation.Zero);
     }
 
     public class WorldOption<T> : WorldOption

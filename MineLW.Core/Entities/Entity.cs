@@ -2,6 +2,7 @@
 using System.Numerics;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
+using MineLW.API.Math;
 using MineLW.API.Worlds;
 
 namespace MineLW.Entities
@@ -14,7 +15,7 @@ namespace MineLW.Entities
 
         public IWorldContext WorldContext { get; set; }
         public Vector3 Position { get; set; } = Vector3.Zero;
-        public Vector2 Rotation { get; set; } = Vector2.Zero;
+        public Rotation Rotation { get; set; } = Rotation.Zero;
 
         public event EventHandler<EntityEventArgs> Removed;
         public event EventHandler<EntityWorldEventArgs> WorldChanged;
@@ -37,7 +38,7 @@ namespace MineLW.Entities
         {
         }
 
-        public void Move(IWorldContext worldContext, Vector3 position = default, Vector2 rotation = default)
+        public void Move(IWorldContext worldContext, Vector3 position = default, Rotation rotation = default)
         {
             EnsureValid();
 
