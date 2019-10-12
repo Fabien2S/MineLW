@@ -7,8 +7,6 @@ namespace MineLW.Worlds.Chunks
 {
     public class ChunkSection : IChunkSection
     {
-        public const int BlockCount = Chunk.Size * Chunk.SectionCount * Chunk.Size;
-        
         public IBlockStorage BlockStorage { get; }
 
         public ChunkSection(IBlockPalette globalPalette)

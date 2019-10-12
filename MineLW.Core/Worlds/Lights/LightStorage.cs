@@ -1,15 +1,15 @@
-﻿using MineLW.API.Worlds.Lights;
+﻿using MineLW.API;
+using MineLW.API.Worlds.Lights;
 using MineLW.Utils;
-using MineLW.Worlds.Chunks;
 
 namespace MineLW.Worlds.Lights
 {
     public class LightStorage : ILightStorage
     {
-        private const int LightArraySize = ChunkSection.BlockCount / 2;
-        
+        private const int LightArraySize = Minecraft.Units.Chunk.SectionBlockCount / 2;
+
         private readonly NibbleArray _array = new NibbleArray(LightArraySize);
-        
+
         public void SetLight(byte x, byte y, byte z, byte level)
         {
             var index = Index(x, y, z);

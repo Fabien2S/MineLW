@@ -1,11 +1,19 @@
-﻿namespace MineLW.API.Utils
+﻿namespace MineLW.API
 {
-    public static class Minecraft
+    public static partial class Minecraft
     {
-        private const string Namespace = "minecraft";
-
         public static class Units
         {
+            public static class Chunk
+            {
+                public const int Size = 16;
+                public const int Height = 256;
+
+                public const int SectionHeight = 16;
+                public const int SectionCount = Height / SectionHeight;
+                public const int SectionBlockCount = Size * SectionCount * Size;
+            }
+
             /// <summary>
             /// Convert a Minecraft metric value (e.g. a player's walk speed) and convert it to meter per seconds
             /// </summary>
@@ -15,16 +23,6 @@
             {
                 return (float) (43.178 * mcMetricValue - 0.02141);
             }
-        }
-
-        public static class Channels
-        {
-            public static readonly Identifier Brand = new Identifier(Namespace, "brand");
-        }
-
-        public static Identifier CreateIdentifier(string key)
-        {
-            return new Identifier(Namespace, key);
         }
     }
 }

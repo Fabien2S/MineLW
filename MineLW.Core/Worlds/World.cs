@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Math;
@@ -23,7 +24,7 @@ namespace MineLW.Worlds
 
         public IBlockState GetBlock(Vector3Int position)
         {
-            var chunkPos = Chunk.BlockToChunkPosition(position);
+            var chunkPos = ChunkPosition.FromWorld(position);
             if(!ChunkManager.IsLoaded(chunkPos))
                 return BlockState.Air;
 
@@ -35,15 +36,15 @@ namespace MineLW.Worlds
 
             var section = chunk[index];
             return section.BlockStorage.GetBlock(
-                position.X % Chunk.Size,
-                position.Y % Chunk.SectionHeight,
-                position.Z % Chunk.Size
+                position.X % Minecraft.Units.Chunk.Size,
+                position.Y % Minecraft.Units.Chunk.SectionHeight,
+                position.Z % Minecraft.Units.Chunk.Size
             );
         }
 
         public void SetBlock(Vector3Int position, IBlockState blockState)
         {
-            var chunkPos = Chunk.BlockToChunkPosition(position);
+            var chunkPos = ChunkPosition.FromWorld(position);
             if(!ChunkManager.IsLoaded(chunkPos))
                 return;
 
@@ -52,9 +53,9 @@ namespace MineLW.Worlds
 
             var section = chunk.CreateSection(index);
             section.BlockStorage.SetBlock(
-                position.X % Chunk.Size,
-                position.Y % Chunk.SectionHeight,
-                position.Z % Chunk.Size,
+                position.X % Minecraft.Units.Chunk.Size,
+                position.Y % Minecraft.Units.Chunk.SectionHeight,
+                position.Z % Minecraft.Units.Chunk.Size,
                 blockState
             );
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using MineLW.API;
 using MineLW.API.Math;
 using MineLW.API.Worlds.Lights;
-using MineLW.Worlds.Chunks;
 
 namespace MineLW.Worlds.Lights
 {
@@ -11,7 +11,7 @@ namespace MineLW.Worlds.Lights
         public const byte MinLightLevel = 0;
         public const byte MaxLightLevel = 15;
 
-        public const int SectionCount = Chunk.SectionCount + 2;
+        public const int SectionCount = Minecraft.Units.Chunk.SectionCount + 2;
         
         private static readonly LightType[] Values = (LightType[]) Enum.GetValues(typeof(LightType));
         
