@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Text;
 using DotNetty.Buffers;
+using MineLW.API.Math;
 using MineLW.API.Utils;
 using Newtonsoft.Json;
 
@@ -102,6 +103,12 @@ namespace MineLW.Networking.IO
         {
             buffer.WriteFloat(vector3.X);
             buffer.WriteFloat(vector3.Y);
+        }
+
+        public static void WriteRotation(this IByteBuffer buffer, Rotation rotation)
+        {
+            buffer.WriteFloat(rotation.Yaw);
+            buffer.WriteFloat(rotation.Pitch);
         }
     }
 }
