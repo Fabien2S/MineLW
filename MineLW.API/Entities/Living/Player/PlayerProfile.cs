@@ -1,6 +1,6 @@
 using System;
 
-namespace MineLW.API.Utils
+namespace MineLW.API.Entities.Living.Player
 {
     [Serializable]
     public struct PlayerProfile

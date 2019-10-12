@@ -12,8 +12,7 @@ namespace MineLW.Blocks
         public int Id { get; }
         public Identifier Name { get; }
         public ReadOnlyCollection<IBlockProperty> Properties { get; }
-        
-        public readonly int StateCount;
+        public int StateCount { get; }
 
         internal readonly object[] DefaultValues;
 
@@ -53,14 +52,14 @@ namespace MineLW.Blocks
             return new BlockState(Id, this, props);
         }
 
-        protected bool Equals(Block other)
+        protected bool Equals(IBlock other)
         {
             return Id == other.Id;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is Block other && other.Id == Id;
+            return obj is IBlock other && other.Id == Id;
         }
 
         public override int GetHashCode()

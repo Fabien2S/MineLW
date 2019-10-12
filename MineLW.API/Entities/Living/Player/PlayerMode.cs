@@ -1,6 +1,6 @@
-﻿namespace MineLW.API.Utils
+﻿namespace MineLW.API.Entities.Living.Player
 {
-    public enum GameMode : byte
+    public enum PlayerMode : byte
     {
         Survival,
         Creative,

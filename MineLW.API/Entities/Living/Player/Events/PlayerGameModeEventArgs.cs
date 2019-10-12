@@ -6,10 +6,10 @@ namespace MineLW.API.Entities.Living.Player.Events
     {
         public bool Canceled { get; set; }
 
-        public readonly GameMode From;
-        public readonly GameMode To;
+        public readonly PlayerMode From;
+        public readonly PlayerMode To;
 
-        public PlayerGameModeEventArgs(IEntityPlayer entity, GameMode from, GameMode to) : base(entity)
+        public PlayerGameModeEventArgs(IEntityPlayer entity, PlayerMode from, PlayerMode to) : base(entity)
         {
             From = from;
             To = to;

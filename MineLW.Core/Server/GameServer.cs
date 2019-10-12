@@ -41,7 +41,7 @@ namespace MineLW.Server
         {
             _stopWatch = new Stopwatch();
             _networkServer = new NetworkServer(this, HandshakeState.Instance);
-
+            
             WorldManager = new WorldManager();
             ClientManager = new ClientManager(this);
         }

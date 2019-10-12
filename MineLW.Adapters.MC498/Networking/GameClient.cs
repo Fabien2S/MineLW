@@ -21,7 +21,7 @@ namespace MineLW.Adapters.MC498.Networking
             
             NetworkClient.Send(new MessageClientInitGame.Message(
                 player.Id,
-                (byte) player.GameMode,
+                (byte) player.PlayerMode,
                 environment.Id,
                 0,
                 "default",

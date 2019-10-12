@@ -9,5 +9,6 @@ namespace MineLW.API.Blocks
         int Id { get; }
         Identifier Name { get; }
         ReadOnlyCollection<IBlockProperty> Properties { get; }
+        int StateCount { get; }
     }
 }

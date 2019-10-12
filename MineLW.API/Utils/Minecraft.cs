@@ -22,7 +22,7 @@
             public static readonly Identifier Brand = new Identifier(Namespace, "brand");
         }
 
-        public static Identifier CreateKey(string key)
+        public static Identifier CreateIdentifier(string key)
         {
             return new Identifier(Namespace, key);
         }
