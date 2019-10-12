@@ -3,34 +3,32 @@ using System.Globalization;
 using System.Numerics;
 using System.Text;
 
-namespace MineLW.API.Math
+namespace MineLW.API.Worlds.Chunks
 {
-    public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
+    public struct ChunkPosition : IEquatable<ChunkPosition>, IFormattable
     {
         public readonly int X;
-        public readonly int Y;
         public readonly int Z;
 
-        public Vector3Int(int x, int y, int z)
+        public ChunkPosition(int x, int z)
         {
             X = x;
-            Y = y;
             Z = z;
         }
 
         public override int GetHashCode()
         {
-            return (X, Y, Z).GetHashCode();
+            return (X, Z).GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            return obj is Vector3Int other && Equals(other);
+            return obj is ChunkPosition other && Equals(other);
         }
 
-        public bool Equals(Vector3Int other)
+        public bool Equals(ChunkPosition other)
         {
-            return X == other.X && Y == other.Y && Z == other.Z;
+            return X == other.X && Z == other.Z;
         }
 
         public string ToString(string format, IFormatProvider formatProvider)
@@ -41,17 +39,17 @@ namespace MineLW.API.Math
             builder.Append(((IFormattable) X).ToString(format, formatProvider));
             builder.Append(separator);
             builder.Append(' ');
-            builder.Append(((IFormattable) Y).ToString(format, formatProvider));
-            builder.Append(separator);
-            builder.Append(' ');
             builder.Append(((IFormattable) Z).ToString(format, formatProvider));
             builder.Append('>');
             return builder.ToString();
         }
 
-        public static implicit operator Vector3(Vector3Int other)
+        public static ChunkPosition FromWorld(Vector3 position)
         {
-            return new Vector3(other.X, other.Y, other.Z);
+            return new ChunkPosition(
+                (int) (position.X / Minecraft.Units.Chunk.Size),
+                (int) (position.Z / Minecraft.Units.Chunk.Size)
+            );
         }
     }
 }

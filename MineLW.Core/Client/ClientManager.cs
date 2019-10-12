@@ -19,16 +19,15 @@ namespace MineLW.Client
 
         public void Initialize(IClient client)
         {
-            client.World = new ClientWorld(client);
+            var player = new EntityPlayer(0, client);
             
             var worldManager = _server.WorldManager;
             var defaultWorld = worldManager.CreateWorld(worldManager.DefaultWorld);
             var spawnPosition = defaultWorld.GetOption(WorldOption.SpawnPosition);
             var spawnRotation = defaultWorld.GetOption(WorldOption.SpawnRotation);
-
-            var player = new EntityPlayer(0, client);
             player.Move(defaultWorld, spawnPosition, spawnRotation);
-
+            
+            client.World = new ClientWorld(client);
             client.Init(player);
 
             _clients.Add(client);

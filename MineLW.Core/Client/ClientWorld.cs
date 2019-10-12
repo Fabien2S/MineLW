@@ -10,7 +10,6 @@ namespace MineLW.Client
         public const byte DefaultRenderDistance = 10;
 
         public Vector2Int ChunkPosition { get; }
-        public IWorldContext WorldContext { get; private set; }
         public byte RenderDistance { get; set; } = DefaultRenderDistance;
 
         private readonly IClient _client;
@@ -18,18 +17,20 @@ namespace MineLW.Client
         public ClientWorld(IClient client)
         {
             _client = client;
-            _client.Player.WorldChanged += OnPlayerWorldChanged;
         }
 
+        public void Init()
+        {
+            _client.Player.WorldChanged += OnPlayerWorldChanged;
+        }
+        
         private void OnPlayerWorldChanged(object sender, EntityWorldEventArgs e)
         {
-            WorldContext = e.To;
-            
             if (!DoesWorldRequireReload(e.From, e.To))
                 return;
 
             if (e.From != null)
-                _client.Respawn(WorldContext);
+                _client.Respawn(e.To);
         }
 
         private static bool DoesWorldRequireReload(IWorldContext from, IWorldContext to)

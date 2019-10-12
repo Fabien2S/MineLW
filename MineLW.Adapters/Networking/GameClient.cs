@@ -36,6 +36,8 @@ namespace MineLW.Adapters.Networking
             }
 
             Player = player;
+            World.Init();
+            
             _Init(player);
         }
         
