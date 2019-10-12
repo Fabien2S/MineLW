@@ -55,15 +55,13 @@ namespace MineLW.Networking
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            Close("End of stream");
+            Close();
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            #if DEBUG
-            Logger.Error("An error occurred with {0}: {1}", this, exception);
-            #endif
-            Close(exception.Message);
+            Logger.Error(exception, "An error occurred with {0}", this);
+            Close();
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IMessage message)
@@ -88,9 +86,41 @@ namespace MineLW.Networking
                     task.Wait();
                 }
             }
-            catch
+            catch(AggregateException e)
             {
+#if DEBUG
+                var innerException = e.InnerException;
+                if (innerException == null)
+                {
+                    Disconnect();
+                    return;
+                }
+
+                Logger.Error(innerException);
+                var targetSite = innerException.TargetSite;
+                Disconnect(new TextComponentTranslate("multiplayer.disconnect.generic")
+                {
+                    Color = TextColor.Red,
+                    Style = TextStyles.Underlined,
+                    Children =
+                    {
+                        new TextComponentString("\n"),
+                        new TextComponentString(innerException.Message)
+                        {
+                            Style = TextStyles.None,
+                            Children =
+                            {
+                                new TextComponentString("\nIn "),
+                                new TextComponentString(targetSite.DeclaringType?.FullName + '#'),
+                                new TextComponentString(targetSite.Name)
+                            }
+                        },
+                    }
+                });
+#else
                 Disconnect();
+                return;
+#endif
             }
         }
 
@@ -139,7 +169,7 @@ namespace MineLW.Networking
             var message = _state.CreateDisconnectMessage(reasonComponent);
             if (message == null)
             {
-                Close(reasonComponent.ToString());
+                Close();
                 return;
             }
 
@@ -147,16 +177,14 @@ namespace MineLW.Networking
             {
                 var reason = reasonComponent.ToString();
                 Logger.Info("{0} disconnected (reason: {1})", this, reason);
-                Close(reason);
+                Close();
             });
         }
 
-        public void Close(string reason)
+        public void Close()
         {
             if (Closed)
                 return;
-
-            Logger.Debug("Closing connection {0} (reason: {1})", this, reason);
 
             Closed = true;
             _channel?.CloseAsync();

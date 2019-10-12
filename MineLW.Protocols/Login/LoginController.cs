@@ -76,7 +76,7 @@ namespace MineLW.Protocols.Login
             var decryptedSignature = Cryptography.CryptoServiceProvider.Decrypt(encryptedSignature, false);
             if (!decryptedSignature.SequenceEqual(_signature))
             {
-                Client.Close("Invalid signature");
+                Client.Close();
                 return;
             }
 

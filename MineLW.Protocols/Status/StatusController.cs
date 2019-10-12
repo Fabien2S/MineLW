@@ -39,7 +39,7 @@ namespace MineLW.Protocols.Status
         {
             Client
                 .Send(new MessageClientPong.Message(payload))
-                .ContinueWith(task => Client.Close("Pong sent"));
+                .ContinueWith(task => Client.Close());
         }
     }
 }
