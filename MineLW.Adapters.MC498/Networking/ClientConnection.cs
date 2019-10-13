@@ -26,16 +26,21 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient = networkClient;
         }
 
+        public void Disconnect(TextComponentString reason = null)
+        {
+            _networkClient.Disconnect(reason);
+        }
+
         public void JoinGame(IClient client, IEntityPlayer player)
         {
-            if (_client !=null)
+            if (_client != null)
                 throw new NotSupportedException("Connection already initialized");
 
             _client = client;
-            
+
             var worldContext = player.WorldContext;
             var environment = worldContext.GetOption(WorldOption.Environment);
-            
+
             _networkClient.Send(new MessageClientInitGame.Message(
                 player.Id,
                 (byte) player.PlayerMode,
@@ -45,10 +50,15 @@ namespace MineLW.Adapters.MC498.Networking
                 client.World.RenderDistance,
                 false
             ));
-            _networkClient.Send(new MessageClientPlayerTeleport.Message(
-                Vector3.Zero,
-                Rotation.Zero,
-                0
+        }
+
+        public void Respawn(IWorldContext worldContext)
+        {
+            var environment = worldContext.GetOption(WorldOption.Environment);
+            _networkClient.Send(new MessageClientRespawn.Message(
+                environment.Id,
+                _client.Player.PlayerMode,
+                LevelType
             ));
         }
 
@@ -62,19 +72,18 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientChatMessage.Message(message));
         }
 
-        public void Disconnect(TextComponentString reason = null)
+        public void Teleport(Vector3 position, Rotation rotation, int id)
         {
-            _networkClient.Disconnect(reason);
+            _networkClient.Send(new MessageClientPlayerTeleport.Message(
+                position,
+                rotation,
+                id
+            ));
         }
 
-        public void Respawn(IWorldContext worldContext)
+        public void UpdateView(ChunkPosition chunkPosition)
         {
-            var environment = worldContext.GetOption(WorldOption.Environment);
-            _networkClient.Send(new MessageClientRespawn.Message(
-                environment.Id,
-                _client.Player.PlayerMode,
-                LevelType
-            ));
+            _networkClient.Send(new MessageClientUpdateViewPosition.Message(chunkPosition));
         }
 
         public void LoadChunk(ChunkPosition position, IChunk chunk)
@@ -100,7 +109,6 @@ namespace MineLW.Adapters.MC498.Networking
                 buffer.WriteByte(blockPalette.BitsPerBlock);
 
                 blockPalette.Serialize(buffer);
-
                 blockStorage.Serialize(buffer);
             }
 
@@ -112,6 +120,7 @@ namespace MineLW.Adapters.MC498.Networking
                 position,
                 true,
                 sectionMask,
+                chunk.HeightMap,
                 buffer
             ));
         }
