@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Worlds.Chunks;
 using NLog;
@@ -9,8 +10,14 @@ namespace MineLW.Client.World
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
+        private readonly IClient _client;
         private readonly ISet<ChunkPosition> _loadedChunks = new HashSet<ChunkPosition>();
-        
+
+        public ClientChunkManager(IClient client)
+        {
+            _client = client;
+        }
+
         public bool IsLoaded(ChunkPosition position)
         {
             return _loadedChunks.Contains(position);
@@ -24,7 +31,7 @@ namespace MineLW.Client.World
                 return;
             }
             
-            
+            _client.Connection.LoadChunk(position, chunk);
         }
 
         public void UnloadChunk(ChunkPosition position)
@@ -35,7 +42,7 @@ namespace MineLW.Client.World
                 return;
             }
             
-            
+            _client.Connection.UnloadChunk(position);
         }
     }
 }

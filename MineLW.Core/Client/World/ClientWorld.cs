@@ -10,8 +10,8 @@ namespace MineLW.Client.World
     {
         private const byte DefaultRenderDistance = 10;
 
-        public IClientChunkManager ChunkManager { get; } = new ClientChunkManager();
-        public IClientEntityManager EntityManager { get; } = new ClientEntityManager();
+        public IClientChunkManager ChunkManager { get; }
+        public IClientEntityManager EntityManager { get; }
 
         public ChunkPosition ChunkPosition
         {
@@ -43,6 +43,7 @@ namespace MineLW.Client.World
         public ClientWorld(IClient client)
         {
             _client = client;
+            ChunkManager = new ClientChunkManager(_client);
         }
 
         public void Init()
