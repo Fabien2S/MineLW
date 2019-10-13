@@ -1,8 +1,10 @@
 ﻿using DotNetty.Buffers;
+using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
 using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
+using MineLW.Serialization.NBT;
 
 namespace MineLW.Adapters.MC498.Networking.Client
 {
@@ -14,7 +16,11 @@ namespace MineLW.Adapters.MC498.Networking.Client
             buffer.WriteBoolean(message.FullChunk);
             buffer.WriteVarInt32(message.SectionMask);
             
-            buffer.WriteByte(0); // nbt compound end
+            buffer.WriteCompound(new NbtCompound
+            {
+                ["MOTION_BLOCKING"] = new NbtLongArray(message.HeightMap.Backing),
+                ["WORLD_SURFACE"] = new NbtLongArray(message.HeightMap.Backing)
+            });
 
             buffer.WriteVarInt32(message.Data.ReadableBytes);
             buffer.WriteBytes(message.Data);
@@ -27,13 +33,15 @@ namespace MineLW.Adapters.MC498.Networking.Client
             public readonly ChunkPosition ChunkPosition;
             public readonly bool FullChunk;
             public readonly int SectionMask;
+            public readonly NBitsArray HeightMap;
             public readonly IByteBuffer Data;
 
-            public Message(ChunkPosition chunkPosition, bool fullChunk, int sectionMask, IByteBuffer data)
+            public Message(ChunkPosition chunkPosition, bool fullChunk, int sectionMask, NBitsArray heightMap, IByteBuffer data)
             {
                 ChunkPosition = chunkPosition;
                 FullChunk = fullChunk;
                 SectionMask = sectionMask;
+                HeightMap = heightMap;
                 Data = data;
             }
         }

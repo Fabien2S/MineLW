@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Numerics;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Worlds;
 using MineLW.Entities.Living.Player;
+using MineLW.Worlds.Chunks.Generator;
 
 namespace MineLW.Client
 {
@@ -26,9 +28,13 @@ namespace MineLW.Client
 
             var worldManager = _server.WorldManager;
             var defaultWorld = worldManager.CreateWorld(worldManager.DefaultWorld);
-            var spawnPosition = defaultWorld.GetOption(WorldOption.SpawnPosition);
-            var spawnRotation = defaultWorld.GetOption(WorldOption.SpawnRotation);
-            player.Move(defaultWorld, spawnPosition, spawnRotation);
+            
+            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator();
+            defaultWorld.SetOption(WorldOption.SpawnPosition, new Vector3(0, 128, 0));
+            
+            player.WorldContext = defaultWorld;
+            player.Position = defaultWorld.GetOption(WorldOption.SpawnPosition);
+            player.Rotation = defaultWorld.GetOption(WorldOption.SpawnRotation);
 
             client.Init(player);
             _clients.Add(client);

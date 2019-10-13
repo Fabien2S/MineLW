@@ -2,6 +2,7 @@
 using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
+using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
 using MineLW.Blocks;
 
@@ -9,6 +10,8 @@ namespace MineLW.Worlds.Chunks
 {
     public class Chunk : IChunk
     {
+        public NBitsArray HeightMap { get; } = NBitsArray.Create(9, Minecraft.Units.Chunk.Size * Minecraft.Units.Chunk.Size);
+        
         private readonly IBlockPalette _globalPalette;
         private readonly ChunkSection[] _sections = new ChunkSection[Minecraft.Units.Chunk.SectionCount];
 

@@ -1,6 +1,10 @@
-﻿namespace MineLW.API.Math
+﻿using System;
+using System.Globalization;
+using System.Text;
+
+namespace MineLW.API.Math
 {
-    public struct Rotation
+    public struct Rotation : IEquatable<Rotation>, IFormattable
     {
         public static readonly Rotation Zero = new Rotation(0, 0);
 
@@ -27,7 +31,20 @@
         {
             return (Yaw, Pitch).GetHashCode();
         }
-        
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            var builder = new StringBuilder();
+            var separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+            builder.Append('<');
+            builder.Append(((IFormattable) Yaw).ToString(format, formatProvider));
+            builder.Append(separator);
+            builder.Append(' ');
+            builder.Append(((IFormattable) Pitch).ToString(format, formatProvider));
+            builder.Append('>');
+            return builder.ToString();
+        }
+
         public static bool operator ==(Rotation a, Rotation b)
         {
             return a.Equals(b);

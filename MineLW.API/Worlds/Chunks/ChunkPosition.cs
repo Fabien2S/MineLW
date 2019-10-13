@@ -16,9 +16,9 @@ namespace MineLW.API.Worlds.Chunks
             Z = z;
         }
 
-        public override int GetHashCode()
+        public bool Equals(ChunkPosition other)
         {
-            return (X, Z).GetHashCode();
+            return X == other.X && Z == other.Z;
         }
 
         public override bool Equals(object obj)
@@ -26,9 +26,9 @@ namespace MineLW.API.Worlds.Chunks
             return obj is ChunkPosition other && Equals(other);
         }
 
-        public bool Equals(ChunkPosition other)
+        public override int GetHashCode()
         {
-            return X == other.X && Z == other.Z;
+            return (X, Z).GetHashCode();
         }
 
         public string ToString(string format, IFormatProvider formatProvider)
@@ -42,6 +42,16 @@ namespace MineLW.API.Worlds.Chunks
             builder.Append(((IFormattable) Z).ToString(format, formatProvider));
             builder.Append('>');
             return builder.ToString();
+        }
+
+        public static bool operator ==(ChunkPosition a, ChunkPosition b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ChunkPosition a, ChunkPosition b)
+        {
+            return !a.Equals(b);
         }
 
         public static ChunkPosition FromWorld(Vector3 position)

@@ -126,7 +126,8 @@ namespace MineLW.Server
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Unable to process the update of the server.");
+                Logger.Error("Unable to process the update of the server.");
+                Logger.Error(e);
             }
             finally
             {

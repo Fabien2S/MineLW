@@ -14,6 +14,8 @@ namespace MineLW.Entities.Living.Player
             get => _playerMode;
             set
             {
+                EnsureValid();
+                
                 var eventArgs = new PlayerGameModeEventArgs(this, _playerMode, value);
                 GameModeChanged?.Invoke(this, eventArgs);
                 if(!eventArgs.Canceled)

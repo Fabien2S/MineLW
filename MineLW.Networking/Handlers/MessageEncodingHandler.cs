@@ -28,7 +28,7 @@ namespace MineLW.Networking.Handlers
             var state = _client.State;
             state.Serialize(buffer, msg);
             
-            Logger.Debug("Sending message \"{0}\" to {1}", msg, _client);
+            Logger.Debug("Sending message \"{0}\" to {1} ({2} bytes)", msg, _client, buffer.ReadableBytes);
 
             output.Add(buffer);
         }
@@ -49,9 +49,8 @@ namespace MineLW.Networking.Handlers
                 Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
             }
 #if DEBUG
-            catch (System.NullReferenceException e)
+            catch (System.NullReferenceException)
             {
-                Logger.Error(e);
             }
 #endif
             catch (DecoderException e)

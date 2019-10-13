@@ -13,65 +13,78 @@ namespace MineLW.Entities
         public Guid Uuid { get; }
         public bool Valid { get; private set; } = true;
 
-        public IWorldContext WorldContext { get; set; }
-        public Vector3 Position { get; set; } = Vector3.Zero;
-        public Rotation Rotation { get; set; } = Rotation.Zero;
+        public IWorldContext WorldContext
+        {
+            get => _worldContext;
+            set
+            {
+                EnsureValid();
+                
+                var worldEventArgs = new EntityWorldChangedEventArgs(this, _worldContext, value);
+                WorldChanged?.Invoke(this, worldEventArgs);
+                if (worldEventArgs.Canceled)
+                    return;
+
+                _worldContext?.EntityManager.RemoveEntity(this);
+                _worldContext = value;
+                _worldContext.EntityManager.SpawnEntity(this);
+            }
+        }
+
+        public Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                EnsureValid();
+                
+                var positionEventArgs = new EntityPositionChangedEventArgs(this, _position, value);
+                PositionChanged?.Invoke(this, positionEventArgs);
+                if (!positionEventArgs.Canceled)
+                    _position = value;
+            }
+        }
+
+        public Rotation Rotation
+        {
+            get => _rotation;
+            set {
+                EnsureValid();
+                _rotation = value;
+            }
+        }
 
         public event EventHandler<EntityEventArgs> Removed;
         public event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
         public event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
 
-        public Entity(int id, Guid uuid)
+        private IWorldContext _worldContext;
+        private Vector3 _position = Vector3.Zero;
+        private Rotation _rotation = Rotation.Zero;
+
+        protected Entity(int id, Guid uuid)
         {
             Id = id;
             Uuid = uuid;
         }
 
-        private void EnsureValid()
+        protected void EnsureValid()
         {
-            if (!Valid)
-                throw new InvalidOperationException(
-                    "The entity isn't valid. You are probably referring to a removed entity");
+            if (Valid)
+                return;
+            
+            throw new InvalidOperationException(
+                "The entity isn't valid. You are probably referring to a removed entity"
+            );
         }
 
         public virtual void Update(float deltaTime)
         {
         }
 
-        public void Move(IWorldContext worldContext, Vector3 position = default, Rotation rotation = default)
-        {
-            EnsureValid();
-
-            if (position != default && Position != position)
-            {
-                var positionEventArgs = new EntityPositionChangedEventArgs(this, Position, position);
-                PositionChanged?.Invoke(this, positionEventArgs);
-                if (!positionEventArgs.Canceled)
-                    Position = position;
-            }
-
-            if (rotation != default && Rotation != rotation)
-            {
-                Rotation = rotation;
-            }
-
-            if (WorldContext == worldContext)
-                return;
-
-            var worldEventArgs = new EntityWorldChangedEventArgs(this, WorldContext, worldContext);
-            WorldChanged?.Invoke(this, worldEventArgs);
-            if (worldEventArgs.Canceled)
-                return;
-
-            WorldContext?.EntityManager.RemoveEntity(this);
-            WorldContext = worldContext;
-            WorldContext.EntityManager.SpawnEntity(this);
-        }
-
         public void Remove()
         {
-            if (!Valid)
-                return;
+            EnsureValid();
 
             Removed?.Invoke(this, new EntityEventArgs(this));
             Valid = false;

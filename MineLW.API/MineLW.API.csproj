@@ -12,4 +12,8 @@
         <PackageReference Include="NLog.Extensions.Logging" Version="1.6.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MineLW.Serialization\MineLW.Serialization.csproj" />
+    </ItemGroup>
+
 </Project>

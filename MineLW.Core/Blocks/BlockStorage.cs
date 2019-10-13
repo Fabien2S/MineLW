@@ -2,9 +2,9 @@
 using DotNetty.Buffers;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
+using MineLW.API.Utils;
 using MineLW.Blocks.Palette;
 using MineLW.Networking.IO;
-using MineLW.Utils;
 
 namespace MineLW.Blocks
 {

@@ -1,9 +1,12 @@
 ﻿using MineLW.API.Blocks;
+using MineLW.API.Utils;
 
 namespace MineLW.API.Worlds.Chunks
 {
     public interface IChunk
     {
+        NBitsArray HeightMap { get; }
+
         bool HasSection(int index);
         IChunkSection CreateSection(int index);
         void RemoveSection(int index);

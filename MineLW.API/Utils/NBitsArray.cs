@@ -1,7 +1,7 @@
 ﻿using System;
 using MineLW.API.Math;
 
-namespace MineLW.Utils
+namespace MineLW.API.Utils
 {
     public class NBitsArray
     {
