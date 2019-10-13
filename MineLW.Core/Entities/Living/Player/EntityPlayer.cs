@@ -2,7 +2,6 @@
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Entities.Living.Player.Events;
-using MineLW.API.Utils;
 
 namespace MineLW.Entities.Living.Player
 {

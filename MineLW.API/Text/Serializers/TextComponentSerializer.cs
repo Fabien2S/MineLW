@@ -79,13 +79,12 @@ namespace MineLW.API.Text.Serializers
                     component.Style &= ~style;
             }
 
-            if (root.ContainsKey("extra"))
-            {
-                var array = root.Value<JArray>("extra");
-                foreach (var token in array)
-                    component.Children.Add(token.ToObject<TextComponent>());
-            }
+            if (!root.ContainsKey("extra"))
+                return component;
             
+            var array = root.Value<JArray>("extra");
+            foreach (var token in array)
+                component.Children.Add(token.ToObject<TextComponent>());
             return component;
         }
 

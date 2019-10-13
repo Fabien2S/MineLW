@@ -1,7 +1,6 @@
 using MineLW.Adapters;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
-using MineLW.API.Utils;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
 using MineLW.Protocols.Status.Client;

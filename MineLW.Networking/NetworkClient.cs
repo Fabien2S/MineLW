@@ -114,7 +114,7 @@ namespace MineLW.Networking
                                 new TextComponentString(targetSite.DeclaringType?.FullName + '#'),
                                 new TextComponentString(targetSite.Name)
                             }
-                        },
+                        }
                     }
                 });
 #else

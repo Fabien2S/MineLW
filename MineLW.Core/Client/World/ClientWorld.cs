@@ -44,6 +44,7 @@ namespace MineLW.Client.World
         {
             _client = client;
             ChunkManager = new ClientChunkManager(_client);
+            EntityManager = new ClientEntityManager();
         }
 
         public void Init()

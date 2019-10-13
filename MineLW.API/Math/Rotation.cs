@@ -13,14 +13,29 @@
             Pitch = pitch % 360;
         }
 
+        public bool Equals(Rotation other)
+        {
+            return MathHelper.AreRoughlyTheSame(Yaw, other.Yaw) && MathHelper.AreRoughlyTheSame(Yaw, other.Pitch);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Rotation other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Yaw, Pitch).GetHashCode();
+        }
+        
         public static bool operator ==(Rotation a, Rotation b)
         {
-            return MathHelper.AreRoughlyTheSame(a.Yaw, b.Yaw) && MathHelper.AreRoughlyTheSame(b.Yaw, b.Pitch);
+            return a.Equals(b);
         }
 
         public static bool operator !=(Rotation a, Rotation b)
         {
-            return !(a == b);
+            return !a.Equals(b);
         }
     }
 }
