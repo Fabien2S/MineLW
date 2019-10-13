@@ -5,6 +5,8 @@ using DotNetty.Buffers;
 using MineLW.API.Math;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
+using MineLW.Serialization;
+using MineLW.Serialization.NBT;
 using Newtonsoft.Json;
 
 namespace MineLW.Networking.IO
@@ -116,6 +118,13 @@ namespace MineLW.Networking.IO
         {
             buffer.WriteInt(position.X);
             buffer.WriteInt(position.Z);
+        }
+
+        public static void WriteCompound(this IByteBuffer buffer, NbtCompound compound)
+        {
+            buffer.WriteByte(compound.Id);
+            buffer.WriteShort(0); // empty name
+            compound.Serialize(buffer);
         }
     }
 }
