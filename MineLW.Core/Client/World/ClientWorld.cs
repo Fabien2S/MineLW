@@ -1,18 +1,44 @@
 ﻿using MineLW.API.Client;
+using MineLW.API.Client.World;
 using MineLW.API.Entities.Events;
-using MineLW.API.Math;
 using MineLW.API.Worlds;
+using MineLW.API.Worlds.Chunks;
 
-namespace MineLW.Client
+namespace MineLW.Client.World
 {
     public class ClientWorld : IClientWorld
     {
-        public const byte DefaultRenderDistance = 10;
+        private const byte DefaultRenderDistance = 10;
 
-        public Vector2Int ChunkPosition { get; }
-        public byte RenderDistance { get; set; } = DefaultRenderDistance;
+        public IClientChunkManager ChunkManager { get; } = new ClientChunkManager();
+        public IClientEntityManager EntityManager { get; } = new ClientEntityManager();
+
+        public ChunkPosition ChunkPosition
+        {
+            get => _chunkPosition;
+            set
+            {
+                _chunkPosition = value;
+                _worldDirty = true;
+            }
+        }
+
+        public byte RenderDistance
+        {
+            get => _renderDistance;
+            set
+            {
+                _renderDistance = value;
+                _worldDirty = true;
+            }
+        }
 
         private readonly IClient _client;
+
+        private ChunkPosition _chunkPosition;
+        private byte _renderDistance = DefaultRenderDistance;
+        
+        private bool _worldDirty;
 
         public ClientWorld(IClient client)
         {
@@ -22,6 +48,15 @@ namespace MineLW.Client
         public void Init()
         {
             _client.Player.WorldChanged += OnPlayerWorldChanged;
+            _worldDirty = true;
+        }
+
+        public void Update(float deltaTime)
+        {
+            if (_worldDirty)
+            {
+                // TODO synchronize chunks and entities
+            }
         }
         
         private void OnPlayerWorldChanged(object sender, EntityWorldEventArgs e)
@@ -30,7 +65,7 @@ namespace MineLW.Client
                 return;
 
             if (e.From != null)
-                _client.Respawn(e.To);
+                _client.Connection.Respawn(e.To);
         }
 
         private static bool DoesWorldRequireReload(IWorldContext from, IWorldContext to)
