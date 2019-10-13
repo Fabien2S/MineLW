@@ -1,10 +1,9 @@
 using MineLW.Adapters.MC498.Networking;
 using MineLW.API.Blocks;
-using MineLW.API.Entities.Living.Player;
+using MineLW.API.Client;
 using MineLW.API.Registries;
 using MineLW.API.Utils;
 using MineLW.Networking;
-using GameClient = MineLW.Adapters.Networking.GameClient;
 
 namespace MineLW.Adapters.MC498
 {
@@ -15,9 +14,9 @@ namespace MineLW.Adapters.MC498
         public Registry<Identifier, IBlock> Blocks { get; } = new Registry<Identifier, IBlock>();
         public Registry<int, IBlockState> BlockStates { get; } = new Registry<int, IBlockState>();
 
-        public GameClient CreateClient(NetworkClient client, PlayerProfile profile)
+        public IClientConnection CreateConnection(NetworkClient networkClient)
         {
-            return new Networking.GameClient(profile, client);
+            return new ClientConnection(networkClient);
         }
     }
 }

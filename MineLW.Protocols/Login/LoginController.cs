@@ -184,11 +184,10 @@ namespace MineLW.Protocols.Login
         {
             var gameServer = Client.Server;
             var clientManager = gameServer.ClientManager;
-            
-            var gameClient = _adapter.CreateClient(Client, _profile);
-            Logger.Info("{0} logged on successfully in {1}", gameClient, _adapter.Version);
-            
-            clientManager.Initialize(gameClient);
+
+            var clientConnection = _adapter.CreateConnection(Client);
+            Logger.Info("{0} ({1}) logged on successfully in {2}", _profile, Client, _adapter.Version);
+            clientManager.Initialize(clientConnection, _profile);
         }
     }
 }

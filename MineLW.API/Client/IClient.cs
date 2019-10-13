@@ -1,22 +1,17 @@
-﻿using DotNetty.Buffers;
+﻿using MineLW.API.Client.World;
 using MineLW.API.Entities.Living.Player;
-using MineLW.API.Text;
 using MineLW.API.Utils;
-using MineLW.API.Worlds;
 
 namespace MineLW.API.Client
 {
     public interface IClient : IUpdatable
-    {       
+    {
+        IClientConnection Connection { get; }
         PlayerProfile Profile { get; }
-        IEntityPlayer Player { get; }
 
-        IClientWorld World { get; set; }
+        IEntityPlayer Player { get; }
+        IClientWorld World { get; }
 
         void Init(IEntityPlayer player);
-        void SendCustom(Identifier channel, IByteBuffer buffer);
-        void SendMessage(TextComponent message);
-        void Disconnect(TextComponentString reason);
-        void Respawn(IWorldContext worldContext);
     }
 }
