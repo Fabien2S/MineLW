@@ -12,7 +12,7 @@ namespace MineLW.Client
         
         public IEntityPlayer Player { get; private set; }
         public IClientWorld World { get; }
-        
+
         public Client(IClientConnection connection, PlayerProfile profile)
         {
             Profile = profile;
@@ -32,9 +32,10 @@ namespace MineLW.Client
             World.Init();
             Connection.JoinGame(this, player);
         }
-        
+
         public void Update(float deltaTime)
         {
+            World.Update(deltaTime);
         }
     }
 }
