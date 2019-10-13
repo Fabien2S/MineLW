@@ -1,4 +1,5 @@
-﻿using MineLW.API.Client;
+﻿using System;
+using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Entities.Events;
 using MineLW.API.Worlds;
@@ -28,7 +29,11 @@ namespace MineLW.Client.World
             get => _renderDistance;
             set
             {
-                _renderDistance = value;
+                var tmp = Math.Clamp(value, (byte) 0, DefaultRenderDistance);
+                if (_renderDistance == tmp)
+                    return;
+                
+                _renderDistance = tmp;
                 _worldDirty = true;
             }
         }
@@ -49,16 +54,31 @@ namespace MineLW.Client.World
 
         public void Init()
         {
+            _client.Player.PositionChanged += OnPlayerPositionChanged;
             _client.Player.WorldChanged += OnPlayerWorldChanged;
+            
             _worldDirty = true;
         }
 
         public void Update(float deltaTime)
         {
-            if (_worldDirty)
-            {
-                // TODO synchronize chunks and entities
-            }
+            if (!_worldDirty)
+                return;
+            
+            _worldDirty = false;
+            
+            ChunkManager.SynchronizeChunks();
+            EntityManager.SynchronizeEntities();
+        }
+
+        private void OnPlayerPositionChanged(object sender, EntityPositionChangedEventArgs e)
+        {
+            var playerChunk = ChunkPosition.FromWorld(e.To);
+            if (ChunkPosition == playerChunk)
+                return;
+            
+            ChunkPosition = playerChunk;
+            _worldDirty = true;
         }
         
         private void OnPlayerWorldChanged(object sender, EntityWorldChangedEventArgs e)
@@ -68,13 +88,15 @@ namespace MineLW.Client.World
 
             if (e.From != null)
                 _client.Connection.Respawn(e.To);
+
+            _worldDirty = true;
         }
 
         private static bool DoesWorldRequireReload(IWorldContext from, IWorldContext to)
         {
             if (from == null)
                 return true;
-
+            
             var currentEnvironment = from.GetOption(WorldOption.Environment);
             var destinationEnvironment = to.GetOption(WorldOption.Environment);
             if (currentEnvironment != destinationEnvironment)
