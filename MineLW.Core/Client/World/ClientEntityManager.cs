@@ -8,7 +8,6 @@ namespace MineLW.Client.World
     {
         public void SynchronizeEntities()
         {
-            throw new NotImplementedException();
         }
 
         public bool SpawnEntity(IEntity entity)
