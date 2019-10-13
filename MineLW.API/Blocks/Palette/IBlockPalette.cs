@@ -1,6 +1,8 @@
-﻿namespace MineLW.API.Blocks.Palette
+﻿using MineLW.API.IO;
+
+namespace MineLW.API.Blocks.Palette
 {
-    public interface IBlockPalette
+    public interface IBlockPalette : IByteBufferSerializable
     {
         byte BitsPerBlock { get; }
 

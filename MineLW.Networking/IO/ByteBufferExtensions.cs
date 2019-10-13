@@ -4,6 +4,7 @@ using System.Text;
 using DotNetty.Buffers;
 using MineLW.API.Math;
 using MineLW.API.Utils;
+using MineLW.API.Worlds.Chunks;
 using Newtonsoft.Json;
 
 namespace MineLW.Networking.IO
@@ -109,6 +110,12 @@ namespace MineLW.Networking.IO
         {
             buffer.WriteFloat(rotation.Yaw);
             buffer.WriteFloat(rotation.Pitch);
+        }
+
+        public static void WriteChunkPosition(this IByteBuffer buffer, ChunkPosition position)
+        {
+            buffer.WriteInt(position.X);
+            buffer.WriteInt(position.Z);
         }
     }
 }

@@ -17,6 +17,23 @@ namespace MineLW.Worlds.Chunks
             _globalPalette = globalPalette;
         }
 
+        public bool HasSection(int index)
+        {
+            return _sections[index] != null;
+        }
+
+        public IChunkSection CreateSection(int index)
+        {
+            if (HasSection(index))
+                return _sections[index];
+            return _sections[index] = new ChunkSection(_globalPalette);
+        }
+
+        public void RemoveSection(int index)
+        {
+            _sections[index] = null;
+        }
+
         public bool HasBlock(int x, int y, int z)
         {
             var index = SectionIndex(y);
@@ -47,23 +64,6 @@ namespace MineLW.Worlds.Chunks
             var section = _sections[index];
             var blockStorage = section.BlockStorage;
             return blockStorage.GetBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
-        }
-
-        public bool HasSection(int index)
-        {
-            return _sections[index] != null;
-        }
-
-        public IChunkSection CreateSection(int index)
-        {
-            if (HasSection(index))
-                return _sections[index];
-            return _sections[index] = new ChunkSection(_globalPalette);
-        }
-
-        public void RemoveSection(int index)
-        {
-            _sections[index] = null;
         }
 
         public IChunkSection this[int index] => _sections[index];

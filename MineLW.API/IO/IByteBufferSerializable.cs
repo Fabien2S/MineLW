@@ -1,8 +1,8 @@
 ﻿using DotNetty.Buffers;
 
-namespace MineLW.Networking.Serialization
+namespace MineLW.API.IO
 {
-    public interface INetworkSerializer
+    public interface IByteBufferSerializable
     {
         void Serialize(IByteBuffer buffer);
     }

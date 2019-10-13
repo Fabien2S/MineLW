@@ -2,6 +2,7 @@
 using System.Numerics;
 using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
+using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
@@ -78,17 +79,46 @@ namespace MineLW.Adapters.MC498.Networking
 
         public void LoadChunk(ChunkPosition position, IChunk chunk)
         {
-            throw new NotImplementedException();
+            var buffer = Unpooled.Buffer();
+            var sectionMask = 0;
+            for (var y = 0; y < Minecraft.Units.Chunk.SectionCount; y++)
+            {
+                var section = chunk[y];
+                if (section == null)
+                    continue;
+
+                var blockStorage = section.BlockStorage;
+                var blockCount = blockStorage.BlockCount;
+                if (blockCount == 0)
+                    continue;
+
+                sectionMask |= 1 << y;
+                    
+                buffer.WriteShort(blockCount);
+
+                var blockPalette = blockStorage.BlockPalette;
+                buffer.WriteByte(blockPalette.BitsPerBlock);
+
+                blockPalette.Serialize(buffer);
+
+                blockStorage.Serialize(buffer);
+            }
+
+            // biome
+            for (var i = 0; i < 256; i++)
+                buffer.WriteInt(0);
+
+            _networkClient.Send(new MessageClientLoadChunk.Message(
+                position,
+                true,
+                sectionMask,
+                buffer
+            ));
         }
 
         public void UnloadChunk(ChunkPosition position)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Close()
-        {
-            _networkClient.Disconnect();
+            _networkClient.Send(new MessageClientUnloadChunk.Message(position));
         }
     }
 }

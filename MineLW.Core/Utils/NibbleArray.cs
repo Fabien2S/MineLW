@@ -1,11 +1,10 @@
 ﻿using System.Linq;
 using DotNetty.Buffers;
 using MineLW.Networking.IO;
-using MineLW.Networking.Serialization;
 
 namespace MineLW.Utils
 {
-    public class NibbleArray : INetworkSerializer
+    public class NibbleArray
     {
         private const int MaxLowestValue = 15;
         private const int MaxHighestValue = MaxLowestValue * MaxLowestValue + MaxLowestValue;

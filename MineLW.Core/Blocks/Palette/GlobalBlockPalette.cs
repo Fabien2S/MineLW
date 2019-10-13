@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetty.Buffers;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Registries;
@@ -42,6 +43,10 @@ namespace MineLW.Blocks.Palette
         public IBlockState GetBlockState(int id)
         {
             return _registry[id];
+        }
+
+        public void Serialize(IByteBuffer buffer)
+        {
         }
     }
 }

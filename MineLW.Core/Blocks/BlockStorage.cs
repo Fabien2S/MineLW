@@ -1,8 +1,9 @@
 ﻿using System;
+using DotNetty.Buffers;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
-using MineLW.API.Utils;
 using MineLW.Blocks.Palette;
+using MineLW.Networking.IO;
 using MineLW.Utils;
 
 namespace MineLW.Blocks
@@ -105,6 +106,14 @@ namespace MineLW.Blocks
             var index = Index(x, y, z);
             var id = NBitsArray[index];
             return BlockPalette.GetBlockState(id);
+        }
+
+        public void Serialize(IByteBuffer buffer)
+        {
+            var backing = NBitsArray.Backing;
+            buffer.WriteVarInt32(backing.Length);
+            foreach (var l in backing)
+                buffer.WriteLong(l);
         }
 
         private static int Index(int x, int y, int z)

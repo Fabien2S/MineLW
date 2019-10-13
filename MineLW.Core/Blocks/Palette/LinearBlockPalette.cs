@@ -3,11 +3,10 @@ using DotNetty.Buffers;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.Networking.IO;
-using MineLW.Networking.Serialization;
 
 namespace MineLW.Blocks.Palette
 {
-    public class LinearBlockPalette : IBlockPalette, INetworkDeserializer
+    public class LinearBlockPalette : IBlockPalette
     {
         public byte BitsPerBlock { get; private set; }
 
@@ -73,11 +72,11 @@ namespace MineLW.Blocks.Palette
             return _globalPalette.GetBlockState(blockStateId);
         }
 
-        public void Deserialize(IByteBuffer buffer)
+        public void Serialize(IByteBuffer buffer)
         {
-            _highestIndex = buffer.ReadVarInt32();
+            buffer.WriteVarInt32(_highestIndex);
             for (var i = 0; i < _highestIndex; i++)
-                _globalBlockStateIds[i] = buffer.ReadVarInt32();
+                buffer.WriteVarInt32(_globalBlockStateIds[i]);
         }
     }
 }
