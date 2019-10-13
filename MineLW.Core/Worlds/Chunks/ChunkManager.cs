@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Worlds.Chunks;
 using MineLW.API.Worlds.Chunks.Generator;
@@ -26,17 +27,12 @@ namespace MineLW.Worlds.Chunks
         {
             if (IsLoaded(position))
                 return GetChunk(position);
+            if(Generator == null)
+                throw new NotSupportedException("No chunk generator");
             
             var chunk = new Chunk(_globalPalette);
             Generator.Generate(chunk);
             return _loadedChunks[position] = chunk;
-        }
-
-        public IChunk CreateChunk(ChunkPosition position)
-        {
-            if (IsLoaded(position))
-                return GetChunk(position);
-            return _loadedChunks[position] = new Chunk(_globalPalette);
         }
 
         public void UnloadChunk(ChunkPosition position)

@@ -11,7 +11,6 @@ namespace MineLW.API.Worlds.Chunks
         IChunkGenerator Generator { get; set; }
 
         bool IsLoaded(ChunkPosition position);
-        IChunk CreateChunk(ChunkPosition position);
         IChunk GenerateChunk(ChunkPosition position);
         void UnloadChunk(ChunkPosition position);
         IChunk GetChunk(ChunkPosition position);
