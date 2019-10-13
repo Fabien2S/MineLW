@@ -18,8 +18,8 @@ namespace MineLW.Entities
         public Rotation Rotation { get; set; } = Rotation.Zero;
 
         public event EventHandler<EntityEventArgs> Removed;
-        public event EventHandler<EntityWorldEventArgs> WorldChanged;
-        public event EventHandler<EntityPositionEventArgs> PositionChanged;
+        public event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
+        public event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
 
         public Entity(int id, Guid uuid)
         {
@@ -44,7 +44,7 @@ namespace MineLW.Entities
 
             if (position != default && Position != position)
             {
-                var positionEventArgs = new EntityPositionEventArgs(this, Position, position);
+                var positionEventArgs = new EntityPositionChangedEventArgs(this, Position, position);
                 PositionChanged?.Invoke(this, positionEventArgs);
                 if (!positionEventArgs.Canceled)
                     Position = position;
@@ -58,7 +58,7 @@ namespace MineLW.Entities
             if (WorldContext == worldContext)
                 return;
 
-            var worldEventArgs = new EntityWorldEventArgs(this, WorldContext, worldContext);
+            var worldEventArgs = new EntityWorldChangedEventArgs(this, WorldContext, worldContext);
             WorldChanged?.Invoke(this, worldEventArgs);
             if (worldEventArgs.Canceled)
                 return;

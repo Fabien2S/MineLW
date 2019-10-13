@@ -61,7 +61,7 @@ namespace MineLW.Client.World
             }
         }
         
-        private void OnPlayerWorldChanged(object sender, EntityWorldEventArgs e)
+        private void OnPlayerWorldChanged(object sender, EntityWorldChangedEventArgs e)
         {
             if (!DoesWorldRequireReload(e.From, e.To))
                 return;

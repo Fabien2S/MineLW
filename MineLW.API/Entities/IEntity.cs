@@ -29,7 +29,7 @@ namespace MineLW.API.Entities
         Rotation Rotation { get; set; }
 
         event EventHandler<EntityEventArgs> Removed;
-        event EventHandler<EntityWorldEventArgs> WorldChanged;
-        event EventHandler<EntityPositionEventArgs> PositionChanged;
+        event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
+        event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
     }
 }
