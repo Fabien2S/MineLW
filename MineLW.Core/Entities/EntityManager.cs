@@ -15,7 +15,7 @@ namespace MineLW.Entities
                 entity.Update(deltaTime);
         }
 
-        public bool AddEntity(IEntity entity)
+        public bool SpawnEntity(IEntity entity)
         {
             _entities.Add(entity);
             return true;

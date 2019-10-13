@@ -5,7 +5,7 @@ namespace MineLW.API.Entities
 {
     public interface IEntityManager : IUpdatable, IEnumerable<IEntity>
     {
-        bool AddEntity(IEntity entity);
+        bool SpawnEntity(IEntity entity);
         bool RemoveEntity(IEntity entity);
     }
 }

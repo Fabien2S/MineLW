@@ -65,7 +65,7 @@ namespace MineLW.Entities
 
             WorldContext?.EntityManager.RemoveEntity(this);
             WorldContext = worldContext;
-            WorldContext.EntityManager.AddEntity(this);
+            WorldContext.EntityManager.SpawnEntity(this);
         }
 
         public void Remove()
