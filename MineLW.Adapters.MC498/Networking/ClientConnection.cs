@@ -2,7 +2,6 @@
 using System.Numerics;
 using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
-using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
@@ -86,30 +85,28 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientUpdateViewPosition.Message(chunkPosition));
         }
 
-        public void LoadChunk(ChunkPosition position, IChunk chunk)
+        public void LoadChunk(ChunkPosition position, ChunkSnapshot chunkSnapshot)
         {
             var buffer = Unpooled.Buffer();
-            var sectionMask = 0;
-            for (var y = 0; y < Minecraft.Units.Chunk.SectionCount; y++)
-            {
-                var section = chunk[y];
-                if (section == null)
-                    continue;
 
-                var blockStorage = section.BlockStorage;
-                var blockCount = blockStorage.BlockCount;
+            var blockStorage = chunkSnapshot.BlockStorage;
+            foreach (var storage in blockStorage)
+            {
+                if(storage == null)
+                    continue;
+                
+                var blockCount = storage.BlockCount;
                 if (blockCount == 0)
                     continue;
 
-                sectionMask |= 1 << y;
-                    
+                // TODO add cross-version support
                 buffer.WriteShort(blockCount);
 
-                var blockPalette = blockStorage.BlockPalette;
+                var blockPalette = storage.BlockPalette;
                 buffer.WriteByte(blockPalette.BitsPerBlock);
 
                 blockPalette.Serialize(buffer);
-                blockStorage.Serialize(buffer);
+                storage.Serialize(buffer);
             }
 
             // biome
@@ -119,8 +116,8 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientLoadChunk.Message(
                 position,
                 true,
-                sectionMask,
-                chunk.HeightMap,
+                chunkSnapshot.SectionMask,
+                chunkSnapshot.HeightMap,
                 buffer
             ));
         }

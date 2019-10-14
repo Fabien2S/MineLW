@@ -6,7 +6,7 @@ namespace MineLW.API.Client.World
     {
         void SynchronizeChunks();
         bool IsLoaded(ChunkPosition position);
-        void LoadChunk(ChunkPosition position, IChunk chunk);
+        void LoadChunk(ChunkPosition position);
         void UnloadChunk(ChunkPosition position);
     }
 }
