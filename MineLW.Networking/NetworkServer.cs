@@ -40,8 +40,6 @@ namespace MineLW.Networking
 
         public void Start(EndPoint endPoint)
         {
-            Logger.Debug("Starting network server...");
-            
             _eventLoopGroup = new MultithreadEventLoopGroup(CreateEventLoop);
 
             _bootstrap
