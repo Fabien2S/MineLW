@@ -10,8 +10,36 @@ namespace MineLW.Worlds.Chunks
 {
     public class Chunk : IChunk
     {
-        public NBitsArray HeightMap { get; } = NBitsArray.Create(9, Minecraft.Units.Chunk.Size * Minecraft.Units.Chunk.Size);
-        
+        public NBitsArray HeightMap { get; } = NBitsArray.Create(
+            9,
+            Minecraft.Units.Chunk.Size * Minecraft.Units.Chunk.Size
+        );
+
+        public ChunkSnapshot Snapshot
+        {
+            get
+            {
+                var sectionStorage = new IBlockStorage[Minecraft.Units.Chunk.SectionCount];
+
+                var sectionMask = 0;
+                for (var i = 0; i < Minecraft.Units.Chunk.SectionCount; i++)
+                {
+                    var section = _sections[i];
+                    if(section == null)
+                        continue;
+                    
+                    var blockStorage = section.BlockStorage;
+                    if (blockStorage.BlockCount == 0)
+                        continue;
+
+                    sectionMask |= 1 << i;
+                    sectionStorage[i] = blockStorage;
+                }
+
+                return new ChunkSnapshot(HeightMap, sectionMask, sectionStorage);
+            }
+        }
+
         private readonly IBlockPalette _globalPalette;
         private readonly ChunkSection[] _sections = new ChunkSection[Minecraft.Units.Chunk.SectionCount];
 
@@ -42,7 +70,7 @@ namespace MineLW.Worlds.Chunks
             var index = SectionIndex(y);
             if (!HasSection(index))
                 return false;
-            
+
             var section = _sections[index];
             var blockStorage = section.BlockStorage;
             return blockStorage.HasBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
@@ -63,7 +91,7 @@ namespace MineLW.Worlds.Chunks
             var index = SectionIndex(y);
             if (!HasSection(index))
                 return BlockState.Air;
-            
+
             var section = _sections[index];
             var blockStorage = section.BlockStorage;
             return blockStorage.GetBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
