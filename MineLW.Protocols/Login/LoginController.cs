@@ -84,9 +84,9 @@ namespace MineLW.Protocols.Login
             _sharedSecret = Cryptography.CryptoServiceProvider.Decrypt(encryptedSharedSecret, false);
             Client.EnableEncryption(_sharedSecret);
 
-            Client
+            /*Client
                 .Send(new MessageClientEnableCompression.Message(CompressionThreshold))
-                .ContinueWith(task => { Client.EnableCompression(CompressionThreshold); });
+                .ContinueWith(task => { Client.EnableCompression(CompressionThreshold); });*/
 
             RequestSession();
         }
