@@ -20,7 +20,7 @@ namespace MineLW
 
         private static void Main(string[] args)
         {
-            Logger.Debug("Program started with {0} arguments", args.Length);
+            Logger.Debug("Fetching {0} argument(s)", args.Length);
 
             var currentThread = Thread.CurrentThread;
             currentThread.Name = "Main";
