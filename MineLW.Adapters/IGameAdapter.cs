@@ -1,6 +1,5 @@
-using MineLW.API.Blocks;
+using MineLW.Adapters.Blocks;
 using MineLW.API.Client;
-using MineLW.API.Registries;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
@@ -11,8 +10,7 @@ namespace MineLW.Adapters
         GameVersion Version { get; }
 
         NetworkState NetworkState { get; }
-        Registry<Identifier, IBlock> Blocks { get; }
-        Registry<int, IBlockState> BlockStates { get; }
+        IBlockManager BlockManager { get; }
 
         IClientConnection CreateConnection(NetworkClient networkClient);
     }

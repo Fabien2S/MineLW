@@ -22,7 +22,8 @@ namespace MineLW.Worlds
         public WorldManager()
         {
             var gameAdapter = GameAdapter.ServerAdapter;
-            _globalPalette = new GlobalBlockPalette(gameAdapter.BlockStates);
+            var blockManager = gameAdapter.BlockManager;
+            _globalPalette = new GlobalBlockPalette(blockManager.BlockStates);
         }
         
         public IWorld CreateWorld(Identifier name)
