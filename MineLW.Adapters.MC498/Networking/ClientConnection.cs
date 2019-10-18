@@ -61,9 +61,9 @@ namespace MineLW.Adapters.MC498.Networking
             ));
         }
 
-        public void SendCustom(Identifier channel, IByteBuffer buffer)
+        public void SendCustom(Identifier channel, byte[] data)
         {
-            _networkClient.Send(new MessageClientCustomData.Message(channel, buffer));
+            _networkClient.Send(new MessageClientCustomData.Message(channel, data));
         }
 
         public void SendMessage(TextComponent message)

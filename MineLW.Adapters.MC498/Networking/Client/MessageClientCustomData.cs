@@ -17,9 +17,9 @@ namespace MineLW.Adapters.MC498.Networking.Client
         public struct Message : IMessage
         {
             public readonly Identifier Channel;
-            public readonly IByteBuffer Buffer;
+            public readonly byte[] Buffer;
 
-            public Message(Identifier channel, IByteBuffer buffer)
+            public Message(Identifier channel, byte[] buffer)
             {
                 Channel = channel;
                 Buffer = buffer;
