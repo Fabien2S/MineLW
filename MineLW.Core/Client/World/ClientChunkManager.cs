@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Worlds.Chunks;
@@ -48,6 +49,33 @@ namespace MineLW.Client.World
                 UnloadChunk(position);
         }
 
+        public BakedChunk BakeChunk(ChunkPosition position)
+        {
+            var bakedChunk = new BakedChunk();
+
+            var worldContexts = _client.World.WorldContexts;
+            foreach (var worldContext in worldContexts)
+            {
+                var chunkManager = worldContext.ChunkManager;
+                var chunk = chunkManager.GetChunk(position);
+
+                for (var x = 0; x < Minecraft.Units.Chunk.Size; x++)
+                for (var z = 0; z < Minecraft.Units.Chunk.Size; z++)
+                for (var y = 0; y < Minecraft.Units.Chunk.Height; y++)
+                {
+                    if(bakedChunk.HasBlock(x, y, z))
+                        continue;
+                    if (!chunk.HasBlock(x, y, z))
+                        continue;
+                    
+                    var blockState = chunk.GetBlock(x, y, z);
+                    bakedChunk.SetBlock(x, y, z, blockState);
+                }
+            }
+
+            return bakedChunk;
+        }
+
         public bool IsLoaded(ChunkPosition position)
         {
             return _loadedChunks.Contains(position);
@@ -61,16 +89,8 @@ namespace MineLW.Client.World
                 return;
             }
 
-            /*var worldContexts = _client.World.WorldContexts;
-            foreach (var worldContext in worldContexts)
-            {
-                var chunkManager = worldContext.ChunkManager;
-                var chunk = chunkManager.GetChunk(position);
-                var snapshot = chunk.Snapshot;
-            }*/
-
-            var chunk = _client.Player.WorldContext.ChunkManager.GenerateChunk(position);
-            _client.Connection.LoadChunk(position, chunk.Snapshot);
+            var bakedChunk = BakeChunk(position);
+            _client.Connection.LoadChunk(position, bakedChunk);
         }
 
         public void UnloadChunk(ChunkPosition position)

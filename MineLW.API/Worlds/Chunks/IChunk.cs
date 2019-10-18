@@ -6,7 +6,6 @@ namespace MineLW.API.Worlds.Chunks
     public interface IChunk
     {
         NBitsArray HeightMap { get; }
-        ChunkSnapshot Snapshot { get; }
 
         bool HasSection(int index);
         IChunkSection CreateSection(int index);

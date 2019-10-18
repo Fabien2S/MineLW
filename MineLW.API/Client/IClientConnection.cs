@@ -1,6 +1,4 @@
-﻿using System;
-using System.Numerics;
-using DotNetty.Buffers;
+﻿using System.Numerics;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Text;
@@ -23,7 +21,7 @@ namespace MineLW.API.Client
         void Teleport(Vector3 position, Rotation rotation, int id);
         void UpdateView(ChunkPosition chunkPosition);
         
-        void LoadChunk(ChunkPosition position, ChunkSnapshot chunkSnapshot);
+        void LoadChunk(ChunkPosition position, BakedChunk chunk);
         void UnloadChunk(ChunkPosition position);
     }
 }

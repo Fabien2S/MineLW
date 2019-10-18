@@ -85,11 +85,10 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientUpdateViewPosition.Message(chunkPosition));
         }
 
-        public void LoadChunk(ChunkPosition position, ChunkSnapshot chunkSnapshot)
+        public void LoadChunk(ChunkPosition position, BakedChunk chunk)
         {
             var buffer = Unpooled.Buffer();
 
-            var blockStorage = chunkSnapshot.BlockStorage;
             foreach (var storage in blockStorage)
             {
                 if(storage == null)
@@ -116,8 +115,8 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientLoadChunk.Message(
                 position,
                 true,
-                chunkSnapshot.SectionMask,
-                chunkSnapshot.HeightMap,
+                chunk.SectionMask,
+                chunk.HeightMap,
                 buffer
             ));
         }

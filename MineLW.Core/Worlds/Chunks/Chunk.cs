@@ -15,7 +15,7 @@ namespace MineLW.Worlds.Chunks
             Minecraft.Units.Chunk.Size * Minecraft.Units.Chunk.Size
         );
 
-        public ChunkSnapshot Snapshot
+        /*public ChunkSnapshot Snapshot
         {
             get
             {
@@ -38,7 +38,7 @@ namespace MineLW.Worlds.Chunks
 
                 return new ChunkSnapshot(HeightMap, sectionMask, sectionStorage);
             }
-        }
+        }*/
 
         private readonly IBlockPalette _globalPalette;
         private readonly ChunkSection[] _sections = new ChunkSection[Minecraft.Units.Chunk.SectionCount];
