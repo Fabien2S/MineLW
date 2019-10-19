@@ -42,42 +42,22 @@ namespace MineLW.Blocks
         {
             _globalPalette = globalPalette;
             BlockPalette = _globalPalette;
+
             UpdatePalette(bitsPerBlock);
         }
 
         /// <summary>
-        /// Update the internal palette to match the bitsPerBlock
+        /// Resize the storage to match the bitsPerBlock
         /// </summary>
         /// <param name="bitsPerBlock">The number of bits used to store a block state</param>
-        /// <returns>true if the internal palette was updated, false otherwise</returns>
-        private void UpdatePalette(byte bitsPerBlock)
+        private void Resize(byte bitsPerBlock)
         {
-            bitsPerBlock = Math.Max(bitsPerBlock, MinBitsPerBlock);
-
-            if (BlockPalette != null && BlockPalette.BitsPerBlock == bitsPerBlock)
-                return;
-
-            if (bitsPerBlock <= 8)
-            {
-                if (!(BlockPalette is LinearBlockPalette))
-                    BlockPalette = new LinearBlockPalette(this, _globalPalette, bitsPerBlock);
-            }
-            else
-                BlockPalette = _globalPalette;
-
-            NBitsArray = NBitsArray.Create(bitsPerBlock, 4096);
-        }
-
-        public void Resize(byte bitsPerBlock)
-        {
-            if (bitsPerBlock > 32)
-                throw new ArgumentOutOfRangeException(nameof(bitsPerBlock), "bitsPerBlock > 32");
-
             var previousDataBits = NBitsArray;
             var previousBlockPalette = BlockPalette;
 
-            UpdatePalette(bitsPerBlock);
-
+            if (!UpdatePalette(bitsPerBlock))
+                return;
+            
             for (var i = 0; i < previousDataBits.Capacity; i++)
             {
                 var blockStateId = previousDataBits[i];
@@ -89,6 +69,37 @@ namespace MineLW.Blocks
             }
         }
 
+        /// <summary>
+        /// Update the internal palette to match the bitsPerBlock
+        /// </summary>
+        /// <remarks>This should never be called directly, please use <see cref="Resize"/></remarks>
+        /// <param name="bitsPerBlock">The number of bits used to store a block state</param>
+        /// <returns>true if the internal array must be updated, false otherwise</returns>
+        private bool UpdatePalette(byte bitsPerBlock)
+        {
+            bitsPerBlock = Math.Clamp(bitsPerBlock, MinBitsPerBlock, _globalPalette.BitsPerBlock);
+
+            if (BlockPalette.BitsPerBlock == bitsPerBlock)
+                return false;
+
+            var flag = true;
+            if (bitsPerBlock <= 8)
+            {
+                if (BlockPalette is LinearBlockPalette blockPalette)
+                {
+                    blockPalette.Resize(bitsPerBlock);
+                    flag = false;
+                }
+                else
+                    BlockPalette = new LinearBlockPalette(_globalPalette, bitsPerBlock);
+            }
+            else
+                BlockPalette = _globalPalette;
+
+            NBitsArray = NBitsArray.Create(bitsPerBlock, 4096);
+            return flag;
+        }
+
         public bool HasBlock(int x, int y, int z)
         {
             var index = Index(x, y, z);
@@ -97,8 +108,17 @@ namespace MineLW.Blocks
 
         public void SetBlock(int x, int y, int z, IBlockState blockState)
         {
+            var id = BlockPalette.GetId(blockState);
+            if (id == -1) // block not registered
+            {
+                Resize((byte) (BlockPalette.BitsPerBlock + 1));
+                id = BlockPalette.GetId(blockState);
+                if (id == -1)
+                    throw new InvalidOperationException("Invalid block state palette id");
+            }
+
             var index = Index(x, y, z);
-            NBitsArray[index] = BlockPalette.GetId(blockState);
+            NBitsArray[index] = id;
         }
 
         public IBlockState GetBlock(int x, int y, int z)
