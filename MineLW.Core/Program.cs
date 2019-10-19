@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
-using McMaster.NETCore.Plugins;
 using MineLW.Adapters;
 using MineLW.API;
 using MineLW.Server;
@@ -40,6 +40,7 @@ namespace MineLW
                 Logger.Error("No game adapter found");
                 return;
             }
+
             GameAdapter.Lock();
 
             _server = new GameServer();
@@ -67,12 +68,11 @@ namespace MineLW
             var adaptersPath = Path.Combine(Environment.CurrentDirectory, "adapters");
 
             Directory.CreateDirectory(adaptersPath);
-            
+
             var files = Directory.EnumerateFiles(adaptersPath, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var file in files)
             {
-                var pluginLoader = PluginLoader.CreateFromAssemblyFile(file, new []{typeof(IGameAdapter)});
-                var defaultAssembly = pluginLoader.LoadDefaultAssembly();
+                var defaultAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
                 var exportedTypes = defaultAssembly.GetExportedTypes();
                 foreach (var exportedType in exportedTypes)
                 {
@@ -80,7 +80,7 @@ namespace MineLW
                         continue;
                     if (exportedType.IsAbstract)
                         continue;
-                    
+
                     var gameAdapter = Activator.CreateInstance(exportedType);
                     GameAdapter.Register((IGameAdapter) gameAdapter);
                 }
