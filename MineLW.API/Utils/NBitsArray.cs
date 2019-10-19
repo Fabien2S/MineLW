@@ -7,26 +7,27 @@ namespace MineLW.API.Utils
     {
         public readonly long[] Backing;
 
-        public readonly int BitsPerValue;
+        public readonly int BitsPerEntry;
         public readonly int Capacity;
 
-        private readonly long _valueMask;
+        private readonly long _maxValue;
 
-        public NBitsArray(long[] backing, byte bitsPerValue, ushort capacity)
+        public NBitsArray(long[] backing, byte bitsPerEntry, ushort capacity)
         {
-            if (bitsPerValue < 1 || bitsPerValue > 32)
+            if (bitsPerEntry < 1 || bitsPerEntry > 32)
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(bitsPerValue),
-                    "Invalid bitsPerValue (either < 1 or > 32)"
+                    nameof(bitsPerEntry),
+                    bitsPerEntry,
+                    "Invalid bit count per entry"
                 );
             }
 
             Backing = backing;
-            BitsPerValue = bitsPerValue;
+            BitsPerEntry = bitsPerEntry;
             Capacity = capacity;
 
-            _valueMask = (1L << bitsPerValue) - 1L;
+            _maxValue = (1L << bitsPerEntry) - 1L;
         }
 
         public int this[int index]
@@ -36,30 +37,29 @@ namespace MineLW.API.Utils
                 if (index < 0 || index >= Capacity)
                     throw new ArgumentOutOfRangeException(nameof(index), "Invalid index");
 
-                index *= BitsPerValue;
+                index *= BitsPerEntry;
                 var i0 = index >> 6;
                 var i1 = index & 0b111111;
 
                 var value = (long) ((ulong) Backing[i0] >> i1);
-                var i2 = i1 + BitsPerValue;
+                var i2 = i1 + BitsPerEntry;
                 if (i2 > 64)
                     value |= Backing[++i0] << 64 - i1;
-                return (int) (value & _valueMask);
+                return (int) (value & _maxValue);
             }
             set
             {
                 if (index < 0 || index >= Capacity)
                     throw new ArgumentOutOfRangeException(nameof(index), "Invalid index");
-                if (value < 0 || value > _valueMask)
+                if (value < 0 || value > _maxValue)
                     throw new ArgumentOutOfRangeException(nameof(value), "Invalid value");
 
-                index *= BitsPerValue;
+                index *= BitsPerEntry;
                 var i0 = index >> 6;
                 var i1 = index & 0b111111;
 
-                Backing[i0] = Backing[i0] & ~(_valueMask << i1) | (value & _valueMask) << i1;
-                var i2 = i1 + BitsPerValue;
-                // The value is divided over two long values
+                Backing[i0] = Backing[i0] & ~(_maxValue << i1) | (value & _maxValue) << i1;
+                var i2 = i1 + BitsPerEntry;
                 if (i2 <= 64)
                     return;
 
