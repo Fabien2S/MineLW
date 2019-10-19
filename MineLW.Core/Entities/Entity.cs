@@ -2,7 +2,6 @@
 using System.Numerics;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
-using MineLW.API.Math;
 using MineLW.API.Worlds;
 
 namespace MineLW.Entities
@@ -45,7 +44,7 @@ namespace MineLW.Entities
             }
         }
 
-        public Rotation Rotation
+        public Quaternion Rotation
         {
             get => _rotation;
             set {
@@ -60,7 +59,7 @@ namespace MineLW.Entities
 
         private IWorldContext _worldContext;
         private Vector3 _position = Vector3.Zero;
-        private Rotation _rotation = Rotation.Zero;
+        private Quaternion _rotation = Quaternion.Identity;
 
         protected Entity(int id, Guid uuid)
         {

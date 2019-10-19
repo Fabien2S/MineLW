@@ -2,7 +2,6 @@
 using System.Numerics;
 using System.Text;
 using DotNetty.Buffers;
-using MineLW.API.Math;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
 using MineLW.Serialization.NBT;
@@ -114,10 +113,11 @@ namespace MineLW.Networking.IO
             return buffer;
         }
 
-        public static IByteBuffer WriteRotation(this IByteBuffer buffer, Rotation rotation)
+        public static IByteBuffer WriteRotation(this IByteBuffer buffer, Quaternion rotation)
         {
-            buffer.WriteFloat(rotation.Yaw);
-            buffer.WriteFloat(rotation.Pitch);
+            // TODO get yaw and pitch from rotation
+            buffer.WriteFloat(0);
+            buffer.WriteFloat(0);
             return buffer;
         }
 

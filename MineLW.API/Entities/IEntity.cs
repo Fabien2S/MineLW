@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using MineLW.API.Entities.Events;
-using MineLW.API.Math;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
 
@@ -26,7 +25,7 @@ namespace MineLW.API.Entities
 
         IWorldContext WorldContext { get; set; }
         Vector3 Position { get; set; }
-        Rotation Rotation { get; set; }
+        Quaternion Rotation { get; set; }
 
         event EventHandler<EntityEventArgs> Removed;
         event EventHandler<EntityWorldChangedEventArgs> WorldChanged;

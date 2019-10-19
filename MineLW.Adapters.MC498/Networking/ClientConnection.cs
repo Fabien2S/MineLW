@@ -4,7 +4,6 @@ using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
-using MineLW.API.Math;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
@@ -71,7 +70,7 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientChatMessage.Message(message));
         }
 
-        public void Teleport(Vector3 position, Rotation rotation, int id)
+        public void Teleport(Vector3 position, Quaternion rotation, int id)
         {
             _networkClient.Send(new MessageClientPlayerTeleport.Message(
                 position,
