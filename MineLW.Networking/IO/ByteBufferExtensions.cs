@@ -2,9 +2,9 @@
 using System.Numerics;
 using System.Text;
 using DotNetty.Buffers;
+using MineLW.API.NBT;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
-using MineLW.Serialization.NBT;
 using Newtonsoft.Json;
 
 namespace MineLW.Networking.IO

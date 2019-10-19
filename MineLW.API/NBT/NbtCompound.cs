@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using DotNetty.Buffers;
 
-namespace MineLW.Serialization.NBT
+namespace MineLW.API.NBT
 {
-    public class NbtCompound : NbtTag<IDictionary<string, INbtTag>>, IDictionary<string, INbtTag>, IReadOnlyDictionary<string, INbtTag>
+    public class NbtCompound : NbtTag<IDictionary<string, INbtTag>>, IDictionary<string, INbtTag>,
+        IReadOnlyDictionary<string, INbtTag>
     {
+        private static readonly UTF8Encoding Utf8Encoding = new UTF8Encoding(false, true);
+
         public override byte Id { get; } = 10;
 
         public int Count => Value.Count;
@@ -26,7 +30,12 @@ namespace MineLW.Serialization.NBT
             foreach (var (name, tag) in Value)
             {
                 buffer.WriteByte(tag.Id);
-                JavaSerializer.WriteUtf8(buffer, name);
+
+                var nameByteCount = Utf8Encoding.GetByteCount(name);
+                buffer.WriteShort(nameByteCount);
+
+                var nameBytes = Utf8Encoding.GetBytes(name);
+                buffer.WriteBytes(nameBytes);
 
                 tag.Serialize(buffer);
             }

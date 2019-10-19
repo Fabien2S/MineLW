@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace MineLW.Serialization.Text
+namespace MineLW.Utils
 {
     public class StringReader
     {

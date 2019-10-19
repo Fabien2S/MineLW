@@ -1,6 +1,6 @@
 ﻿using DotNetty.Buffers;
 
-namespace MineLW.Serialization.NBT
+namespace MineLW.API.NBT
 {
     public class NbtInt : NbtTag<int>
     {

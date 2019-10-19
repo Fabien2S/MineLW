@@ -1,10 +1,10 @@
 ﻿using DotNetty.Buffers;
+using MineLW.API.NBT;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
 using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
-using MineLW.Serialization.NBT;
 
 namespace MineLW.Adapters.MC498.Networking.Client
 {
