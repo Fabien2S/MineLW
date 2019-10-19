@@ -34,18 +34,12 @@ namespace MineLW.Blocks
             var index = Type.Properties.IndexOf(property);
             if (index == -1)
                 throw new ArgumentException("The block \"" + Type + "\" doesn't support the property " + property);
-
             return index;
         }
 
-        public override string ToString()
+        public bool Equals(IBlockState other)
         {
-            return Type.ToString() + '[' + string.Join(",", Properties) + ']';
-        }
-
-        protected bool Equals(IBlockState other)
-        {
-            return Id == other.Id;
+            return Id == other?.Id;
         }
 
         public override bool Equals(object obj)
@@ -58,16 +52,11 @@ namespace MineLW.Blocks
             return Id;
         }
 
+        public override string ToString()
+        {
+            return Type.ToString() + '[' + string.Join(",", Properties) + ']';
+        }
+
         public object this[IBlockProperty property] => Properties[PropertyIndex(property)];
-
-        public static bool operator ==(BlockState obj, IBlockState other)
-        {
-            return obj?.Id == other?.Id;
-        }
-
-        public static bool operator !=(BlockState obj, IBlockState other)
-        {
-            return obj?.Id != other?.Id;
-        }
     }
 }

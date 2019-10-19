@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using MineLW.API.Blocks.Properties;
 using MineLW.API.Utils;
 
 namespace MineLW.API.Blocks
 {
-    public interface IBlock
+    public interface IBlock : IEquatable<IBlock>
     {
         int Id { get; }
         Identifier Name { get; }

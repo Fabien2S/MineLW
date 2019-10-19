@@ -27,11 +27,6 @@ namespace MineLW.Blocks
             StateCount = properties.Aggregate(1, (current, property) => current * property.ValueCount);
         }
 
-        public override string ToString()
-        {
-            return Name.ToString();
-        }
-
         public IBlockState CreateState(int blockData)
         {
             var propertyCount = Properties.Count;
@@ -52,9 +47,9 @@ namespace MineLW.Blocks
             return new BlockState(Id, this, props);
         }
 
-        protected bool Equals(IBlock other)
+        public bool Equals(IBlock other)
         {
-            return Id == other.Id;
+            return Id == other?.Id;
         }
 
         public override bool Equals(object obj)
@@ -65,6 +60,11 @@ namespace MineLW.Blocks
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        public override string ToString()
+        {
+            return Name.ToString();
         }
     }
 }
