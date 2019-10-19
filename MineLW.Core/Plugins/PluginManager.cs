@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using McMaster.NETCore.Plugins;
 using MineLW.API;
 using MineLW.API.Plugins;
 
@@ -12,7 +8,7 @@ namespace MineLW.Plugins
         private readonly IServer _server;
         private readonly string _pluginsFolder;
 
-        private readonly Dictionary<IPlugin, PluginLoader> _plugins = new Dictionary<IPlugin, PluginLoader>();
+        //private readonly Dictionary<IPlugin, PluginLoader> _plugins = new Dictionary<IPlugin, PluginLoader>();
 
         public PluginManager(IServer server, string pluginsFolder)
         {
@@ -22,7 +18,7 @@ namespace MineLW.Plugins
 
         public void LoadPlugins()
         {
-            var files = Directory.EnumerateFiles(_pluginsFolder, "*.dll");
+            /*var files = Directory.EnumerateFiles(_pluginsFolder, "*.dll");
             foreach (var file in files)
             {
                 var pluginLoader = PluginLoader.CreateFromAssemblyFile(file, new[] {typeof(IPlugin)});
@@ -38,16 +34,16 @@ namespace MineLW.Plugins
                     var plugin = (IPlugin) Activator.CreateInstance(type);
                     _plugins[plugin] = pluginLoader;
                 }
-            }
+            }*/
         }
 
         public void UnloadPlugin(IPlugin plugin)
         {
-            if (!_plugins.ContainsKey(plugin))
+            /*if (!_plugins.ContainsKey(plugin))
                 throw new ArgumentNullException(nameof(plugin), "Plugin not registered");
 
             var loader = _plugins[plugin];
-            loader.Dispose();
+            loader.Dispose();*/
         }
 
         public void EnablePlugin(IPlugin plugin)
