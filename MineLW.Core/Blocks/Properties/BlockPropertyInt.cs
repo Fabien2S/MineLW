@@ -9,7 +9,7 @@ namespace MineLW.Blocks.Properties
         private readonly int _min;
         private readonly int _max;
 
-        public BlockPropertyInt(string name, int min, int max) : base(name, SetFromRange(min, max))
+        public BlockPropertyInt(string name, int min, int max) : base(name, CreateRangeCollection(min, max))
         {
             _min = min;
             _max = max;
@@ -25,13 +25,14 @@ namespace MineLW.Blocks.Properties
         {
             if (!int.TryParse(source, out var value))
                 throw new ArgumentException("Invalid int property value", nameof(source));
-            if(value < _min || value > _max)
-                throw new ArgumentOutOfRangeException(nameof(source), "Property value out of range (value: " + value + ", range: [" + _min + ',' + _max + "])");
+            if (value < _min || value > _max)
+                throw new ArgumentOutOfRangeException(nameof(source),
+                    "Property value out of range (value: " + value + ", range: [" + _min + ',' + _max + "])");
 
             return value;
         }
 
-        private static ReadOnlyCollection<int> SetFromRange(int min, int max)
+        private static ReadOnlyCollection<int> CreateRangeCollection(int min, int max)
         {
             var possibilities = new int[max - min + 1];
             for (var i = min; i <= max; i++)
