@@ -12,7 +12,7 @@ namespace MineLW.Worlds
 {
     public class WorldManager : IWorldManager
     {
-        public Identifier DefaultWorld { get; set; } = Minecraft.CreateIdentifier("overworld");
+        public Identifier DefaultWorld { get; } = Minecraft.CreateIdentifier("default");
 
         public event EventHandler<WorldEventArgs> WorldCreated;
 
@@ -33,5 +33,7 @@ namespace MineLW.Worlds
             WorldCreated?.Invoke(this, new WorldEventArgs(world));
             return _worlds[name] = world;
         }
+
+        public IWorldContext this[Identifier name] => _worlds[name];
     }
 }

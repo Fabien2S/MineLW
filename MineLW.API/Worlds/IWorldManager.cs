@@ -9,7 +9,7 @@ namespace MineLW.API.Worlds
         /// <summary>
         /// The world name where the player will spawn on log in.
         /// </summary>
-        Identifier DefaultWorld { get; set; }
+        Identifier DefaultWorld { get; }
 
         event EventHandler<WorldEventArgs> WorldCreated;
 
@@ -20,5 +20,7 @@ namespace MineLW.API.Worlds
         /// <param name="name">The name for the world</param>
         /// <returns>The world with the given name</returns>
         IWorld CreateWorld(Identifier name);
+
+        IWorldContext this[Identifier name] { get; }
     }
 }
