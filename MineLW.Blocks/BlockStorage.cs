@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetty.Buffers;
+using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Collections;
@@ -22,8 +23,7 @@ namespace MineLW.Blocks
                     return _blockCount;
 
                 _blockCount = 0;
-                var capacity = _nBitsArray.Capacity;
-                for (var i = 0; i < capacity; i++)
+                for (var i = 0; i < _nBitsArray.Capacity; i++)
                 {
                     if (_nBitsArray[i] != 0)
                         _blockCount++;
@@ -34,7 +34,7 @@ namespace MineLW.Blocks
         }
 
         private readonly IBlockPalette _globalPalette;
-        
+
         private NBitsArray _nBitsArray;
         private ushort _blockCount = ushort.MaxValue;
 
@@ -96,7 +96,7 @@ namespace MineLW.Blocks
             else
                 BlockPalette = _globalPalette;
 
-            _nBitsArray = NBitsArray.Create(bitsPerBlock, 4096);
+            _nBitsArray = NBitsArray.Create(bitsPerBlock, Minecraft.Units.Chunk.SectionBlockCount);
             return flag;
         }
 
@@ -119,6 +119,7 @@ namespace MineLW.Blocks
 
             var index = Index(x, y, z);
             _nBitsArray[index] = id;
+            _blockCount = ushort.MaxValue;
         }
 
         public IBlockState GetBlock(int x, int y, int z)

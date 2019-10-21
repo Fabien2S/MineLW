@@ -12,7 +12,7 @@ namespace MineLW.API.Collections
 
         private readonly long _maxValue;
 
-        public NBitsArray(long[] backing, byte bitsPerEntry, ushort capacity)
+        private NBitsArray(long[] backing, byte bitsPerEntry, ushort capacity)
         {
             if (bitsPerEntry < 1 || bitsPerEntry > 32)
             {
@@ -39,7 +39,7 @@ namespace MineLW.API.Collections
 
                 index *= BitsPerEntry;
                 var i0 = index >> 6;
-                var i1 = index & 0b111111;
+                var i1 = index & 0x3f;
 
                 var value = (long) ((ulong) Backing[i0] >> i1);
                 var i2 = i1 + BitsPerEntry;
@@ -56,7 +56,7 @@ namespace MineLW.API.Collections
 
                 index *= BitsPerEntry;
                 var i0 = index >> 6;
-                var i1 = index & 0b111111;
+                var i1 = index & 0x3f;
 
                 Backing[i0] = Backing[i0] & ~(_maxValue << i1) | (value & _maxValue) << i1;
                 var i2 = i1 + BitsPerEntry;

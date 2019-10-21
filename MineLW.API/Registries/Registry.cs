@@ -68,10 +68,10 @@ namespace MineLW.API.Registries
             return GetEnumerator();
         }
 
-        public TValue this[TKey identifier]
+        public TValue this[TKey key]
         {
-            get => _dictionary[identifier];
-            set => _dictionary[identifier] = value;
+            get => _dictionary[key];
+            set => _dictionary[key] = value;
         }
     }
 }
