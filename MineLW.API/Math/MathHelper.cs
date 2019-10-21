@@ -4,6 +4,8 @@ namespace MineLW.API.Math
 {
     public static class MathHelper
     {
+        public static readonly float Log2 = MathF.Log(2);
+
         public static bool AreRoughlyTheSame(float a, float b, float threshold = float.Epsilon)
         {
             return MathF.Abs(a - b) < threshold;
