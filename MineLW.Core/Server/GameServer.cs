@@ -55,7 +55,7 @@ namespace MineLW.Server
 
             _stopWatch.Start();
 
-            Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapter.ServerVersion);
+            Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapterManager.ServerVersion);
 
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);

@@ -5,11 +5,11 @@ using NLog;
 
 namespace MineLW.Adapters
 {
-    public static class GameAdapter
+    public static class GameAdapterManager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static readonly GameVersion Invalid = new GameVersion("Unknown", -1);
+        private static readonly GameVersion Invalid = new GameVersion("Unknown", -1);
 
         public static GameVersion ServerVersion { get; private set; } = Invalid;
         public static IGameAdapter ServerAdapter { get; private set; }
@@ -30,9 +30,13 @@ namespace MineLW.Adapters
                 ServerVersion = version;
         }
 
-        public static void Lock()
+        public static bool Lock()
         {
+            if (ServerVersion == Invalid || ServerAdapter != null)
+                return false;
+
             ServerAdapter = Resolve(ServerVersion.Protocol);
+            return true;
         }
 
         public static bool IsSupported(int protocol)

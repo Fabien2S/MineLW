@@ -20,10 +20,10 @@ namespace MineLW
 
         private static void Main(string[] args)
         {
-            Logger.Debug("Fetching {0} argument(s)", args.Length);
-
             var currentThread = Thread.CurrentThread;
-            currentThread.Name = "Main";
+            currentThread.Name = "Server";
+            
+            Logger.Debug("Fetching {0} argument(s)", args.Length);
 
             var executingAssembly = Assembly.GetExecutingAssembly();
             var assemblyName = executingAssembly.GetName();
@@ -35,13 +35,11 @@ namespace MineLW
 
             Logger.Info("Loading game adapters...");
             LoadGameAdapters();
-            if (GameAdapter.ServerVersion == GameAdapter.Invalid)
+            if (!GameAdapterManager.Lock())
             {
                 Logger.Error("No game adapter found");
                 return;
             }
-
-            GameAdapter.Lock();
 
             _server = new GameServer();
             Console.Title = _server.Name;
@@ -67,7 +65,8 @@ namespace MineLW
         {
             var adaptersPath = Path.Combine(Environment.CurrentDirectory, "adapters");
 
-            Directory.CreateDirectory(adaptersPath);
+            if(!Directory.Exists(adaptersPath))
+                Directory.CreateDirectory(adaptersPath);
 
             var files = Directory.EnumerateFiles(adaptersPath, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var file in files)
@@ -82,7 +81,7 @@ namespace MineLW
                         continue;
 
                     var gameAdapter = Activator.CreateInstance(exportedType);
-                    GameAdapter.Register((IGameAdapter) gameAdapter);
+                    GameAdapterManager.Register((IGameAdapter) gameAdapter);
                 }
             }
         }
