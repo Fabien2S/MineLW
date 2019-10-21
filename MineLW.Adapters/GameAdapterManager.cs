@@ -10,15 +10,15 @@ namespace MineLW.Adapters
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly GameVersion Invalid = new GameVersion("Unknown", -1);
+        private static readonly Dictionary<int, IGameAdapter> Versions = new Dictionary<int, IGameAdapter>();
 
         public static GameVersion ServerVersion { get; private set; } = Invalid;
-        public static IGameAdapter ServerAdapter { get; private set; }
 
-        private static readonly Dictionary<int, IGameAdapter> Versions = new Dictionary<int, IGameAdapter>();
+        private static bool _locked;
 
         public static void Register(IGameAdapter gameAdapter)
         {
-            if (ServerAdapter != null)
+            if (_locked)
                 throw new InvalidOperationException("GameAdapter is locked");
 
             var version = gameAdapter.Version;
@@ -30,13 +30,13 @@ namespace MineLW.Adapters
                 ServerVersion = version;
         }
 
-        public static bool Lock()
+        public static IGameAdapter Lock()
         {
-            if (ServerVersion == Invalid || ServerAdapter != null)
-                return false;
+            if (_locked || ServerVersion == Invalid)
+                return null;
 
-            ServerAdapter = Resolve(ServerVersion.Protocol);
-            return true;
+            _locked = true;
+            return Resolve(ServerVersion.Protocol);
         }
 
         public static bool IsSupported(int protocol)

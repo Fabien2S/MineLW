@@ -11,5 +11,8 @@ namespace MineLW.API.Blocks
         Identifier Name { get; }
         ReadOnlyCollection<IBlockProperty> Properties { get; }
         int StateCount { get; }
+
+        IBlockState CreateDefaultState();
+        IBlockState CreateState(int blockData);
     }
 }

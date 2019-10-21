@@ -28,9 +28,13 @@ namespace MineLW.Client
 
             var worldManager = _server.WorldManager;
             var defaultWorld = worldManager.CreateWorld(worldManager.DefaultWorld);
+
+            var blockManager = _server.BlockManager;
+            var stoneBlock = blockManager[Minecraft.Blocks.Stone];
+            var stoneBlockState = stoneBlock.CreateDefaultState();
             
-            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator();
-            defaultWorld.SetOption(WorldOption.SpawnPosition, new Vector3(0, 128, 0));
+            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(stoneBlockState);
+            defaultWorld.SetOption(WorldOption.SpawnPosition, Vector3.UnitY);
             
             player.WorldContext = defaultWorld;
             player.Position = defaultWorld.GetOption(WorldOption.SpawnPosition);

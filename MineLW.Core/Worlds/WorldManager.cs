@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MineLW.Adapters;
 using MineLW.API;
+using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
@@ -19,10 +19,8 @@ namespace MineLW.Worlds
         private readonly IBlockPalette _globalPalette;
         private readonly Dictionary<Identifier, IWorld> _worlds = new Dictionary<Identifier, IWorld>();
 
-        public WorldManager()
+        public WorldManager(IBlockManager blockManager)
         {
-            var gameAdapter = GameAdapter.ServerAdapter;
-            var blockManager = gameAdapter.BlockManager;
             _globalPalette = new GlobalBlockPalette(blockManager.BlockStates);
         }
         

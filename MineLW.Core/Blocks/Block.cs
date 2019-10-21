@@ -14,7 +14,7 @@ namespace MineLW.Blocks
         public ReadOnlyCollection<IBlockProperty> Properties { get; }
         public int StateCount { get; }
 
-        internal readonly object[] DefaultValues;
+        private readonly object[] _defaultValues;
 
         public Block(int id, Identifier name, IList<IBlockProperty> properties, object[] defaultValues)
         {
@@ -22,11 +22,17 @@ namespace MineLW.Blocks
             Name = name;
 
             Properties = new ReadOnlyCollection<IBlockProperty>(properties);
-            DefaultValues = defaultValues;
+            _defaultValues = defaultValues;
 
             StateCount = properties.Aggregate(1, (current, property) => current * property.ValueCount);
         }
 
+
+        public IBlockState CreateDefaultState()
+        {
+            return new BlockState(Id, this, _defaultValues);
+        }
+        
         public IBlockState CreateState(int blockData)
         {
             var propertyCount = Properties.Count;
