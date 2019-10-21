@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Worlds.Chunks;
 using MineLW.API.Worlds.Chunks.Generator;
+using NLog;
 
 namespace MineLW.Worlds.Chunks
 {
     public class ChunkManager : IChunkManager
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        
         public IChunkGenerator Generator { get; set; }
         
         private readonly IBlockPalette _globalPalette;
@@ -23,6 +26,11 @@ namespace MineLW.Worlds.Chunks
             return _loadedChunks.ContainsKey(position);
         }
 
+        public bool CanGenerate(ChunkPosition position)
+        {
+            return Generator != null;
+        }
+
         public IChunk GenerateChunk(ChunkPosition position)
         {
             if (IsLoaded(position))
@@ -31,6 +39,7 @@ namespace MineLW.Worlds.Chunks
                 throw new NotSupportedException("No chunk generator");
             
             var chunk = new Chunk(_globalPalette);
+            Logger.Debug("Generating chunk at {0}", position);
             Generator.Generate(chunk);
             return _loadedChunks[position] = chunk;
         }
