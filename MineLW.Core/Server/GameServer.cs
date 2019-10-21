@@ -7,7 +7,7 @@ using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Client;
 using MineLW.API.Worlds;
-using MineLW.Client;
+using MineLW.Clients;
 using MineLW.Networking;
 using MineLW.Protocols.Handshake;
 using MineLW.Worlds;
