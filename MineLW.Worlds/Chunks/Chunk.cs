@@ -47,7 +47,7 @@ namespace MineLW.Worlds.Chunks
 
             var section = _sections[index];
             var blockStorage = section.BlockStorage;
-            return blockStorage.HasBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
+            return blockStorage.HasBlock(x, y % Minecraft.Units.Chunk.SectionHeight, z);
         }
 
         public void SetBlock(int x, int y, int z, IBlockState blockState)
@@ -56,7 +56,7 @@ namespace MineLW.Worlds.Chunks
             var section = CreateSection(index);
             var blockStorage = section.BlockStorage;
             blockStorage.SetBlock(
-                x, y / Minecraft.Units.Chunk.SectionHeight, z, blockState
+                x, y % Minecraft.Units.Chunk.SectionHeight, z, blockState
             );
         }
 
@@ -68,7 +68,7 @@ namespace MineLW.Worlds.Chunks
 
             var section = _sections[index];
             var blockStorage = section.BlockStorage;
-            return blockStorage.GetBlock(x, y / Minecraft.Units.Chunk.SectionHeight, z);
+            return blockStorage.GetBlock(x, y % Minecraft.Units.Chunk.SectionHeight, z);
         }
 
         public IChunkSection this[int index] => _sections[index];
