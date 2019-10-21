@@ -28,6 +28,11 @@ namespace MineLW.Adapters.MC498
                 ImmutableArray<IBlockProperty>.Empty,
                 ImmutableList<dynamic>.Empty
             );
+            BlockManager.Register(
+                Minecraft.CreateIdentifier("granite"),
+                ImmutableArray<IBlockProperty>.Empty,
+                ImmutableList<dynamic>.Empty
+            );
         }
 
         public IClientConnection CreateConnection(NetworkClient networkClient) => new ClientConnection(networkClient);
