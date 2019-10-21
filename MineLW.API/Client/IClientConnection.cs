@@ -20,7 +20,7 @@ namespace MineLW.API.Client
         void Teleport(Vector3 position, Quaternion rotation, int id);
         void UpdateView(ChunkPosition chunkPosition);
         
-        void LoadChunk(ChunkPosition position, BakedChunk chunk);
+        void LoadChunk(ChunkPosition position, IChunk chunk);
         void UnloadChunk(ChunkPosition position);
     }
 }
