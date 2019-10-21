@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
+using MineLW.Adapters;
 using MineLW.API;
+using MineLW.API.Blocks.Palette;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Worlds.Chunks;
+using MineLW.Blocks.Palette;
+using MineLW.Worlds.Chunks;
 using NLog;
 
 namespace MineLW.Clients.World
@@ -47,31 +51,44 @@ namespace MineLW.Clients.World
                 UnloadChunk(position);
         }
 
-        public BakedChunk BakeChunk(ChunkPosition position)
+        public IChunk RenderChunk(ChunkPosition position, IBlockPalette globalBlockPalette)
         {
-            var bakedChunk = new BakedChunk();
+            var clientChunk = new Chunk(globalBlockPalette);
 
             var worldContexts = _client.World.WorldContexts;
             foreach (var worldContext in worldContexts)
             {
                 var chunkManager = worldContext.ChunkManager;
-                var chunk = chunkManager.GetChunk(position);
-
-                for (var x = 0; x < Minecraft.Units.Chunk.Size; x++)
-                for (var z = 0; z < Minecraft.Units.Chunk.Size; z++)
-                for (var y = 0; y < Minecraft.Units.Chunk.Height; y++)
+                if (!chunkManager.CanGenerate(position) && !chunkManager.IsLoaded(position))
                 {
-                    if(bakedChunk.HasBlock(x, y, z))
+                    Logger.Warn("Skipped chunk at {0}", position);
+                    continue;
+                }
+
+                var worldChunk = chunkManager.GenerateChunk(position);
+                for (var i = 0; i < Minecraft.Units.Chunk.SectionCount; i++)
+                {
+                    if (!worldChunk.HasSection(i))
                         continue;
-                    if (!chunk.HasBlock(x, y, z))
+
+                    var worldSection = worldChunk[i];
+                    var worldBlockStorage = worldSection.BlockStorage;
+                    if (worldBlockStorage.BlockCount == 0)
                         continue;
-                    
-                    var blockState = chunk.GetBlock(x, y, z);
-                    bakedChunk.SetBlock(x, y, z, blockState);
+
+                    var clientSection = clientChunk.CreateSection(i);
+                    var clientBlockStorage = clientSection.BlockStorage;
+                    for (var x = 0; x < Minecraft.Units.Chunk.Size; x++)
+                    for (var z = 0; z < Minecraft.Units.Chunk.Size; z++)
+                    for (var y = 0; y < Minecraft.Units.Chunk.SectionHeight; y++)
+                    {
+                        var worldBlock = worldBlockStorage.GetBlock(x, y, z);
+                        clientBlockStorage.SetBlock(x, y, z, worldBlock);
+                    }
                 }
             }
 
-            return bakedChunk;
+            return clientChunk;
         }
 
         public bool IsLoaded(ChunkPosition position)
@@ -87,8 +104,11 @@ namespace MineLW.Clients.World
                 return;
             }
 
-            var bakedChunk = BakeChunk(position);
-            _client.Connection.LoadChunk(position, bakedChunk);
+            // TODO use Client's adapter
+            var version = GameAdapters.ServerVersion;
+            var adapter = GameAdapters.Resolve(version.Protocol);
+            var renderedChunk = RenderChunk(position, new GlobalBlockPalette(adapter.BlockManager));
+            _client.Connection.LoadChunk(position, renderedChunk);
         }
 
         public void UnloadChunk(ChunkPosition position)
