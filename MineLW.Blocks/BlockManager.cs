@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Properties;
 using MineLW.API.Extensions;
-using MineLW.API.Math;
 using MineLW.API.Registries;
 using MineLW.API.Utils;
+using NLog;
 
 namespace MineLW.Blocks
 {
     public class BlockManager : IBlockManager
     {
-        public byte BitsPerBlock => (byte) MathF.Ceiling(
-            MathF.Log(_blockStates.Count) / MathHelper.Log2
-        );
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        // TODO replace BitsPerBlock with the global palette one when all the blocks are implemented
+        public byte BitsPerBlock => 14;
+        //public byte BitsPerBlock => (byte) MathF.Ceiling(MathF.Log2(_blockStates.Count));
 
         private readonly Registry<Identifier, IBlock> _blocks = new Registry<Identifier, IBlock>();
         private readonly Registry<int, IBlockState> _blockStates = new Registry<int, IBlockState>();
@@ -25,6 +26,7 @@ namespace MineLW.Blocks
             var block = new Block(blockId, name, properties, defaultValues);
             _blocks[name] = block;
 
+            Logger.Debug("Registering block {0}: {1}", blockId, block);
             var stateCount = properties.Aggregate(1, (current, property) => current * property.ValueCount);
             for (var blockData = 0; blockData < stateCount; blockData++)
             {
@@ -46,6 +48,7 @@ namespace MineLW.Blocks
 
                 var stateId = blockId + blockData;
                 _blockStates[stateId] = new BlockState(stateId, block, props);
+                Logger.Debug("Registering block state {0}: {1}", stateId, _blockStates[stateId]);
             }
         }
 
