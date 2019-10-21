@@ -12,6 +12,7 @@ namespace MineLW.Blocks
     public class BlockStorage : IBlockStorage
     {
         private const byte MinBitsPerBlock = 4;
+        private const byte Nil = 0;
 
         public IBlockPalette BlockPalette { get; private set; }
 
@@ -103,12 +104,12 @@ namespace MineLW.Blocks
         public bool HasBlock(int x, int y, int z)
         {
             var index = Index(x, y, z);
-            return _nBitsArray[index] != 0;
+            return _nBitsArray[index] != Nil;
         }
 
         public void SetBlock(int x, int y, int z, IBlockState blockState)
         {
-            var id = BlockPalette.GetId(blockState);
+            var id = blockState != null ? BlockPalette.GetId(blockState) : Nil;
             if (id == -1) // block not registered
             {
                 Resize((byte) (BlockPalette.BitsPerBlock + 1));
@@ -126,7 +127,7 @@ namespace MineLW.Blocks
         {
             var index = Index(x, y, z);
             var id = _nBitsArray[index];
-            return BlockPalette.GetBlockState(id);
+            return id == Nil ? null : BlockPalette.GetBlockState(id);
         }
 
         public void Serialize(IByteBuffer buffer)
