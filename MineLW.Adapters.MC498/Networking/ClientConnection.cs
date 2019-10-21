@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Numerics;
+using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
+using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
@@ -83,27 +85,31 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientUpdateViewPosition.Message(chunkPosition));
         }
 
-        public void LoadChunk(ChunkPosition position, BakedChunk chunk)
+        public void LoadChunk(ChunkPosition position, IChunk chunk)
         {
-            // TODO add cross-version support
-            /*var buffer = Unpooled.Buffer();
-
-            foreach (var storage in blockStorage)
+            var buffer = Unpooled.Buffer();
+            
+            var sectionMask = 0;
+            for (var y = 0; y < Minecraft.Units.Chunk.SectionCount; y++)
             {
-                if(storage == null)
+                var section = chunk[y];
+                if (section == null)
                     continue;
-                
-                var blockCount = storage.BlockCount;
+
+                var blockStorage = section.BlockStorage;
+                var blockCount = blockStorage.BlockCount;
                 if (blockCount == 0)
                     continue;
 
+                sectionMask |= 1 << y;
+                    
                 buffer.WriteShort(blockCount);
 
-                var blockPalette = storage.BlockPalette;
+                var blockPalette = blockStorage.BlockPalette;
                 buffer.WriteByte(blockPalette.BitsPerBlock);
 
                 blockPalette.Serialize(buffer);
-                storage.Serialize(buffer);
+                blockStorage.Serialize(buffer);
             }
 
             // biome
@@ -113,10 +119,10 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient.Send(new MessageClientLoadChunk.Message(
                 position,
                 true,
-                chunk.SectionMask,
+                sectionMask,
                 chunk.HeightMap,
                 buffer
-            ));*/
+            ));
         }
 
         public void UnloadChunk(ChunkPosition position)
