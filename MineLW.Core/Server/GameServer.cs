@@ -111,10 +111,9 @@ namespace MineLW.Server
                         } while (elapsedMillis >= DelayBetweenUpdate);
                     }
 
+                    // check UPS
                     if (sinceLastUpsCheck > MsPerSecond)
                         continue;
-
-                    // check UPS
 
                     // handle update per second
                     var updatePerSecond = updateCount / (sinceLastUpsCheck / MsPerSecond);

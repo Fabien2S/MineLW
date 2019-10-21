@@ -3,7 +3,6 @@ using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Collections;
-using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
 
 namespace MineLW.Worlds.Chunks
@@ -14,31 +13,6 @@ namespace MineLW.Worlds.Chunks
             9,
             Minecraft.Units.Chunk.Size * Minecraft.Units.Chunk.Size
         );
-
-        /*public ChunkSnapshot Snapshot
-        {
-            get
-            {
-                var sectionStorage = new IBlockStorage[Minecraft.Units.Chunk.SectionCount];
-
-                var sectionMask = 0;
-                for (var i = 0; i < Minecraft.Units.Chunk.SectionCount; i++)
-                {
-                    var section = _sections[i];
-                    if(section == null)
-                        continue;
-                    
-                    var blockStorage = section.BlockStorage;
-                    if (blockStorage.BlockCount == 0)
-                        continue;
-
-                    sectionMask |= 1 << i;
-                    sectionStorage[i] = blockStorage;
-                }
-
-                return new ChunkSnapshot(HeightMap, sectionMask, sectionStorage);
-            }
-        }*/
 
         private readonly IBlockPalette _globalPalette;
         private readonly ChunkSection[] _sections = new ChunkSection[Minecraft.Units.Chunk.SectionCount];
