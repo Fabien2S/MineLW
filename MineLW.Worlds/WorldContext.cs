@@ -6,7 +6,6 @@ using MineLW.API.Entities;
 using MineLW.API.Math;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
-using MineLW.Blocks;
 using MineLW.Entities;
 using MineLW.Worlds.Chunks;
 
@@ -32,13 +31,13 @@ namespace MineLW.Worlds
         {
             var chunkPos = ChunkPosition.FromWorld(position);
             if (!ChunkManager.IsLoaded(chunkPos))
-                return BlockState.Air;
+                return null;
 
             var chunk = ChunkManager.GetChunk(chunkPos);
             var index = Chunk.SectionIndex(position.Y);
 
             if (!chunk.HasSection(index))
-                return BlockState.Air;
+                return null;
 
             var section = chunk[index];
             return section.BlockStorage.GetBlock(
