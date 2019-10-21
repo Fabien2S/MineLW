@@ -5,6 +5,7 @@ using System.Runtime.Loader;
 using System.Threading;
 using MineLW.Adapters;
 using MineLW.API;
+using MineLW.Blocks;
 using MineLW.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -35,7 +36,7 @@ namespace MineLW
 
             Logger.Info("Loading game adapters...");
             LoadGameAdapters();
-            var serverAdapter = GameAdapterManager.Lock();
+            var serverAdapter = GameAdapters.Lock();
             if (serverAdapter == null)
             {
                 Logger.Error("No game adapter found");
@@ -60,6 +61,8 @@ namespace MineLW
                     context.Handled = true;
                 }
             };
+            
+            GameAdapters.BlockManagerSupplier = () => new BlockManager();
         }
 
         private static void LoadGameAdapters()
@@ -82,7 +85,7 @@ namespace MineLW
                         continue;
 
                     var gameAdapter = Activator.CreateInstance(exportedType);
-                    GameAdapterManager.Register((IGameAdapter) gameAdapter);
+                    GameAdapters.Register((IGameAdapter) gameAdapter);
                 }
             }
         }

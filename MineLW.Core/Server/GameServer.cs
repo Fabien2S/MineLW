@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using MineLW.Adapters;
 using MineLW.API;
+using MineLW.API.Blocks;
 using MineLW.API.Client;
 using MineLW.API.Worlds;
 using MineLW.Client;
@@ -28,21 +29,25 @@ namespace MineLW.Server
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public string Name { get; } = "MineLW " + Version;
-        
+
+        public IBlockManager BlockManager => _gameAdapter.BlockManager;
+
         public IWorldManager WorldManager { get; }
         public IClientManager ClientManager { get; }
 
+        private readonly IGameAdapter _gameAdapter;
         private readonly Stopwatch _stopWatch;
         private readonly NetworkServer _networkServer;
 
         private bool _running;
 
-        public GameServer()
+        public GameServer(IGameAdapter gameAdapter)
         {
+            _gameAdapter = gameAdapter;
             _stopWatch = new Stopwatch();
             _networkServer = new NetworkServer(this, HandshakeState.Instance);
             
-            WorldManager = new WorldManager();
+            WorldManager = new WorldManager(_gameAdapter.BlockManager);
             ClientManager = new ClientManager(this);
         }
 
@@ -55,7 +60,7 @@ namespace MineLW.Server
 
             _stopWatch.Start();
 
-            Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapterManager.ServerVersion);
+            Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.ServerVersion);
 
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);

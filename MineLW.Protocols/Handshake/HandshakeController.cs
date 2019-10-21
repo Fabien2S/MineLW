@@ -16,7 +16,7 @@ namespace MineLW.Protocols.Handshake
 
         public void HandleHandshake(HandshakeMessage.Message message)
         {
-            Client.Version = GameAdapterManager.IsSupported(message.Protocol) ? GameAdapterManager.GetVersion(message.Protocol) : new GameVersion("Unknown", message.Protocol);
+            Client.Version = GameAdapters.IsSupported(message.Protocol) ? GameAdapters.GetVersion(message.Protocol) : new GameVersion("Unknown", message.Protocol);
             Client.State = message.RequestedState switch
             {
                 1 => (NetworkState) StatusState.Instance,

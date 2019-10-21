@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using MineLW.API.Blocks;
 using MineLW.API.Utils;
 using NLog;
 
 namespace MineLW.Adapters
 {
-    public static class GameAdapterManager
+    public static class GameAdapters
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly GameVersion Invalid = new GameVersion("Unknown", -1);
         private static readonly Dictionary<int, IGameAdapter> Versions = new Dictionary<int, IGameAdapter>();
+
+        public static Func<IBlockManager> BlockManagerSupplier { get; set; }
 
         public static GameVersion ServerVersion { get; private set; } = Invalid;
 
