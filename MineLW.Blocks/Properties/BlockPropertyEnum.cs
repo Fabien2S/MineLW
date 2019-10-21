@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace MineLW.Blocks.Properties
 {
     public class BlockPropertyEnum : BlockProperty<string>
     {
-        public BlockPropertyEnum(string name, params string[] values) : base(name, Array.AsReadOnly(values))
+        public BlockPropertyEnum(string name, params string[] values) : base(name, values)
         {
         }
 
@@ -16,8 +15,8 @@ namespace MineLW.Blocks.Properties
                 if (value.Equals(source, StringComparison.Ordinal))
                     return value;
             }
-            
-            throw new InvalidEnumArgumentException("Undefined enum value \"" + source + "\"");
+
+            throw new ArgumentException("Undefined enum value: " + source);
         }
     }
 }

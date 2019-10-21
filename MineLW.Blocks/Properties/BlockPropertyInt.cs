@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 
 namespace MineLW.Blocks.Properties
@@ -15,7 +15,7 @@ namespace MineLW.Blocks.Properties
             _max = max;
         }
 
-        public BlockPropertyInt(string name, int[] values) : base(name, Array.AsReadOnly(values))
+        public BlockPropertyInt(string name, int[] values) : base(name, values)
         {
             _min = values.Min();
             _max = values.Max();
@@ -23,21 +23,32 @@ namespace MineLW.Blocks.Properties
 
         public override object Parse(string source)
         {
-            if (!int.TryParse(source, out var value))
-                throw new ArgumentException("Invalid int property value", nameof(source));
+            if (!int.TryParse(source, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+            {
+                throw new ArgumentException(
+                    "source isn't a valid int",
+                    nameof(source)
+                );
+            }
+
             if (value < _min || value > _max)
-                throw new ArgumentOutOfRangeException(nameof(source),
-                    "Property value out of range (value: " + value + ", range: [" + _min + ',' + _max + "])");
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(source),
+                    value,
+                    "source is either greater or less than the specified range"
+                );
+            }
 
             return value;
         }
 
-        private static ReadOnlyCollection<int> CreateRangeCollection(int min, int max)
+        private static int[] CreateRangeCollection(int min, int max)
         {
             var possibilities = new int[max - min + 1];
             for (var i = min; i <= max; i++)
                 possibilities[i - min] = i;
-            return Array.AsReadOnly(possibilities);
+            return possibilities;
         }
     }
 }
