@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
-        <ProjectReference Include="..\MineLW.Serialization\MineLW.Serialization.csproj" />
     </ItemGroup>
 
     <ItemGroup>
