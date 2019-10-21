@@ -1,4 +1,5 @@
 ﻿using MineLW.API;
+using MineLW.API.Collections;
 using MineLW.API.Worlds.Lights;
 
 namespace MineLW.Worlds.Lights
