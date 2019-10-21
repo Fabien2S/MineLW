@@ -1,4 +1,5 @@
 ﻿using MineLW.API.Blocks;
+using MineLW.API.Collections;
 using MineLW.API.Utils;
 
 namespace MineLW.API.Worlds.Chunks
