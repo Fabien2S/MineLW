@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
+      <ProjectReference Include="..\MineLW.Entities\MineLW.Entities.csproj" />
+      <ProjectReference Include="..\MineLW.Worlds\MineLW.Worlds.csproj" />
+    </ItemGroup>
+
+</Project>

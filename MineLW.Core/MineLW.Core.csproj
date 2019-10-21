@@ -10,8 +10,11 @@
     <ItemGroup>
         <ProjectReference Include="..\MineLW.Adapters\MineLW.Adapters.csproj" />
         <ProjectReference Include="..\MineLW.API\MineLW.API.csproj" />
+        <ProjectReference Include="..\MineLW.Client\MineLW.Client.csproj" />
+        <ProjectReference Include="..\MineLW.Entities\MineLW.Entities.csproj" />
         <ProjectReference Include="..\MineLW.Networking\MineLW.Networking.csproj" />
         <ProjectReference Include="..\MineLW.Protocols\MineLW.Protocols.csproj" />
+        <ProjectReference Include="..\MineLW.Worlds\MineLW.Worlds.csproj" />
     </ItemGroup>
 
     <ItemGroup>
