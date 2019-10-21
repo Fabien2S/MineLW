@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Net;
 using MineLW.Adapters;
 using MineLW.API;
-using MineLW.API.Blocks;
 using MineLW.API.Client;
 using MineLW.API.Worlds;
 using MineLW.Clients;
@@ -30,8 +29,6 @@ namespace MineLW.Server
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public string Name { get; } = "MineLW " + Version;
-
-        public IBlockManager BlockManager => _gameAdapter.BlockManager;
 
         public IWorldManager WorldManager { get; }
         public IClientManager ClientManager { get; }
@@ -64,7 +61,8 @@ namespace MineLW.Server
             Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.ServerVersion);
 
             var defaultWorld = WorldManager.CreateWorld(WorldManager.DefaultWorld);
-            var blockState = BlockManager.CreateState(Minecraft.Blocks.Stone);
+            var blockManager = _gameAdapter.BlockManager;
+            var blockState = blockManager.CreateState(Minecraft.Blocks.Stone);
             defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(blockState);
             
             // start the network server
