@@ -78,12 +78,14 @@ namespace MineLW.Clients.World
 
                     var clientSection = clientChunk.CreateSection(i);
                     var clientBlockStorage = clientSection.BlockStorage;
+
                     for (var x = 0; x < Minecraft.Units.Chunk.Size; x++)
                     for (var z = 0; z < Minecraft.Units.Chunk.Size; z++)
                     for (var y = 0; y < Minecraft.Units.Chunk.SectionHeight; y++)
                     {
                         var worldBlock = worldBlockStorage.GetBlock(x, y, z);
-                        clientBlockStorage.SetBlock(x, y, z, worldBlock);
+                        if(worldBlock != null)
+                            clientBlockStorage.SetBlock(x, y, z, worldBlock);
                     }
                 }
             }
