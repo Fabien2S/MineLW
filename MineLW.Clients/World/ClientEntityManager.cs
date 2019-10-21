@@ -2,7 +2,7 @@
 using MineLW.API.Client.World;
 using MineLW.API.Entities;
 
-namespace MineLW.Client.World
+namespace MineLW.Clients.World
 {
     public class ClientEntityManager : IClientEntityManager
     {

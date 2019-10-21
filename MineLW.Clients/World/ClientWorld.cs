@@ -7,7 +7,7 @@ using MineLW.API.Entities.Events;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
 
-namespace MineLW.Client.World
+namespace MineLW.Clients.World
 {
     public class ClientWorld : IClientWorld
     {

@@ -1,9 +1,9 @@
 ﻿using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Entities.Living.Player;
-using MineLW.Client.World;
+using MineLW.Clients.World;
 
-namespace MineLW.Client
+namespace MineLW.Clients
 {
     public class Client : IClient
     {

@@ -7,7 +7,7 @@ using MineLW.API.Worlds;
 using MineLW.Entities.Living.Player;
 using MineLW.Worlds.Chunks.Generator;
 
-namespace MineLW.Client
+namespace MineLW.Clients
 {
     public class ClientManager : IClientManager
     {
@@ -30,10 +30,9 @@ namespace MineLW.Client
             var defaultWorld = worldManager.CreateWorld(worldManager.DefaultWorld);
 
             var blockManager = _server.BlockManager;
-            var stoneBlock = blockManager[Minecraft.Blocks.Stone];
-            var stoneBlockState = stoneBlock.CreateDefaultState();
+            var blockState = blockManager.CreateState(Minecraft.Blocks.Stone);
             
-            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(stoneBlockState);
+            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(blockState);
             defaultWorld.SetOption(WorldOption.SpawnPosition, Vector3.UnitY);
             
             player.WorldContext = defaultWorld;

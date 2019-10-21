@@ -5,7 +5,7 @@ using MineLW.API.Client.World;
 using MineLW.API.Worlds.Chunks;
 using NLog;
 
-namespace MineLW.Client.World
+namespace MineLW.Clients.World
 {
     public class ClientChunkManager : IClientChunkManager
     {
@@ -29,15 +29,13 @@ namespace MineLW.Client.World
             ISet<ChunkPosition> chunkToLoad = new HashSet<ChunkPosition>();
 
             for (var x = clientPosition.X - renderDistance; x <= clientPosition.X + renderDistance; x++)
+            for (var z = clientPosition.Z - renderDistance; z <= clientPosition.Z + renderDistance; z++)
             {
-                for (var z = clientPosition.Z - renderDistance; z <= clientPosition.Z + renderDistance; z++)
-                {
-                    var chunkPosition = new ChunkPosition(x, z);
-                    if (chunkToUnload.Contains(chunkPosition))
-                        chunkToUnload.Remove(chunkPosition);
-                    else
-                        chunkToLoad.Add(chunkPosition);
-                }
+                var chunkPosition = new ChunkPosition(x, z);
+                if (chunkToUnload.Contains(chunkPosition))
+                    chunkToUnload.Remove(chunkPosition);
+                else
+                    chunkToLoad.Add(chunkPosition);
             }
 
             Logger.Debug("Loading {0} chunk(s)", chunkToLoad.Count);

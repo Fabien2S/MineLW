@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Entities", "MineLW.E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Plugins", "MineLW.Plugins\MineLW.Plugins.csproj", "{4401452C-7C53-41A3-B48C-BCD45D35784C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Client", "MineLW.Client\MineLW.Client.csproj", "{47964758-9E2E-4866-8F12-9C116040BEE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineLW.Clients", "MineLW.Clients\MineLW.Clients.csproj", "{47964758-9E2E-4866-8F12-9C116040BEE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
