@@ -21,7 +21,7 @@ namespace MineLW.Worlds
 
         public WorldManager(IBlockManager blockManager)
         {
-            _globalPalette = new GlobalBlockPalette(blockManager.BlockStates);
+            _globalPalette = new GlobalBlockPalette(blockManager);
         }
         
         public IWorld CreateWorld(Identifier name)

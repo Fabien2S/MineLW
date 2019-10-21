@@ -1,6 +1,5 @@
 ﻿using MineLW.API;
 using MineLW.API.Worlds.Lights;
-using MineLW.Utils;
 
 namespace MineLW.Worlds.Lights
 {

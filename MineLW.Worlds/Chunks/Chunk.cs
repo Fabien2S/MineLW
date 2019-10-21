@@ -2,9 +2,9 @@
 using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
+using MineLW.API.Collections;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
-using MineLW.Blocks;
 
 namespace MineLW.Worlds.Chunks
 {
@@ -90,7 +90,7 @@ namespace MineLW.Worlds.Chunks
         {
             var index = SectionIndex(y);
             if (!HasSection(index))
-                return BlockState.Air;
+                return null;
 
             var section = _sections[index];
             var blockStorage = section.BlockStorage;

@@ -1,13 +1,7 @@
 ﻿using System.Collections.Generic;
-using MineLW.API;
-using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
-using MineLW.API.Math;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
-using MineLW.API.Worlds.Chunks;
-using MineLW.Blocks;
-using MineLW.Worlds.Chunks;
 
 namespace MineLW.Worlds
 {
