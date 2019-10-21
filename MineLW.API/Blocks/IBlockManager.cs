@@ -8,9 +8,6 @@ namespace MineLW.API.Blocks
     {
         byte BitsPerBlock { get; }
 
-        /*Registry<Identifier, IBlock> Blocks { get; }
-        Registry<int, IBlockState> BlockStates { get; }*/
-
         void Register(Identifier name, IReadOnlyList<IBlockProperty> properties, IReadOnlyList<dynamic> defaultValues);
         IBlockState CreateState(Identifier name, Dictionary<string, string> properties = null);
 
