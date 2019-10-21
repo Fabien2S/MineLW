@@ -13,6 +13,8 @@ namespace MineLW.Worlds
     public class WorldManager : IWorldManager
     {
         public Identifier DefaultWorld { get; } = Minecraft.CreateIdentifier("default");
+        
+        public IBlockManager BlockManager { get; }
 
         public event EventHandler<WorldEventArgs> WorldCreated;
 
@@ -21,6 +23,7 @@ namespace MineLW.Worlds
 
         public WorldManager(IBlockManager blockManager)
         {
+            BlockManager = blockManager;
             _globalPalette = new GlobalBlockPalette(blockManager);
         }
         
@@ -34,6 +37,6 @@ namespace MineLW.Worlds
             return _worlds[name] = world;
         }
 
-        public IWorldContext this[Identifier name] => _worlds[name];
+        public IWorld this[Identifier name] => _worlds[name];
     }
 }

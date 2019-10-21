@@ -1,4 +1,5 @@
 ﻿using System;
+using MineLW.API.Blocks;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Events;
 
@@ -10,6 +11,8 @@ namespace MineLW.API.Worlds
         /// The world name where the player will spawn on log in.
         /// </summary>
         Identifier DefaultWorld { get; }
+        
+        IBlockManager BlockManager { get; }
 
         event EventHandler<WorldEventArgs> WorldCreated;
 
@@ -21,6 +24,6 @@ namespace MineLW.API.Worlds
         /// <returns>The world with the given name</returns>
         IWorld CreateWorld(Identifier name);
 
-        IWorldContext this[Identifier name] { get; }
+        IWorld this[Identifier name] { get; }
     }
 }
