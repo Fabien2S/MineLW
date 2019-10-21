@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MineLW.API.Blocks;
+using MineLW.API.Blocks.Properties;
 using MineLW.API.Extensions;
 using MineLW.API.Math;
 using MineLW.API.Registries;
@@ -17,30 +19,32 @@ namespace MineLW.Blocks
         private readonly Registry<Identifier, IBlock> _blocks = new Registry<Identifier, IBlock>();
         private readonly Registry<int, IBlockState> _blockStates = new Registry<int, IBlockState>();
 
-        public void Register(IBlock block)
+        public void Register(Identifier name, IReadOnlyList<IBlockProperty> properties, IReadOnlyList<dynamic> defaultValues)
         {
-            _blocks[block.Name] = block;
+            var blockId = _blockStates.Count;
+            var block = new Block(blockId, name, properties, defaultValues);
+            _blocks[name] = block;
 
-            for (var state = 0; state < block.StateCount; state++)
+            var stateCount = properties.Aggregate(1, (current, property) => current * property.ValueCount);
+            for (var blockData = 0; blockData < stateCount; blockData++)
             {
-                var properties = block.Properties;
                 var propertyCount = properties.Count;
 
-                var data = state;
+                var tmp = blockData;
                 var props = new dynamic[propertyCount];
                 for (var j = propertyCount - 1; j >= 0; j--)
                 {
                     var property = properties[j];
 
                     var propertySize = property.ValueCount;
-                    var valueIndex = data % propertySize;
-                    data /= propertySize;
+                    var valueIndex = tmp % propertySize;
+                    tmp /= propertySize;
 
                     var value = property.GetValue(valueIndex);
                     props[j] = value;
                 }
 
-                var stateId = block.Id + state;
+                var stateId = blockId + blockData;
                 _blockStates[stateId] = new BlockState(stateId, block, props);
             }
         }

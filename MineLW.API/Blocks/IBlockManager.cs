@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MineLW.API.Blocks.Properties;
 using MineLW.API.Utils;
 
 namespace MineLW.API.Blocks
@@ -10,7 +11,7 @@ namespace MineLW.API.Blocks
         /*Registry<Identifier, IBlock> Blocks { get; }
         Registry<int, IBlockState> BlockStates { get; }*/
 
-        void Register(IBlock block);
+        void Register(Identifier name, IReadOnlyList<IBlockProperty> properties, IReadOnlyList<dynamic> defaultValues);
         IBlockState CreateState(Identifier name, Dictionary<string, string> properties = null);
 
         IBlockState this[int id] { get; }
