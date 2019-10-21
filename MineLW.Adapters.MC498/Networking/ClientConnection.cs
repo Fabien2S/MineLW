@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
@@ -86,7 +85,8 @@ namespace MineLW.Adapters.MC498.Networking
 
         public void LoadChunk(ChunkPosition position, BakedChunk chunk)
         {
-            var buffer = Unpooled.Buffer();
+            // TODO add cross-version support
+            /*var buffer = Unpooled.Buffer();
 
             foreach (var storage in blockStorage)
             {
@@ -97,7 +97,6 @@ namespace MineLW.Adapters.MC498.Networking
                 if (blockCount == 0)
                     continue;
 
-                // TODO add cross-version support
                 buffer.WriteShort(blockCount);
 
                 var blockPalette = storage.BlockPalette;
@@ -117,7 +116,7 @@ namespace MineLW.Adapters.MC498.Networking
                 chunk.SectionMask,
                 chunk.HeightMap,
                 buffer
-            ));
+            ));*/
         }
 
         public void UnloadChunk(ChunkPosition position)
