@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using DotNetty.Buffers;
-using MineLW.Networking.IO;
 
-namespace MineLW.Utils
+namespace MineLW.API.Collections
 {
     public class NibbleArray
     {
@@ -50,11 +48,6 @@ namespace MineLW.Utils
 
                 _dirty = true;
             }
-        }
-
-        public void Serialize(IByteBuffer buffer)
-        {
-            buffer.WriteByteArray(_buffer);
         }
 
         private static int ArrayIndex(int nibbleIndex)
