@@ -11,6 +11,7 @@ using MineLW.Clients;
 using MineLW.Networking;
 using MineLW.Protocols.Handshake;
 using MineLW.Worlds;
+using MineLW.Worlds.Chunks.Generator;
 using NLog;
 
 namespace MineLW.Server
@@ -62,6 +63,10 @@ namespace MineLW.Server
 
             Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.ServerVersion);
 
+            var defaultWorld = WorldManager.CreateWorld(WorldManager.DefaultWorld);
+            var blockState = BlockManager.CreateState(Minecraft.Blocks.Stone);
+            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(blockState);
+            
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);
             _networkServer.Start(ipEndPoint);
