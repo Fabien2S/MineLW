@@ -59,8 +59,11 @@ namespace MineLW.Clients.World
 
         public void Init()
         {
-            _client.Player.PositionChanged += OnPlayerPositionChanged;
-            _client.Player.WorldChanged += OnPlayerWorldChanged;
+            var player = _client.Player;
+            player.PositionChanged += OnPlayerPositionChanged;
+            player.WorldChanged += OnPlayerWorldChanged;
+
+            _worldContexts.Add(player.WorldContext);
 
             _worldDirty = true;
         }
