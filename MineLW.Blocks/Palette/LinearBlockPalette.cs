@@ -49,7 +49,7 @@ namespace MineLW.Blocks.Palette
 
             if (_position >= _globalBlockStateIds.Length)
                 return -1;
-            
+
             _globalBlockStateIds[_position] = id;
             return _position++;
         }
@@ -57,7 +57,7 @@ namespace MineLW.Blocks.Palette
         public IBlockState GetBlockState(int id)
         {
             if (0 > id || id >= _position)
-                return BlockState.Air;
+                return null;
 
             var blockStateId = _globalBlockStateIds[id];
             return _globalPalette.GetBlockState(blockStateId);

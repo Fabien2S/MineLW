@@ -1,13 +1,19 @@
-using MineLW.API.Registries;
+using System.Collections.Generic;
 using MineLW.API.Utils;
 
 namespace MineLW.API.Blocks
 {
     public interface IBlockManager
     {
-        Registry<int, IBlockState> BlockStates { get; }
+        byte BitsPerBlock { get; }
 
-        IBlockState CreateState(int id);
-        IBlock this[Identifier stone] { get; }
+        /*Registry<Identifier, IBlock> Blocks { get; }
+        Registry<int, IBlockState> BlockStates { get; }*/
+
+        void Register(IBlock block);
+        IBlockState CreateState(Identifier name, Dictionary<string, string> properties = null);
+
+        IBlockState this[int id] { get; }
+        IBlock this[Identifier name] { get; }
     }
 }

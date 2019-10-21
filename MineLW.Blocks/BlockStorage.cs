@@ -3,7 +3,6 @@ using DotNetty.Buffers;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Collections;
-using MineLW.API.Utils;
 using MineLW.Blocks.Palette;
 using MineLW.Networking.IO;
 
@@ -23,10 +22,10 @@ namespace MineLW.Blocks
                     return _blockCount;
 
                 _blockCount = 0;
-                var capacity = NBitsArray.Capacity;
+                var capacity = _nBitsArray.Capacity;
                 for (var i = 0; i < capacity; i++)
                 {
-                    if (NBitsArray[i] != 0)
+                    if (_nBitsArray[i] != 0)
                         _blockCount++;
                 }
 
@@ -34,9 +33,9 @@ namespace MineLW.Blocks
             }
         }
 
-        public NBitsArray NBitsArray { get; private set; }
-
         private readonly IBlockPalette _globalPalette;
+        
+        private NBitsArray _nBitsArray;
         private ushort _blockCount = ushort.MaxValue;
 
         public BlockStorage(IBlockPalette globalPalette, byte bitsPerBlock = MinBitsPerBlock)
@@ -53,12 +52,12 @@ namespace MineLW.Blocks
         /// <param name="bitsPerBlock">The number of bits used to store a block state</param>
         private void Resize(byte bitsPerBlock)
         {
-            var previousDataBits = NBitsArray;
+            var previousDataBits = _nBitsArray;
             var previousBlockPalette = BlockPalette;
 
             if (!UpdatePalette(bitsPerBlock))
                 return;
-            
+
             for (var i = 0; i < previousDataBits.Capacity; i++)
             {
                 var blockStateId = previousDataBits[i];
@@ -66,7 +65,7 @@ namespace MineLW.Blocks
                     continue;
 
                 var blockState = previousBlockPalette.GetBlockState(blockStateId);
-                NBitsArray[i] = BlockPalette.GetId(blockState);
+                _nBitsArray[i] = BlockPalette.GetId(blockState);
             }
         }
 
@@ -97,14 +96,14 @@ namespace MineLW.Blocks
             else
                 BlockPalette = _globalPalette;
 
-            NBitsArray = NBitsArray.Create(bitsPerBlock, 4096);
+            _nBitsArray = NBitsArray.Create(bitsPerBlock, 4096);
             return flag;
         }
 
         public bool HasBlock(int x, int y, int z)
         {
             var index = Index(x, y, z);
-            return NBitsArray[index] != 0;
+            return _nBitsArray[index] != 0;
         }
 
         public void SetBlock(int x, int y, int z, IBlockState blockState)
@@ -119,19 +118,19 @@ namespace MineLW.Blocks
             }
 
             var index = Index(x, y, z);
-            NBitsArray[index] = id;
+            _nBitsArray[index] = id;
         }
 
         public IBlockState GetBlock(int x, int y, int z)
         {
             var index = Index(x, y, z);
-            var id = NBitsArray[index];
+            var id = _nBitsArray[index];
             return BlockPalette.GetBlockState(id);
         }
 
         public void Serialize(IByteBuffer buffer)
         {
-            var backing = NBitsArray.Backing;
+            var backing = _nBitsArray.Backing;
             buffer.WriteVarInt32(backing.Length);
             foreach (var l in backing)
                 buffer.WriteLong(l);
