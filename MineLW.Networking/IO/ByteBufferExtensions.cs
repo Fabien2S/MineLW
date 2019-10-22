@@ -11,19 +11,21 @@ namespace MineLW.Networking.IO
 {
     public static class ByteBufferExtensions
     {
-        public static byte[] ToArray(this IByteBuffer buffer, out int offset, out int length)
+        public static byte[] ToArray(this IByteBuffer buffer, out int offset, out int count)
         {
             if (buffer.HasArray)
             {
                 offset = buffer.ArrayOffset;
-                length = buffer.ReadableBytes;
+                count = buffer.ReadableBytes;
                 return buffer.Array;
             }
 
             offset = 0;
-            length = buffer.ReadableBytes;
-            var bytes = new byte[length];
+            count = buffer.ReadableBytes;
+            var bytes = new byte[count];
+            buffer.MarkReaderIndex();
             buffer.ReadBytes(bytes);
+            buffer.ResetReaderIndex();
             return bytes;
         }
 
