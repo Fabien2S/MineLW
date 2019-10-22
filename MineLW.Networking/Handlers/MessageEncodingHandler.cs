@@ -40,7 +40,17 @@ namespace MineLW.Networking.Handlers
 
             try
             {
-                var message = state.Deserialize(msg, id);
+                var deserializer = state.GetDeserializer(id);
+                if (deserializer == null)
+                {
+#if DEBUG
+                    msg.SkipBytes(msg.ReadableBytes);
+                    Logger.Debug("Undefined message {0} in state {1}", id, state);
+#endif
+                    return;
+                }
+                
+                var message = deserializer.Deserialize(msg);
                 if (msg.ReadableBytes > 0)
                     throw new DecoderException("Too many bytes");
 
@@ -48,11 +58,6 @@ namespace MineLW.Networking.Handlers
 
                 Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
             }
-#if DEBUG
-            catch (System.NullReferenceException)
-            {
-            }
-#endif
             catch (DecoderException e)
             {
                 throw new DecoderException("Unable to decode message id " + id, e);

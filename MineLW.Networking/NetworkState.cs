@@ -50,16 +50,9 @@ namespace MineLW.Networking
             throw new NotSupportedException("No serializer for message " + message);
         }
 
-        public IMessage Deserialize(IByteBuffer buffer, int id)
+        public IMessageDeserializer GetDeserializer(int id)
         {
-            if (id < 0 || id >= _deserializers.Length)
-                throw new NullReferenceException("No deserializer for id " + id);
-
-            var deserializer = _deserializers[id];
-            if (deserializer == null)
-                throw new NullReferenceException("No deserializer for id " + id);
-
-            return deserializer.Deserialize(buffer);
+            return id < 0 || id >= _deserializers.Length ? null : _deserializers[id];
         }
 
         public void Handle(MessageController controller, IMessage message)
