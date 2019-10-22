@@ -60,7 +60,8 @@ namespace MineLW.Networking
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            Logger.Error(exception, "An error occurred with {0}", this);
+            Logger.Error("An error occurred with {0}", this);
+            Logger.Error(exception);
             Close();
         }
 
@@ -126,6 +127,8 @@ namespace MineLW.Networking
 
         public void EnableCompression(int threshold)
         {
+            // TODO handle compression threshold update
+            
             Logger.Debug("Enabling compression on {0} (threshold: {1})", this, threshold);
             _channel.Pipeline.AddBefore(
                 MessageEncodingHandler.Name,
