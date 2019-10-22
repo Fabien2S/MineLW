@@ -84,10 +84,6 @@ namespace MineLW.Protocols.Login
             _sharedSecret = Cryptography.CryptoServiceProvider.Decrypt(encryptedSharedSecret, false);
             Client.EnableEncryption(_sharedSecret);
 
-            Client
-                .Send(new MessageClientEnableCompression.Message(CompressionThreshold))
-                .ContinueWith(task => { Client.EnableCompression(CompressionThreshold); });
-
             RequestSession();
         }
 
@@ -147,22 +143,32 @@ namespace MineLW.Protocols.Login
                             }
 
                             Logger.Info("UUID of player {0} is {1}", _profile.Name, _profile.Id);
-
+                            
                             Client
-                                .Send(new MessageClientLoginResponse.Message(
-                                    _profile.Id.ToString(),
-                                    _profile.Name
-                                ))
+                                .Send(new MessageClientEnableCompression.Message(CompressionThreshold))
                                 .ContinueWith(CheckErrors)
-                                .ContinueWith(task =>
+                                .ContinueWith(t1 =>
                                 {
-                                    // if an error occurred
-                                    if (Client.Closed)
+                                    if (Client.Closed) // encryption gone wrong
                                         return;
+                                    
+                                    Client.EnableCompression(CompressionThreshold);
+                            
+                                    Client
+                                        .Send(new MessageClientLoginResponse.Message(
+                                            _profile.Id.ToString(),
+                                            _profile.Name
+                                        ))
+                                        .ContinueWith(CheckErrors)
+                                        .ContinueWith(t2 =>
+                                        {
+                                            if (Client.Closed) // compression gone wrong
+                                                return;
 
-                                    _adapter = GameAdapters.Resolve(Client.Version.Protocol);
-                                    Client.State = _adapter.NetworkState;
-                                    Client.AddTask(FinalizeLogin);
+                                            _adapter = GameAdapters.Resolve(Client.Version.Protocol);
+                                            Client.State = _adapter.NetworkState;
+                                            Client.AddTask(FinalizeLogin);
+                                        });
                                 });
                         }).ContinueWith(CheckErrors);
                 }).ContinueWith(CheckErrors);
