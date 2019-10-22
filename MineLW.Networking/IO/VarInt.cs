@@ -13,22 +13,31 @@ namespace MineLW.Networking.IO
 
         public static bool TryReadVarInt32(this IByteBuffer buffer, out int result)
         {
+            buffer.MarkReaderIndex();
+
             var numBytes = (byte) 0;
 
             result = 0;
             byte read;
             do
             {
-                if (buffer.ReadableBytes < 1)
+                if (!buffer.IsReadable())
+                {
+                    buffer.ResetReaderIndex();
                     return false;
+                }
 
                 read = buffer.ReadByte();
                 var value = read & VarIntContentMask;
                 result |= value << (VarIntContentBytesCount * numBytes);
 
                 numBytes++;
-                if (numBytes > VarInt32MaxBytes)
-                    return false;
+                if (numBytes <= VarInt32MaxBytes)
+                    continue;
+                
+                buffer.ResetReaderIndex();
+                return false;
+                
             } while ((read & VarIntIndexMask) != 0);
 
             return true;
