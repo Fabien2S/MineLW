@@ -84,9 +84,9 @@ namespace MineLW.Protocols.Login
             _sharedSecret = Cryptography.CryptoServiceProvider.Decrypt(encryptedSharedSecret, false);
             Client.EnableEncryption(_sharedSecret);
 
-            /*Client
+            Client
                 .Send(new MessageClientEnableCompression.Message(CompressionThreshold))
-                .ContinueWith(task => { Client.EnableCompression(CompressionThreshold); });*/
+                .ContinueWith(task => { Client.EnableCompression(CompressionThreshold); });
 
             RequestSession();
         }
@@ -176,7 +176,8 @@ namespace MineLW.Protocols.Login
             var taskException = task.Exception;
             var exception = taskException.InnerException;
 
-            Logger.Error(exception, "Unable to complete the login sequence of {0}. Exception: {1}", _profile);
+            Logger.Error( "Unable to complete the login sequence of {0}", _profile);
+            Logger.Error(exception);
             Client.Disconnect();
         }
 

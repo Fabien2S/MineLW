@@ -24,15 +24,15 @@ namespace MineLW.Networking.Handlers
 
         protected override void Encode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
-            var input = msg.ToArray(out var inputOffset, out var inputLength);
-            var outputBuffer = _encryptCipher.ProcessBytes(input, inputOffset, inputLength);
+            var inputBuffer = msg.ToArray(out var offset, out var count);
+            var outputBuffer = _encryptCipher.ProcessBytes(inputBuffer, offset, count);
             output.Add(Unpooled.WrappedBuffer(outputBuffer));
         }
 
         protected override void Decode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
-            var input = msg.ToArray(out var inputOffset, out var inputLength);
-            var outputBuffer = _decryptCipher.ProcessBytes(input, inputOffset, inputLength);
+            var inputBuffer = msg.ToArray(out var offset, out var count);
+            var outputBuffer = _decryptCipher.ProcessBytes(inputBuffer, offset, count);
             output.Add(Unpooled.WrappedBuffer(outputBuffer));
         }
 
