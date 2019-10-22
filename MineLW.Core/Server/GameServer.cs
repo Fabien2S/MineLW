@@ -58,7 +58,7 @@ namespace MineLW.Server
 
             _stopWatch.Start();
 
-            Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.ServerVersion);
+            Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.CurrentVersion);
 
             var defaultWorld = WorldManager.CreateWorld(WorldManager.DefaultWorld);
             var blockManager = _gameAdapter.BlockManager;

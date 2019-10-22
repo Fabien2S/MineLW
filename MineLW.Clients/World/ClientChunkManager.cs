@@ -107,7 +107,7 @@ namespace MineLW.Clients.World
             }
 
             // TODO use Client's adapter
-            var version = GameAdapters.ServerVersion;
+            var version = GameAdapters.CurrentVersion;
             var adapter = GameAdapters.Resolve(version.Protocol);
             var renderedChunk = RenderChunk(position, new GlobalBlockPalette(adapter.BlockManager));
             _client.Connection.LoadChunk(position, renderedChunk);
