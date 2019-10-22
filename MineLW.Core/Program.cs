@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using MineLW.Adapters;
-using MineLW.API;
+using MineLW.API.Server;
 using MineLW.Blocks;
 using MineLW.Server;
 using Newtonsoft.Json;
