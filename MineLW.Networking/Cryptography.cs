@@ -2,6 +2,9 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 
 namespace MineLW.Networking
 {
@@ -209,6 +212,13 @@ namespace MineLW.Networking
                 result = "-" + result;
                 
             return result;
+        }
+
+        public static IBufferedCipher CreateCipher(byte[] key, bool encryption)
+        {
+            var cipher = CipherUtilities.GetCipher("AES/CFB8/NoPadding");
+            cipher.Init(encryption, new ParametersWithIV(new KeyParameter(key), key));
+            return cipher;
         }
     }
 }

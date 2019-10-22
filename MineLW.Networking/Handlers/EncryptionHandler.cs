@@ -18,8 +18,8 @@ namespace MineLW.Networking.Handlers
 
         public EncryptionHandler(byte[] sharedSecret)
         {
-            _encryptCipher = CreateCipher(sharedSecret, true);
-            _decryptCipher = CreateCipher(sharedSecret, false);
+            _encryptCipher = Cryptography.CreateCipher(sharedSecret, true);
+            _decryptCipher = Cryptography.CreateCipher(sharedSecret, false);
         }
 
         protected override void Encode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
@@ -34,13 +34,6 @@ namespace MineLW.Networking.Handlers
             var inputBuffer = msg.ToArray(out var offset, out var count);
             var outputBuffer = _decryptCipher.ProcessBytes(inputBuffer, offset, count);
             output.Add(Unpooled.WrappedBuffer(outputBuffer));
-        }
-
-        private static IBufferedCipher CreateCipher(byte[] key, bool encryption)
-        {
-            var cipher = CipherUtilities.GetCipher("AES/CFB8/NoPadding");
-            cipher.Init(encryption, new ParametersWithIV(new KeyParameter(key), key));
-            return cipher;
         }
     }
 }
