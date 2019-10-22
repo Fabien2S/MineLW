@@ -13,8 +13,7 @@ namespace MineLW.Networking
 {
     public class NetworkServer : ChannelInitializer<TcpSocketChannel>, IUpdatable
     {
-        private const int ReadIdleTimeout = 20;
-        private const int WriteIdleTimeout = 15;
+        private const int ReadIdleTimeout = 30;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -77,11 +76,7 @@ namespace MineLW.Networking
             };
 
             channel.Pipeline
-                .AddLast("idle_timeout", new IdleStateHandler(
-                    ReadIdleTimeout,
-                    WriteIdleTimeout,
-                    0
-                ))
+                .AddLast("timeout", new ReadTimeoutHandler(ReadIdleTimeout))
                 .AddLast(MessageFramingHandler.Name, new MessageFramingHandler())
                 .AddLast(MessageEncodingHandler.Name, new MessageEncodingHandler(client))
                 .AddLast(NetworkClient.Name, client);
