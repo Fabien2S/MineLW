@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Text;
 using DotNetty.Buffers;
+using MineLW.API.Math;
 using MineLW.API.NBT;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Chunks;
@@ -26,6 +27,13 @@ namespace MineLW.Networking.IO
             buffer.MarkReaderIndex();
             buffer.ReadBytes(bytes);
             buffer.ResetReaderIndex();
+            return bytes;
+        }
+
+        public static byte[] ReadBytes(this IByteBuffer buffer)
+        {
+            var bytes = new byte[buffer.ReadableBytes];
+            buffer.ReadBytes(bytes);
             return bytes;
         }
 
@@ -100,6 +108,15 @@ namespace MineLW.Networking.IO
             return buffer;
         }
 
+        public static Vector3 ReadVector3D(this IByteBuffer buffer)
+        {
+            return new Vector3(
+                (float) buffer.ReadDouble(),
+                (float) buffer.ReadDouble(),
+                (float) buffer.ReadDouble()
+            );
+        }
+
         public static IByteBuffer WriteVector3D(this IByteBuffer buffer, Vector3 vector3)
         {
             buffer.WriteDouble(vector3.X);
@@ -113,6 +130,14 @@ namespace MineLW.Networking.IO
             buffer.WriteFloat(vector3.X);
             buffer.WriteFloat(vector3.Y);
             return buffer;
+        }
+
+        public static Rotation ReadRotation(this IByteBuffer buffer)
+        {
+            return new Rotation(
+                buffer.ReadFloat(),
+                buffer.ReadFloat()
+            );
         }
 
         public static IByteBuffer WriteRotation(this IByteBuffer buffer, Quaternion rotation)
