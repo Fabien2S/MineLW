@@ -8,8 +8,6 @@ namespace MineLW.API.Server
     {
         string Name { get; }
 
-        IConsoleHandler ConsoleHandler { get; }
-
         IWorldManager WorldManager { get; }
         IClientManager ClientManager { get; }
         ICommandManager CommandManager { get; }

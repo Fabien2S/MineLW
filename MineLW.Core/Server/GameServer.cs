@@ -32,8 +32,6 @@ namespace MineLW.Server
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public string Name { get; } = "MineLW " + Version;
-        
-        public IConsoleHandler ConsoleHandler { get; }
 
         public IWorldManager WorldManager { get; }
         public IClientManager ClientManager { get; }
@@ -51,8 +49,6 @@ namespace MineLW.Server
             _stopWatch = new Stopwatch();
             _networkServer = new NetworkServer(this, HandshakeState.Instance);
 
-            ConsoleHandler = new ConsoleHandler();
-            
             WorldManager = new WorldManager(_gameAdapter.BlockManager);
             ClientManager = new ClientManager(this);
             CommandManager = new CommandManager();
@@ -73,7 +69,7 @@ namespace MineLW.Server
             var blockManager = _gameAdapter.BlockManager;
             var blockState = blockManager.CreateState(Minecraft.Blocks.Stone);
             defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(blockState);
-            
+
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);
             _networkServer.Start(ipEndPoint);
@@ -161,7 +157,7 @@ namespace MineLW.Server
         private void Update(float deltaTime)
         {
             _networkServer.Update(deltaTime);
-            
+
             ClientManager.Update(deltaTime);
         }
 
