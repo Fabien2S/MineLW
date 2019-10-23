@@ -2,6 +2,5 @@
 {
     public interface IEntityLiving : IEntity
     {
-        float Health { get; set; }
     }
 }
