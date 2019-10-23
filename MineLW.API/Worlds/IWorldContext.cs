@@ -18,6 +18,11 @@ namespace MineLW.API.Worlds
         /// <returns>the block, or null if empty</returns>
         IBlockState GetBlock(Vector3Int position);
 
+        /// <summary>
+        /// Sets the block at the current position
+        /// </summary>
+        /// <param name="position">The position</param>
+        /// <param name="blockState">The block state</param>
         void SetBlock(Vector3Int position, IBlockState blockState);
 
         T GetOptionRaw<T>(WorldOption<T> option);
