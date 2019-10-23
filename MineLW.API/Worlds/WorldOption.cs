@@ -8,11 +8,19 @@ namespace MineLW.API.Worlds
         public static readonly WorldOption<bool> DaylightCycle = new WorldOption<bool>(false);
         public static readonly WorldOption<bool> Raining = new WorldOption<bool>(false);
 
-        public static readonly WorldOption<WorldEnvironment> Environment =
-            new WorldOption<WorldEnvironment>(WorldEnvironment.Normal);
+        public static readonly WorldOption<WorldEnvironment> Environment = new WorldOption<WorldEnvironment>(
+            WorldEnvironment.Normal
+        );
 
-        public static readonly WorldOption<Vector3> SpawnPosition = new WorldOption<Vector3>(Vector3.One);
-        public static readonly WorldOption<Quaternion> SpawnRotation = new WorldOption<Quaternion>(Quaternion.Identity);
+        public static readonly WorldOption<Vector3> SpawnPosition = new WorldOption<Vector3>(new Vector3(
+            0,
+            Minecraft.Units.World.Height / 2f,
+            0
+        ));
+
+        public static readonly WorldOption<Quaternion> SpawnRotation = new WorldOption<Quaternion>(
+            Quaternion.Identity
+        );
     }
 
     public class WorldOption<T> : WorldOption
