@@ -5,6 +5,6 @@ namespace MineLW.API.Client
 {
     public interface IClientManager : IUpdatable
     {
-        void Initialize(IClientConnection connection, PlayerProfile profile);
+        void Initialize(IClientConnection connection, IClientController controller, PlayerProfile profile);
     }
 }

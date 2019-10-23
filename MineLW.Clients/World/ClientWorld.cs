@@ -11,7 +11,7 @@ namespace MineLW.Clients.World
 {
     public class ClientWorld : IClientWorld
     {
-        private const byte DefaultRenderDistance = 10;
+        private const byte DefaultRenderDistance = 4;
 
         public IClientChunkManager ChunkManager { get; }
         public IClientEntityManager EntityManager { get; }
@@ -53,14 +53,17 @@ namespace MineLW.Clients.World
         public ClientWorld(IClient client)
         {
             _client = client;
+            
             ChunkManager = new ClientChunkManager(_client);
             EntityManager = new ClientEntityManager();
         }
 
         public void Init()
         {
+            var controller = _client.Controller;
+            controller.PositionChanged += OnPlayerPositionChanged;
+
             var player = _client.Player;
-            player.PositionChanged += OnPlayerPositionChanged;
             player.WorldChanged += OnPlayerWorldChanged;
 
             _worldContexts.Add(player.WorldContext);
@@ -77,7 +80,6 @@ namespace MineLW.Clients.World
 
             ChunkManager.SynchronizeChunks();
             EntityManager.SynchronizeEntities();
-            _client.Connection.Teleport(_client.Player.Position, _client.Player.Rotation, 0);
         }
 
         public void RegisterContext(IWorldContext context)
@@ -109,6 +111,8 @@ namespace MineLW.Clients.World
                 return;
 
             ChunkPosition = playerChunk;
+            _client.Connection.UpdateView(playerChunk);
+            
             _worldDirty = true;
         }
 

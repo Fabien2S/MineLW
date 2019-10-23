@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DotNetty.Common.Internal;
 using MineLW.Adapters;
+using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Text;
 using MineLW.Networking;
@@ -192,9 +193,13 @@ namespace MineLW.Protocols.Login
             var gameServer = Client.Server;
             var clientManager = gameServer.ClientManager;
 
+            var controller = Client.Controller;
+            if(!(controller is IClientController clientController))
+                throw new InvalidOperationException("The client controller of " + _adapter.Version + " doesn't implement IClientController");
+
             var clientConnection = _adapter.CreateConnection(Client);
             Logger.Info("{0} ({1}) logged on successfully in {2}", _profile, Client, _adapter.Version);
-            clientManager.Initialize(clientConnection, _profile);
+            clientManager.Initialize(clientConnection, clientController, _profile);
         }
     }
 }
