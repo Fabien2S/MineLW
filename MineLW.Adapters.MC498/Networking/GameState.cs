@@ -1,4 +1,5 @@
 using MineLW.Adapters.MC498.Networking.Client;
+using MineLW.Adapters.MC498.Networking.Server;
 using MineLW.API.Text;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
@@ -49,7 +50,7 @@ namespace MineLW.Adapters.MC498.Networking
                 new MessageClientUnloadChunk(),
                 null,
                 null,
-                null,
+                new MessageClientPingRequest(),
                 new MessageClientLoadChunk(),
                 null,
                 null,
@@ -87,12 +88,35 @@ namespace MineLW.Adapters.MC498.Networking
 
         protected override IMessageDeserializer[] GetDeserializers()
         {
-            return new IMessageDeserializer[0];
+            return new IMessageDeserializer[]
+            {
+                new MessageServerPlayerTeleportConfirm(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                new MessageServerPlayerPosition(),
+                new MessageServerPlayerPositionRotation(), 
+                new MessageServerPlayerRotation(),
+                null,
+            };
         }
 
         public override MessageController CreateController(NetworkClient client)
         {
-            return new GameController(client);
+            return new ClientController(client);
         }
     }
 }
