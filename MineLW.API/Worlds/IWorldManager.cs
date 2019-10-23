@@ -24,6 +24,12 @@ namespace MineLW.API.Worlds
         /// <returns>The world with the given name</returns>
         IWorld CreateWorld(Identifier name);
 
+        /// <summary>
+        /// Request an unique id across all the worlds
+        /// </summary>
+        /// <returns>an unique id</returns>
+        int RequestUniqueId();
+
         IWorld this[Identifier name] { get; }
     }
 }

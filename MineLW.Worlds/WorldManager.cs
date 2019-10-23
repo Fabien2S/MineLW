@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
@@ -21,6 +22,8 @@ namespace MineLW.Worlds
         private readonly IBlockPalette _globalPalette;
         private readonly Dictionary<Identifier, IWorld> _worlds = new Dictionary<Identifier, IWorld>();
 
+        private int _uniqueId;
+        
         public WorldManager(IBlockManager blockManager)
         {
             BlockManager = blockManager;
@@ -35,6 +38,11 @@ namespace MineLW.Worlds
             var world = new World(_globalPalette);
             WorldCreated?.Invoke(this, new WorldEventArgs(world));
             return _worlds[name] = world;
+        }
+
+        public int RequestUniqueId()
+        {
+            return Interlocked.Increment(ref _uniqueId);
         }
 
         public IWorld this[Identifier name] => _worlds[name];
