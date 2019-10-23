@@ -33,13 +33,7 @@ namespace MineLW.Networking
             for (var i = 0; i < _serializers.Length; i++)
             {
                 var serializer = _serializers[i];
-                
-#if DEBUG
-                if(serializer == null)
-                    continue;
-#endif
-                
-                if (!serializer.CanSerialize(message))
+                if (serializer == null || !serializer.CanSerialize(message))
                     continue;
 
                 buffer.WriteVarInt32(i);
@@ -58,7 +52,7 @@ namespace MineLW.Networking
         public void Handle(MessageController controller, IMessage message)
         {
             foreach (var deserializer in _deserializers)
-                deserializer.Handle(controller, message);
+                deserializer?.Handle(controller, message);
         }
     }
 }
