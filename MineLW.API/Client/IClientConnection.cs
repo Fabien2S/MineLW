@@ -9,7 +9,8 @@ namespace MineLW.API.Client
 {
     public interface IClientConnection
     {
-        void Disconnect(TextComponentString reason = null);
+        void SendPingRequest(long pingId);
+        void Disconnect(TextComponent reason = null);
         
         void JoinGame(IClient client, IEntityPlayer player);
         void Respawn(IWorldContext worldContext);

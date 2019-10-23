@@ -25,7 +25,12 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient = networkClient;
         }
 
-        public void Disconnect(TextComponentString reason = null)
+        public void SendPingRequest(long pingId)
+        {
+            _networkClient.Send(new MessageClientPingRequest.Message(pingId));
+        }
+
+        public void Disconnect(TextComponent reason = null)
         {
             _networkClient.Disconnect(reason);
         }
