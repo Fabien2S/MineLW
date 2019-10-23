@@ -16,7 +16,7 @@ namespace MineLW.Worlds
         public IWorld World => _world ?? this as World;
 
         public IChunkManager ChunkManager { get; }
-        public IEntityManager EntityManager { get; } = new EntityManager();
+        public IEntityManager EntityManager { get; }
 
         private readonly World _world;
         private readonly Dictionary<WorldOption, dynamic> _options = new Dictionary<WorldOption, dynamic>();
@@ -25,6 +25,7 @@ namespace MineLW.Worlds
         {
             _world = world;
             ChunkManager = new ChunkManager(globalPalette);
+            EntityManager = new EntityManager();
         }
 
         public IBlockState GetBlock(Vector3Int position)
