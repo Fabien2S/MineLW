@@ -1,7 +1,9 @@
-﻿namespace MineLW.API.Worlds.Chunks.Generator
+﻿using System;
+
+namespace MineLW.API.Worlds.Chunks.Generator
 {
     public interface IChunkGenerator
     {
-        void Generate(IChunk chunk);
+        void Generate(ChunkPosition position, IChunk chunk, Random random);
     }
 }

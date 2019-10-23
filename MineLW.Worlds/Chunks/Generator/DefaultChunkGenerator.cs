@@ -1,4 +1,5 @@
-﻿using MineLW.API;
+﻿using System;
+using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Worlds.Chunks;
 using MineLW.API.Worlds.Chunks.Generator;
@@ -14,7 +15,7 @@ namespace MineLW.Worlds.Chunks.Generator
             _blockState = blockState;
         }
 
-        public void Generate(IChunk chunk)
+        public void Generate(ChunkPosition position, IChunk chunk, Random random)
         {
             for (var x = 0; x < Minecraft.Units.Chunk.Size; x++)
             for (var z = 0; z < Minecraft.Units.Chunk.Size; z++)

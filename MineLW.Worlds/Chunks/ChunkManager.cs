@@ -12,7 +12,8 @@ namespace MineLW.Worlds.Chunks
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
         public IChunkGenerator Generator { get; set; }
-        
+
+        private readonly Random _random = new Random();
         private readonly IBlockPalette _globalPalette;
         private readonly Dictionary<ChunkPosition, IChunk> _loadedChunks = new Dictionary<ChunkPosition, IChunk>();
 
@@ -39,8 +40,8 @@ namespace MineLW.Worlds.Chunks
                 throw new NotSupportedException("No chunk generator");
             
             var chunk = new Chunk(_globalPalette);
-            Logger.Debug("Generating chunk at {0}", position);
-            Generator.Generate(chunk);
+            //Logger.Debug("Generating chunk at {0}", position);
+            Generator.Generate(position, chunk, _random);
             return _loadedChunks[position] = chunk;
         }
 
