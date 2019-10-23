@@ -31,9 +31,11 @@ namespace MineLW.Networking
             set
             {
                 _state = value;
-                _controller = value.CreateController(this);
+                Controller = value.CreateController(this);
             }
         }
+
+        public MessageController Controller { get; private set; }
 
         public readonly IServer Server;
         
@@ -41,7 +43,6 @@ namespace MineLW.Networking
 
         private IChannel _channel;
         private NetworkState _state;
-        private MessageController _controller;
 
         public NetworkClient(IServer server)
         {
@@ -70,11 +71,11 @@ namespace MineLW.Networking
         {
             if (_state.Async)
             {
-                _state.Handle(_controller, message);
+                _state.Handle(Controller, message);
                 return;
             }
 
-            var task = new Task(msg => _state.Handle(_controller, (IMessage) msg), message);
+            var task = new Task(msg => _state.Handle(Controller, (IMessage) msg), message);
             _tasks.Enqueue(task);
         }
 
