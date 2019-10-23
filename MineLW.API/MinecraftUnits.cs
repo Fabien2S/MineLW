@@ -4,13 +4,17 @@
     {
         public static class Units
         {
+            public static class World
+            {
+                public const int Height = 256;
+            }
+
             public static class Chunk
             {
                 public const int Size = 16;
-                public const int Height = 256;
 
                 public const int SectionHeight = 16;
-                public const int SectionCount = Height / SectionHeight;
+                public const int SectionCount = World.Height / SectionHeight;
                 public const int SectionBlockCount = Size * SectionCount * Size;
             }
 
