@@ -2,6 +2,7 @@
 using System.Numerics;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
+using MineLW.API.Math;
 using MineLW.API.Worlds;
 
 namespace MineLW.Entities
@@ -24,9 +25,7 @@ namespace MineLW.Entities
                 if (worldEventArgs.Canceled)
                     return;
 
-                _worldContext?.EntityManager.RemoveEntity(this);
                 _worldContext = value;
-                _worldContext.EntityManager.SpawnEntity(this);
             }
         }
 
@@ -44,7 +43,7 @@ namespace MineLW.Entities
             }
         }
 
-        public Quaternion Rotation
+        public Rotation Rotation
         {
             get => _rotation;
             set {
@@ -59,7 +58,7 @@ namespace MineLW.Entities
 
         private IWorldContext _worldContext;
         private Vector3 _position = Vector3.Zero;
-        private Quaternion _rotation = Quaternion.Identity;
+        private Rotation _rotation = Rotation.Zero;
 
         protected Entity(int id, Guid uuid)
         {

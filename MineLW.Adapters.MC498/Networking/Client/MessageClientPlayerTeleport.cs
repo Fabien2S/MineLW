@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using DotNetty.Buffers;
+using MineLW.API.Math;
 using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
@@ -19,10 +20,10 @@ namespace MineLW.Adapters.MC498.Networking.Client
         public struct Message : IMessage
         {
             public readonly Vector3 Position;
-            public readonly Quaternion Rotation;
+            public readonly Rotation Rotation;
             public readonly int TeleportId;
 
-            public Message(Vector3 position, Quaternion rotation, int teleportId)
+            public Message(Vector3 position, Rotation rotation, int teleportId)
             {
                 Position = position;
                 Rotation = rotation;

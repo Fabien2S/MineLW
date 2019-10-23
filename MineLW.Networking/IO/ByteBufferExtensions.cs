@@ -140,11 +140,10 @@ namespace MineLW.Networking.IO
             );
         }
 
-        public static IByteBuffer WriteRotation(this IByteBuffer buffer, Quaternion rotation)
+        public static IByteBuffer WriteRotation(this IByteBuffer buffer, Rotation rotation)
         {
-            // TODO get yaw and pitch from rotation
-            buffer.WriteFloat(0);
-            buffer.WriteFloat(0);
+            buffer.WriteFloat(rotation.Yaw);
+            buffer.WriteFloat(rotation.Pitch);
             return buffer;
         }
 

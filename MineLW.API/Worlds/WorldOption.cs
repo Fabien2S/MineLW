@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using MineLW.API.Math;
 
 namespace MineLW.API.Worlds
 {
@@ -18,8 +19,8 @@ namespace MineLW.API.Worlds
             0
         ));
 
-        public static readonly WorldOption<Quaternion> SpawnRotation = new WorldOption<Quaternion>(
-            Quaternion.Identity
+        public static readonly WorldOption<Rotation> SpawnRotation = new WorldOption<Rotation>(
+            Rotation.Zero
         );
     }
 
