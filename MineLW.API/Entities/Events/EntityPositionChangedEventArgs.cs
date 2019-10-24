@@ -5,7 +5,7 @@ namespace MineLW.API.Entities.Events
 {
     public class EntityPositionChangedEventArgs : EntityEventArgs, ICancellable
     {
-        public bool Canceled { get; set; }
+        public bool Cancelled { get; set; }
         
         public readonly Vector3 From;
         public readonly Vector3 To;

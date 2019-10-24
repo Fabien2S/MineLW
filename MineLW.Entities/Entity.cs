@@ -22,7 +22,7 @@ namespace MineLW.Entities
                 
                 var worldEventArgs = new EntityWorldChangedEventArgs(this, _worldContext, value);
                 WorldChanged?.Invoke(this, worldEventArgs);
-                if (worldEventArgs.Canceled)
+                if (worldEventArgs.Cancelled)
                     return;
 
                 _worldContext = value;
@@ -38,7 +38,7 @@ namespace MineLW.Entities
                 
                 var positionEventArgs = new EntityPositionChangedEventArgs(this, _position, value);
                 PositionChanged?.Invoke(this, positionEventArgs);
-                if (!positionEventArgs.Canceled)
+                if (!positionEventArgs.Cancelled)
                     _position = value;
             }
         }

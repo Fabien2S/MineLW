@@ -4,7 +4,7 @@ namespace MineLW.API.Entities.Living.Player.Events
 {
     public class PlayerGameModeEventArgs : PlayerEventArgs, ICancellable
     {
-        public bool Canceled { get; set; }
+        public bool Cancelled { get; set; }
 
         public readonly PlayerMode From;
         public readonly PlayerMode To;

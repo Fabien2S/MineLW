@@ -5,7 +5,7 @@ namespace MineLW.API.Entities.Events
 {
     public class EntityWorldChangedEventArgs : EntityEventArgs, ICancellable
     {
-        public bool Canceled { get; set; }
+        public bool Cancelled { get; set; }
         
         public readonly IWorldContext From;
         public readonly IWorldContext To;

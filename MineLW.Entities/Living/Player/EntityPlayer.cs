@@ -18,7 +18,7 @@ namespace MineLW.Entities.Living.Player
                 
                 var eventArgs = new PlayerGameModeEventArgs(this, _playerMode, value);
                 GameModeChanged?.Invoke(this, eventArgs);
-                if(!eventArgs.Canceled)
+                if(!eventArgs.Cancelled)
                     _playerMode = value;
             }
         }
