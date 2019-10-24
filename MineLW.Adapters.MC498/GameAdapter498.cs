@@ -1,11 +1,12 @@
 using System.Collections.Immutable;
 using MineLW.Adapters.MC498.Networking;
 using MineLW.API;
-using MineLW.API.Blocks;
 using MineLW.API.Blocks.Properties;
 using MineLW.API.Client;
 using MineLW.API.Registries;
 using MineLW.API.Utils;
+using MineLW.Blocks;
+using MineLW.Entities;
 using MineLW.Networking;
 
 namespace MineLW.Adapters.MC498
@@ -15,7 +16,9 @@ namespace MineLW.Adapters.MC498
         public GameVersion Version { get; } = new GameVersion("1.14.4", 498);
 
         public NetworkState NetworkState { get; } = new GameState();
-        public IBlockRegistry BlockRegistry { get; } = GameAdapters.BlockManagerSupplier();
+        
+        public IBlockRegistry BlockRegistry { get; } = new BlockRegistry();
+        public IEntityRegistry EntityRegistry { get; } = new EntityRegistry();
 
         public GameAdapter498()
         {

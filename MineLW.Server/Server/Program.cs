@@ -5,7 +5,6 @@ using System.Runtime.Loader;
 using System.Threading;
 using MineLW.Adapters;
 using MineLW.API.Server;
-using MineLW.Blocks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
@@ -60,8 +59,6 @@ namespace MineLW.Server
                     context.Handled = true;
                 }
             };
-            
-            GameAdapters.BlockManagerSupplier = () => new BlockManager();
         }
 
         private static void LoadGameAdapters()
