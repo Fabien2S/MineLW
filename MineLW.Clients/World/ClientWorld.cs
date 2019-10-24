@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using MineLW.API.Client;
+using MineLW.API.Client.Events;
 using MineLW.API.Client.World;
 using MineLW.API.Entities.Events;
 using MineLW.API.Worlds;
@@ -41,6 +42,9 @@ namespace MineLW.Clients.World
                 _worldDirty = true;
             }
         }
+
+        public event EventHandler<ClientWorldContextEventArgs> WorldContextRegistered;
+        public event EventHandler<ClientWorldContextEventArgs> WorldContextUnregistered;
 
         private readonly IClient _client;
         private readonly ISet<IWorldContext> _worldContexts = new HashSet<IWorldContext>();
@@ -87,10 +91,15 @@ namespace MineLW.Clients.World
             if (context is IWorld)
                 throw new ArgumentException("Can't register a World as a WorldContext");
 
-            if (_worldContexts.Add(context))
-            {
-                // TODO call event
-            }
+            if(_worldContexts.Contains(context))
+                return;
+            
+            var eventArgs = new ClientWorldContextEventArgs(_client, context);
+            WorldContextRegistered?.Invoke(this, eventArgs);
+            if(eventArgs.Cancelled)
+                return;
+            
+            _worldContexts.Add(context);
         }
 
         public void UnregisterContext(IWorldContext context)
@@ -98,10 +107,15 @@ namespace MineLW.Clients.World
             if (context.Equals(_client.Player.WorldContext))
                 throw new ArgumentException("Can't unregister his living space");
 
-            if (_worldContexts.Remove(context))
-            {
-                // TODO call event
-            }
+            if(!_worldContexts.Contains(context))
+                return;
+            
+            var eventArgs = new ClientWorldContextEventArgs(_client, context);
+            WorldContextUnregistered?.Invoke(this, eventArgs);
+            if(eventArgs.Cancelled)
+                return;
+            
+            _worldContexts.Remove(context);
         }
 
         private void OnPlayerPositionChanged(object sender, EntityPositionChangedEventArgs e)
