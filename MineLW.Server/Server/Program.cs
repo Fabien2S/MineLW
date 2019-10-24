@@ -6,12 +6,11 @@ using System.Threading;
 using MineLW.Adapters;
 using MineLW.API.Server;
 using MineLW.Blocks;
-using MineLW.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
 
-namespace MineLW
+namespace MineLW.Server
 {
     internal static class Program
     {
