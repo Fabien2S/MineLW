@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Properties;
@@ -13,9 +14,7 @@ namespace MineLW.Blocks
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        // TODO replace BitsPerBlock with the global palette one when all the blocks are implemented
-        public byte BitsPerBlock => 14;
-        //public byte BitsPerBlock => (byte) MathF.Ceiling(MathF.Log2(_blockStates.Count));
+        public byte BitsPerBlock => (byte) MathF.Ceiling(MathF.Log2(_blockStates.Count));
 
         private readonly Registry<Identifier, IBlock> _blocks = new Registry<Identifier, IBlock>();
         private readonly Registry<int, IBlockState> _blockStates = new Registry<int, IBlockState>();
@@ -55,13 +54,13 @@ namespace MineLW.Blocks
         public IBlockState CreateState(Identifier name, Dictionary<string, string> properties = null)
         {
             var block = _blocks[name];
-
-            var blockDefaultValues = block.DefaultValues;
             var blockProperties = block.Properties;
 
-            if (properties == null || properties.Count == 0)
-                return _blockStates[block.Id]; // return the default state, which is block id + block data of 0
+            if (properties == null || properties.Count == 0 || blockProperties.Count == 0)
+                return _blockStates[block.Id]; // return the default state
 
+            var blockDefaultValues = block.DefaultValues;
+            
             var props = new dynamic[blockProperties.Count];
             for (var i = 0; i < blockProperties.Count; i++)
             {
