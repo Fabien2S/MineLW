@@ -6,6 +6,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MineLW.Adapters\MineLW.Adapters.csproj" />
+        <ProjectReference Include="..\MineLW.Blocks\MineLW.Blocks.csproj" />
+        <ProjectReference Include="..\MineLW.Entities\MineLW.Entities.csproj" />
     </ItemGroup>
 
 </Project>
