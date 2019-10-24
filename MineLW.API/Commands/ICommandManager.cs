@@ -1,8 +1,10 @@
-﻿namespace MineLW.API.Commands
+﻿using MineLW.API.IO;
+
+namespace MineLW.API.Commands
 {
     public interface ICommandManager
     {
-        void Register<T>() where T : ICommand, new();
-        void Register(ICommand command);
+        void Register<T>() where T : ICommandNode, new();
+        void Execute(ICommandEmitter emitter, StringReader reader);
     }
 }

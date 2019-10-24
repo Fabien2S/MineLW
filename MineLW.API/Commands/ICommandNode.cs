@@ -2,6 +2,6 @@
 {
     public interface ICommandNode
     {
-        
+        string Name { get; }
     }
 }
