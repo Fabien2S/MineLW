@@ -1,29 +1,67 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using MineLW.API.Entities;
+using MineLW.API.Entities.Events;
+using MineLW.API.Math;
+using MineLW.API.Utils;
 
 namespace MineLW.Entities
 {
     public class EntityManager : IEntityManager
     {
-        private readonly List<IEntity> _entities = new List<IEntity>();
+        private readonly HashSet<IEntity> _entities = new HashSet<IEntity>();
 
         public void Update(float deltaTime)
         {
-            _entities.RemoveAll(e => !e.Valid);
-            foreach (var entity in _entities)
-                entity.Update(deltaTime);
+            _entities.RemoveWhere(e => !e.Valid);
+            foreach (var e in _entities)
+                e.Update(deltaTime);
         }
 
-        public bool SpawnEntity(IEntity entity)
+        private void OnEntityWorldChanged(object sender, EntityWorldChangedEventArgs e)
         {
-            _entities.Add(entity);
-            return true;
+            var entity = e.Entity;
+            RemoveEntity(entity);
+
+            var destination = e.To;
+            var entityManager = destination.EntityManager;
+            if(entityManager is EntityManager internalEntityManager)
+                internalEntityManager.AddEntity(entity);
         }
 
-        public bool RemoveEntity(IEntity entity)
+        private void OnEntityRemoved(object sender, EntityEventArgs e)
         {
-            return _entities.Remove(entity);
+            var entity = e.Entity;
+            RemoveEntity(entity);
+        }
+
+        public IEntity SpawnEntity(Identifier name, Vector3 position, Rotation rotation)
+        {
+            // TODO resolve entity type from name through game adapter
+            throw new NotImplementedException();
+            
+            IEntity entity = null;
+            AddEntity(entity);
+        }
+
+        private void AddEntity(IEntity entity)
+        {
+            if (!_entities.Add(entity))
+                return;
+            
+            entity.WorldChanged += OnEntityWorldChanged;
+            entity.Removed += OnEntityRemoved;
+        }
+
+        private void RemoveEntity(IEntity entity)
+        {
+            if (!_entities.Remove(entity))
+                return;
+            
+            entity.WorldChanged -= OnEntityWorldChanged;
+            entity.Removed -= OnEntityRemoved;
         }
 
         public IEnumerator<IEntity> GetEnumerator() => _entities.GetEnumerator();
