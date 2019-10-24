@@ -49,7 +49,7 @@ namespace MineLW.Server
             _stopWatch = new Stopwatch();
             _networkServer = new NetworkServer(this, HandshakeState.Instance);
 
-            WorldManager = new WorldManager(_gameAdapter.BlockManager);
+            WorldManager = new WorldManager(_gameAdapter.BlockRegistry);
             ClientManager = new ClientManager(this);
             CommandManager = new CommandManager();
         }
@@ -66,7 +66,7 @@ namespace MineLW.Server
             Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.CurrentVersion);
 
             var defaultWorld = WorldManager.CreateWorld(WorldManager.DefaultWorld);
-            var blockManager = _gameAdapter.BlockManager;
+            var blockManager = _gameAdapter.BlockRegistry;
             var blockState = blockManager.CreateState(Minecraft.Blocks.Stone);
             defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(blockState);
 

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using MineLW.API.Blocks;
 using MineLW.API.Blocks.Properties;
 using MineLW.API.Utils;
 
-namespace MineLW.API.Blocks
+namespace MineLW.API.Registries
 {
-    public interface IBlockManager
+    public interface IBlockRegistry
     {
         byte BitsPerBlock { get; }
 

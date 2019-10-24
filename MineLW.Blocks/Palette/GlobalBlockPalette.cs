@@ -2,6 +2,7 @@
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Extensions;
+using MineLW.API.Registries;
 
 namespace MineLW.Blocks.Palette
 {
@@ -9,12 +10,12 @@ namespace MineLW.Blocks.Palette
     {
         public byte BitsPerBlock { get; }
 
-        private readonly IBlockManager _blockManager;
+        private readonly IBlockRegistry _blockRegistry;
 
-        public GlobalBlockPalette(IBlockManager blockManager)
+        public GlobalBlockPalette(IBlockRegistry blockRegistry)
         {
-            _blockManager = blockManager;
-            BitsPerBlock = blockManager.BitsPerBlock;
+            _blockRegistry = blockRegistry;
+            BitsPerBlock = blockRegistry.BitsPerBlock;
         }
 
         public int GetId(IBlockState blockState)
@@ -25,7 +26,7 @@ namespace MineLW.Blocks.Palette
 
         public IBlockState GetBlockState(int id)
         {
-            return _blockManager[id];
+            return _blockRegistry[id];
         }
 
         public void Serialize(IByteBuffer buffer)

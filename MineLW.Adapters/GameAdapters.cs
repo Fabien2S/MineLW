@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MineLW.API.Blocks;
+using MineLW.API.Registries;
 using MineLW.API.Utils;
 using NLog;
 
@@ -13,7 +14,7 @@ namespace MineLW.Adapters
         private static readonly GameVersion Invalid = new GameVersion("Unknown", -1);
         private static readonly Dictionary<int, IGameAdapter> Versions = new Dictionary<int, IGameAdapter>();
 
-        public static Func<IBlockManager> BlockManagerSupplier { get; set; }
+        public static Func<IBlockRegistry> BlockManagerSupplier { get; set; }
 
         /// <summary>
         /// Gets the current version. This is the highest version registered into the <see cref="GameAdapters"/>

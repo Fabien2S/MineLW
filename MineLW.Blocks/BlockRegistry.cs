@@ -9,7 +9,7 @@ using NLog;
 
 namespace MineLW.Blocks
 {
-    public class BlockManager : IBlockManager
+    public class BlockRegistry : IBlockRegistry
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 

@@ -4,6 +4,7 @@ using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Properties;
 using MineLW.API.Client;
+using MineLW.API.Registries;
 using MineLW.API.Utils;
 using MineLW.Networking;
 
@@ -14,21 +15,21 @@ namespace MineLW.Adapters.MC498
         public GameVersion Version { get; } = new GameVersion("1.14.4", 498);
 
         public NetworkState NetworkState { get; } = new GameState();
-        public IBlockManager BlockManager { get; } = GameAdapters.BlockManagerSupplier();
+        public IBlockRegistry BlockRegistry { get; } = GameAdapters.BlockManagerSupplier();
 
         public GameAdapter498()
         {
-            BlockManager.Register(
+            BlockRegistry.Register(
                 Minecraft.CreateIdentifier("air"),
                 ImmutableArray<IBlockProperty>.Empty,
                 ImmutableList<dynamic>.Empty
             );
-            BlockManager.Register(
+            BlockRegistry.Register(
                 Minecraft.CreateIdentifier("stone"),
                 ImmutableArray<IBlockProperty>.Empty,
                 ImmutableList<dynamic>.Empty
             );
-            BlockManager.Register(
+            BlockRegistry.Register(
                 Minecraft.CreateIdentifier("granite"),
                 ImmutableArray<IBlockProperty>.Empty,
                 ImmutableList<dynamic>.Empty

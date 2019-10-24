@@ -4,6 +4,7 @@ using System.Threading;
 using MineLW.API;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
+using MineLW.API.Registries;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Events;
@@ -15,7 +16,7 @@ namespace MineLW.Worlds
     {
         public Identifier DefaultWorld { get; } = Minecraft.CreateIdentifier("default");
         
-        public IBlockManager BlockManager { get; }
+        public IBlockRegistry BlockRegistry { get; }
 
         public event EventHandler<WorldEventArgs> WorldCreated;
 
@@ -24,10 +25,10 @@ namespace MineLW.Worlds
 
         private int _uniqueId;
         
-        public WorldManager(IBlockManager blockManager)
+        public WorldManager(IBlockRegistry blockRegistry)
         {
-            BlockManager = blockManager;
-            _globalPalette = new GlobalBlockPalette(blockManager);
+            BlockRegistry = blockRegistry;
+            _globalPalette = new GlobalBlockPalette(blockRegistry);
         }
         
         public IWorld CreateWorld(Identifier name)

@@ -1,5 +1,6 @@
 ﻿using System;
 using MineLW.API.Blocks;
+using MineLW.API.Registries;
 using MineLW.API.Utils;
 using MineLW.API.Worlds.Events;
 
@@ -12,7 +13,7 @@ namespace MineLW.API.Worlds
         /// </summary>
         Identifier DefaultWorld { get; }
         
-        IBlockManager BlockManager { get; }
+        IBlockRegistry BlockRegistry { get; }
 
         event EventHandler<WorldEventArgs> WorldCreated;
 
