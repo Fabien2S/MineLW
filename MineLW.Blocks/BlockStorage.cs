@@ -107,6 +107,13 @@ namespace MineLW.Blocks
             return _nBitsArray[index] != Nil;
         }
 
+        public IBlockState GetBlock(int x, int y, int z)
+        {
+            var index = Index(x, y, z);
+            var id = _nBitsArray[index];
+            return id == Nil ? null : BlockPalette.GetBlockState(id);
+        }
+
         public void SetBlock(int x, int y, int z, IBlockState blockState)
         {
             var id = blockState != null ? BlockPalette.GetId(blockState) : Nil;
@@ -121,13 +128,6 @@ namespace MineLW.Blocks
             var index = Index(x, y, z);
             _nBitsArray[index] = id;
             _blockCount = ushort.MaxValue;
-        }
-
-        public IBlockState GetBlock(int x, int y, int z)
-        {
-            var index = Index(x, y, z);
-            var id = _nBitsArray[index];
-            return id == Nil ? null : BlockPalette.GetBlockState(id);
         }
 
         public void Serialize(IByteBuffer buffer)

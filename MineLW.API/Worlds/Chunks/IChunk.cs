@@ -1,6 +1,5 @@
 ﻿using MineLW.API.Blocks;
 using MineLW.API.Collections;
-using MineLW.API.Utils;
 
 namespace MineLW.API.Worlds.Chunks
 {
@@ -13,8 +12,8 @@ namespace MineLW.API.Worlds.Chunks
         void RemoveSection(int index);
 
         bool HasBlock(int x, int y, int z);
-        void SetBlock(int x, int y, int z, IBlockState blockState);
         IBlockState GetBlock(int x, int y, int z);
+        void SetBlock(int x, int y, int z, IBlockState blockState);
 
         IChunkSection this[int index] { get; }
     }
