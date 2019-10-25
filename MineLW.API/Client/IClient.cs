@@ -8,8 +8,19 @@ namespace MineLW.API.Client
 {
     public interface IClient : IUpdatable
     {
+        /// <summary>
+        /// Gets the client profile. This is the profile that was received from Mojang's auth servers
+        /// </summary>
         PlayerProfile Profile { get; }
+        /// <summary>
+        /// <para>Gets the client connection. This is responsible for sending data to the client.</para>
+        /// This should never be used by a plugin
+        /// </summary>
         IClientConnection Connection { get; }
+        /// <summary>
+        /// <para>This is responsible for receiving client's data.</para>
+        /// Any plugin is free to subscribe to any events, however, they are probably not reliable across versions
+        /// </summary>
         IClientController Controller { get; }
 
         IEntityPlayer Player { get; }
