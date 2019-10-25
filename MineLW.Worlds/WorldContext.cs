@@ -26,7 +26,7 @@ namespace MineLW.Worlds
         {
             _world = world;
             ChunkManager = new ChunkManager(globalPalette);
-            EntityManager = new EntityManager(uidGenerator);
+            EntityManager = new EntityManager(this, uidGenerator);
         }
 
         public IBlockState GetBlock(Vector3Int position)
