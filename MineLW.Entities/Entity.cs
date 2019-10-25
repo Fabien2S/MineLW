@@ -19,7 +19,7 @@ namespace MineLW.Entities
             set
             {
                 EnsureValid();
-                
+
                 var worldEventArgs = new EntityWorldChangedEventArgs(this, _worldContext, value);
                 WorldChanged?.Invoke(this, worldEventArgs);
                 if (worldEventArgs.Cancelled)
@@ -35,7 +35,7 @@ namespace MineLW.Entities
             set
             {
                 EnsureValid();
-                
+
                 var positionEventArgs = new EntityPositionChangedEventArgs(this, _position, value);
                 PositionChanged?.Invoke(this, positionEventArgs);
                 if (!positionEventArgs.Cancelled)
@@ -46,7 +46,8 @@ namespace MineLW.Entities
         public Rotation Rotation
         {
             get => _rotation;
-            set {
+            set
+            {
                 EnsureValid();
                 _rotation = value;
             }
@@ -70,7 +71,7 @@ namespace MineLW.Entities
         {
             if (Valid)
                 return;
-            
+
             throw new InvalidOperationException(
                 "The entity isn't valid. You are probably referring to a removed entity"
             );
@@ -89,7 +90,7 @@ namespace MineLW.Entities
         }
 
         public override bool Equals(object obj) => obj is IEntity other && Equals(other);
-        private bool Equals(IEntity other) => Id == other.Id;
+        public bool Equals(IEntity other) => Id == other?.Id;
         public override int GetHashCode() => Id;
     }
 }
