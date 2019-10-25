@@ -2,16 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using MineLW.API.Client;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
+using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Utils;
+using MineLW.Entities.Living.Player;
 
 namespace MineLW.Entities
 {
     public class EntityManager : IEntityManager
     {
+        private readonly IUidGenerator _uidGenerator;
         private readonly HashSet<IEntity> _entities = new HashSet<IEntity>();
+
+        public EntityManager(IUidGenerator uidGenerator)
+        {
+            _uidGenerator = uidGenerator;
+        }
 
         public void Update(float deltaTime)
         {
@@ -26,9 +35,8 @@ namespace MineLW.Entities
             RemoveEntity(entity);
 
             var destination = e.To;
-            var entityManager = destination.EntityManager;
-            if(entityManager is EntityManager internalEntityManager)
-                internalEntityManager.AddEntity(entity);
+            var entityManager = (EntityManager) destination.EntityManager;
+            entityManager.AddEntity(entity);
         }
 
         private void OnEntityRemoved(object sender, EntityEventArgs e)
@@ -44,6 +52,15 @@ namespace MineLW.Entities
             
             IEntity entity = null;
             AddEntity(entity);
+            return entity;
+        }
+
+        public IEntityPlayer SpawnPlayer(IClient client, Vector3 position, Rotation rotation)
+        {
+            var uid = _uidGenerator.GenerateUid();
+            var player = new EntityPlayer(uid, client);
+            AddEntity(player);
+            return player;
         }
 
         private void AddEntity(IEntity entity)

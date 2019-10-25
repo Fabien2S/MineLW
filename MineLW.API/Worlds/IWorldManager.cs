@@ -6,7 +6,7 @@ using MineLW.API.Worlds.Events;
 
 namespace MineLW.API.Worlds
 {
-    public interface IWorldManager
+    public interface IWorldManager : IUidGenerator
     {
         /// <summary>
         /// The world name where the player will spawn on log in.
@@ -24,12 +24,6 @@ namespace MineLW.API.Worlds
         /// <param name="name">The name for the world</param>
         /// <returns>The world with the given name</returns>
         IWorld CreateWorld(Identifier name);
-
-        /// <summary>
-        /// Request an unique id across all the worlds
-        /// </summary>
-        /// <returns>an unique id</returns>
-        int RequestUniqueId();
 
         IWorld this[Identifier name] { get; }
     }

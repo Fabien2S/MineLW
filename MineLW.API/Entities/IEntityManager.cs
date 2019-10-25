@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using MineLW.API.Client;
+using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Utils;
 
@@ -16,5 +18,14 @@ namespace MineLW.API.Entities
         /// <returns>The spawned entity</returns>
         /// <exception cref="System.ArgumentException"></exception>
         IEntity SpawnEntity(Identifier name, Vector3 position, Rotation rotation);
+
+        /// <summary>
+        /// Spawn a client-entity in the world context
+        /// </summary>
+        /// <param name="client">The client</param>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
+        /// <returns>The spawned client entity</returns>
+        IEntityPlayer SpawnPlayer(IClient client, Vector3 position, Rotation rotation);
     }
 }

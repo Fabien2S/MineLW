@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using MineLW.API;
-using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Registries;
 using MineLW.API.Utils;
@@ -36,12 +35,12 @@ namespace MineLW.Worlds
             if (_worlds.ContainsKey(name))
                 return _worlds[name];
 
-            var world = new World(_globalPalette);
+            var world = new World(this, _globalPalette);
             WorldCreated?.Invoke(this, new WorldEventArgs(world));
             return _worlds[name] = world;
         }
 
-        public int RequestUniqueId()
+        public int GenerateUid()
         {
             return Interlocked.Increment(ref _uniqueId);
         }

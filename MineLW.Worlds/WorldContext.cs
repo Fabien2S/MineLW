@@ -4,6 +4,7 @@ using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Entities;
 using MineLW.API.Math;
+using MineLW.API.Utils;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
 using MineLW.Entities;
@@ -21,11 +22,11 @@ namespace MineLW.Worlds
         private readonly World _world;
         private readonly Dictionary<WorldOption, dynamic> _options = new Dictionary<WorldOption, dynamic>();
 
-        public WorldContext(World world, IBlockPalette globalPalette)
+        public WorldContext(World world, IUidGenerator uidGenerator, IBlockPalette globalPalette)
         {
             _world = world;
             ChunkManager = new ChunkManager(globalPalette);
-            EntityManager = new EntityManager();
+            EntityManager = new EntityManager(uidGenerator);
         }
 
         public IBlockState GetBlock(Vector3Int position)
