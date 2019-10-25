@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
+using MineLW.API.Math;
 using MineLW.API.Server;
 using MineLW.API.Worlds;
-using MineLW.Entities.Living.Player;
 using MineLW.Networking.IO;
 
 namespace MineLW.Clients
@@ -25,13 +25,16 @@ namespace MineLW.Clients
             var client = new Client(connection, controller, profile);
             
             var worldManager = _server.WorldManager;
-            var defaultWorld = worldManager[worldManager.DefaultWorld];
-            var player = new EntityPlayer(0, client)
-            {
-                WorldContext = defaultWorld,
-                Position = defaultWorld.GetOption(WorldOption.SpawnPosition),
-                Rotation = defaultWorld.GetOption(WorldOption.SpawnRotation)
-            };
+            var world = worldManager[worldManager.DefaultWorld];
+
+            var position = world.GetOption(WorldOption.SpawnPosition);
+            var rotation = world.GetOption(WorldOption.SpawnRotation);
+            var entityManager = world.EntityManager;
+            var player = entityManager.SpawnPlayer(client, position, rotation);
+
+            var blockRegistry = worldManager.BlockRegistry;
+            var stoneBlock = blockRegistry.CreateState(Minecraft.Blocks.Stone);
+            world.SetBlock(new Vector3Int(0, 1, 0), stoneBlock);
 
             client.Init(player);
             controller.Init(player);

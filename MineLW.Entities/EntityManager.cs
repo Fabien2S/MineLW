@@ -8,18 +8,21 @@ using MineLW.API.Entities.Events;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Utils;
+using MineLW.API.Worlds;
 using MineLW.Entities.Living.Player;
 
 namespace MineLW.Entities
 {
     public class EntityManager : IEntityManager
     {
+        private readonly IWorldContext _worldContext;
         private readonly IUidGenerator _uidGenerator;
         private readonly HashSet<IEntity> _entities = new HashSet<IEntity>();
 
-        public EntityManager(IUidGenerator uidGenerator)
+        public EntityManager(IWorldContext worldContext, IUidGenerator uidGenerator)
         {
             _uidGenerator = uidGenerator;
+            _worldContext = worldContext;
         }
 
         public void Update(float deltaTime)
@@ -58,7 +61,12 @@ namespace MineLW.Entities
         public IEntityPlayer SpawnPlayer(IClient client, Vector3 position, Rotation rotation)
         {
             var uid = _uidGenerator.GenerateUid();
-            var player = new EntityPlayer(uid, client);
+            var player = new EntityPlayer(uid, client)
+            {
+                WorldContext = _worldContext,
+                Position = position,
+                Rotation = rotation
+            };
             AddEntity(player);
             return player;
         }
