@@ -14,7 +14,9 @@ namespace MineLW.Blocks
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public byte BitsPerBlock => (byte) MathF.Ceiling(MathF.Log2(_blockStates.Count));
+        // TODO replace BitsPerBlock with the global palette one when all the blocks are implemented
+        public byte BitsPerBlock => 14;
+        //public byte BitsPerBlock => (byte) MathF.Ceiling(MathF.Log2(_blockStates.Count));
 
         private readonly Registry<Identifier, IBlock> _blocks = new Registry<Identifier, IBlock>();
         private readonly Registry<int, IBlockState> _blockStates = new Registry<int, IBlockState>();
