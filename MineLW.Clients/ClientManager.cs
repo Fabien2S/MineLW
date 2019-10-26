@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
+using MineLW.API.Math;
 using MineLW.API.Server;
 using MineLW.API.Worlds;
 using MineLW.Networking.IO;
@@ -29,6 +32,14 @@ namespace MineLW.Clients
             var position = world.GetOption(WorldOption.SpawnPosition);
             var rotation = world.GetOption(WorldOption.SpawnRotation);
             var entityManager = world.EntityManager;
+
+            var rnd = new Random();
+            entityManager.SpawnEntity(Minecraft.Entities.Player, new Vector3(
+                (float) (rnd.NextDouble() * Minecraft.Units.Chunk.Size),
+                1,
+                (float) (rnd.NextDouble() * Minecraft.Units.Chunk.Size)
+            ), Rotation.Zero);
+
             var player = entityManager.SpawnPlayer(client, position, rotation);
 
             client.Init(player);
