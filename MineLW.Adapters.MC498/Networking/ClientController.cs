@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using MineLW.API.Client;
 using MineLW.API.Math;
+using MineLW.API.Text;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
 
@@ -19,7 +20,9 @@ namespace MineLW.Adapters.MC498.Networking
                 _client = value;
             }
         }
-        
+
+        public event EventHandler<TextComponent> Disconnected;
+
         public event EventHandler<Vector3> PositionChanged;
         public event EventHandler<int> TeleportConfirmed;
         public event EventHandler<long> PingResponseReceived;
@@ -28,6 +31,12 @@ namespace MineLW.Adapters.MC498.Networking
         
         public ClientController(NetworkClient networkClient) : base(networkClient)
         {
+            networkClient.Disconnected += OnNetworkClientDisconnect;
+        }
+
+        private void OnNetworkClientDisconnect(object sender, TextComponent e)
+        {
+            Disconnected?.Invoke(this, e);
         }
 
         public void HandlePlayerPositionUpdate(in Vector3 position)
