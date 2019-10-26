@@ -10,7 +10,7 @@ namespace MineLW.Clients.World
     public class ClientEntityManager : IClientEntityManager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
         private readonly IClient _client;
         private readonly ISet<IEntity> _loadedEntities = new HashSet<IEntity>();
 
@@ -23,6 +23,7 @@ namespace MineLW.Clients.World
         {
             ISet<IEntity> entities = new HashSet<IEntity>();
 
+            var clientPlayer = _client.Player;
             var clientWorld = _client.World;
             var chunkManager = clientWorld.ChunkManager;
 
@@ -32,9 +33,14 @@ namespace MineLW.Clients.World
                 var entityManager = worldContext.EntityManager;
                 foreach (var entity in entityManager)
                 {
+                    if (entity.Equals(clientPlayer))
+                        continue;
+
                     var chunkPosition = ChunkPosition.FromWorld(entity.Position);
-                    if (chunkManager.IsLoaded(chunkPosition))
-                        entities.Add(entity);
+                    if (!chunkManager.IsLoaded(chunkPosition))
+                        continue;
+
+                    entities.Add(entity);
                 }
             }
 
@@ -44,7 +50,7 @@ namespace MineLW.Clients.World
         private bool RemoveEntities(IEnumerable<IEntity> entities)
         {
             var removedEntities = new HashSet<IEntity>();
-            
+
             foreach (var e in entities)
             {
                 if (_loadedEntities.Remove(e))
@@ -67,9 +73,9 @@ namespace MineLW.Clients.World
             foreach (var entity in _loadedEntities)
             {
                 if (toSpawn.Contains(entity))
-                    continue;
-
-                toDestroy.Add(entity);
+                    toSpawn.Remove(entity);
+                else
+                    toDestroy.Add(entity);
             }
 
             RemoveEntities(toDestroy);
@@ -91,7 +97,7 @@ namespace MineLW.Clients.World
                 Logger.Warn("Trying to spawn {0} in an unloaded chunk", entity);
                 return false;
             }
-            
+
             if (!_loadedEntities.Add(entity))
                 return false;
 
@@ -102,7 +108,7 @@ namespace MineLW.Clients.World
 
         public bool RemoveEntities(params IEntity[] entities)
         {
-            return RemoveEntities((IEnumerable<IEntity>)entities);
+            return RemoveEntities((IEnumerable<IEntity>) entities);
         }
     }
 }
