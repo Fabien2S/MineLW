@@ -51,9 +51,14 @@ namespace MineLW.Entities
         public IEntity SpawnEntity(Identifier name, Vector3 position, Rotation rotation)
         {
             // TODO resolve entity type from name through game adapter
-            throw new NotImplementedException();
-            
-            IEntity entity = null;
+
+            var uid = _uidGenerator.GenerateUid();
+            IEntity entity = new EntityPlayer(uid, Guid.NewGuid())
+            {
+                WorldContext = _worldContext,
+                Position = position,
+                Rotation = rotation
+            };
             AddEntity(entity);
             return entity;
         }
@@ -75,7 +80,7 @@ namespace MineLW.Entities
         {
             if (!_entities.Add(entity))
                 return;
-            
+
             entity.WorldChanged += OnEntityWorldChanged;
             entity.Removed += OnEntityRemoved;
         }
@@ -84,7 +89,7 @@ namespace MineLW.Entities
         {
             if (!_entities.Remove(entity))
                 return;
-            
+
             entity.WorldChanged -= OnEntityWorldChanged;
             entity.Removed -= OnEntityRemoved;
         }
