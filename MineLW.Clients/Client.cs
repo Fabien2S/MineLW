@@ -21,6 +21,8 @@ namespace MineLW.Clients
 
         public IEntityPlayer Player { get; private set; }
         public IClientWorld World { get; }
+        
+        public float Latency { get; private set; }
 
         // ping
         private float _sincePingRequest;
@@ -48,8 +50,14 @@ namespace MineLW.Clients
             World.Init();
 
             Controller.Client = this;
+            Controller.Disconnected += OnDisconnect;
             Controller.PingResponseReceived += OnPingResponse;
             Connection.Spawn(this, player);
+        }
+
+        private void OnDisconnect(object sender, TextComponent e)
+        {
+            Player.Remove();
         }
 
         public void SendCustom(Identifier channel, Action<IByteBuffer> serializer)
@@ -90,6 +98,7 @@ namespace MineLW.Clients
             if (_pingRequestId != id)
                 return;
 
+            Latency = _sincePingRequest;
             _pingRequestId++;
             _sincePingRequest = 0;
             _waitingForPingResponse = false;

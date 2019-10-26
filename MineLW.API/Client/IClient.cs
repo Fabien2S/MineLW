@@ -25,6 +25,8 @@ namespace MineLW.API.Client
 
         IEntityPlayer Player { get; }
         IClientWorld World { get; }
+        
+        float Latency { get; }
 
         void Init(IEntityPlayer player);
         void SendCustom(Identifier channel, Action<IByteBuffer> serializer);
