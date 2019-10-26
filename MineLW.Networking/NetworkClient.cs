@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
-using MineLW.API;
 using MineLW.API.Server;
 using MineLW.API.Text;
 using MineLW.API.Utils;
@@ -36,6 +35,8 @@ namespace MineLW.Networking
         }
 
         public MessageController Controller { get; private set; }
+
+        public event EventHandler<TextComponent> Disconnected; 
 
         public readonly IServer Server;
         
@@ -171,6 +172,8 @@ namespace MineLW.Networking
 
             reasonComponent ??= DefaultDisconnectReason;
             
+            Logger.Info("{0} disconnected (reason: {1})", this, reasonComponent);
+            
             var message = _state.CreateDisconnectMessage(reasonComponent);
             if (message == null)
             {
@@ -180,16 +183,17 @@ namespace MineLW.Networking
 
             Send(message).ContinueWith(task =>
             {
-                var reason = reasonComponent.ToString();
-                Logger.Info("{0} disconnected (reason: {1})", this, reason);
                 Close();
             });
         }
 
-        public void Close()
+        public void Close(TextComponent reasonComponent = null)
         {
             if (Closed)
                 return;
+
+            reasonComponent ??= DefaultDisconnectReason;
+            Disconnected?.Invoke(this, reasonComponent);
 
             Closed = true;
             _channel?.CloseAsync();
