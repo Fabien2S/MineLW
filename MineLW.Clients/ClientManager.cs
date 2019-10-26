@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
-using MineLW.API.Math;
 using MineLW.API.Server;
 using MineLW.API.Worlds;
 using MineLW.Networking.IO;
@@ -32,13 +31,7 @@ namespace MineLW.Clients
             var entityManager = world.EntityManager;
             var player = entityManager.SpawnPlayer(client, position, rotation);
 
-            var blockRegistry = worldManager.BlockRegistry;
-            var stoneBlock = blockRegistry.CreateState(Minecraft.Blocks.Stone);
-            world.SetBlock(new Vector3Int(0, 1, 0), stoneBlock);
-
             client.Init(player);
-            controller.Init(player);
-            
             client.SendCustom(Minecraft.Channels.Brand, buffer => { buffer.WriteUtf8(_server.Name); });
             
             _clients.Add(client);

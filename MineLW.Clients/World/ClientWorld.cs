@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Numerics;
 using MineLW.API.Client;
 using MineLW.API.Client.Events;
 using MineLW.API.Client.World;
@@ -58,8 +59,8 @@ namespace MineLW.Clients.World
         {
             _client = client;
             
-            ChunkManager = new ClientChunkManager(_client);
-            EntityManager = new ClientEntityManager();
+            ChunkManager = new ClientChunkManager(client);
+            EntityManager = new ClientEntityManager(client);
         }
 
         public void Init()
@@ -118,9 +119,9 @@ namespace MineLW.Clients.World
             _worldContexts.Remove(context);
         }
 
-        private void OnPlayerPositionChanged(object sender, EntityPositionChangedEventArgs e)
+        private void OnPlayerPositionChanged(object sender, Vector3 position)
         {
-            var playerChunk = ChunkPosition.FromWorld(e.To);
+            var playerChunk = ChunkPosition.FromWorld(position);
             if (ChunkPosition == playerChunk)
                 return;
 

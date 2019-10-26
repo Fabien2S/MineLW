@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
+using MineLW.API.Entities;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Text;
@@ -10,19 +12,30 @@ namespace MineLW.API.Client
 {
     public interface IClientConnection
     {
-        void SendPingRequest(long pingId);
+        #region Client
         void Disconnect(TextComponent reason = null);
-        
-        void JoinGame(IClient client, IEntityPlayer player);
-        void Respawn(IWorldContext worldContext);
-        
-        void SendCustom(Identifier channel, byte[] data);
-        void SendMessage(TextComponent message);
-
-        void Teleport(Vector3 position, Rotation rotation, int id);
         void UpdateView(ChunkPosition chunkPosition);
+        void SendCustom(Identifier channel, byte[] data);
+        void SendPingRequest(long pingId);
+        #endregion
+
+        #region Client player
+        void SendMessage(TextComponent message);
+        void Spawn(IClient client, IEntityPlayer player);
+        void Respawn(IWorldContext worldContext);
+        void Teleport(Vector3 position, Rotation rotation, int id);
+        #endregion
         
+        #region Entities
+        void SpawnEntity(IEntity entity);
+        void DestroyEntities(IEnumerable<IEntity> entities);
+        #endregion
+        
+
+
+        #region World
         void LoadChunk(ChunkPosition position, IChunk chunk);
         void UnloadChunk(ChunkPosition position);
+        #endregion
     }
 }

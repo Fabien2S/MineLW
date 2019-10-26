@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using DotNetty.Buffers;
 using MineLW.Adapters.MC498.Networking.Client;
 using MineLW.API;
 using MineLW.API.Client;
+using MineLW.API.Entities;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Text;
@@ -11,12 +14,15 @@ using MineLW.API.Utils;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
 using MineLW.Networking;
+using NLog;
 
 namespace MineLW.Adapters.MC498.Networking
 {
     public class ClientConnection : IClientConnection
     {
         private const string LevelType = "default";
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
         private readonly NetworkClient _networkClient;
         private IClient _client;
@@ -26,17 +32,32 @@ namespace MineLW.Adapters.MC498.Networking
             _networkClient = networkClient;
         }
 
-        public void SendPingRequest(long pingId)
-        {
-            _networkClient.Send(new MessageClientPingRequest.Message(pingId));
-        }
-
         public void Disconnect(TextComponent reason = null)
         {
             _networkClient.Disconnect(reason);
         }
 
-        public void JoinGame(IClient client, IEntityPlayer player)
+        public void UpdateView(ChunkPosition chunkPosition)
+        {
+            _networkClient.Send(new MessageClientUpdateViewPosition.Message(chunkPosition));
+        }
+
+        public void SendCustom(Identifier channel, byte[] data)
+        {
+            _networkClient.Send(new MessageClientCustomData.Message(channel, data));
+        }
+
+        public void SendPingRequest(long pingId)
+        {
+            _networkClient.Send(new MessageClientPingRequest.Message(pingId));
+        }
+
+        public void SendMessage(TextComponent message)
+        {
+            _networkClient.Send(new MessageClientChatMessage.Message(message));
+        }
+
+        public void Spawn(IClient client, IEntityPlayer player)
         {
             if (_client != null)
                 throw new NotSupportedException("Connection already initialized");
@@ -67,16 +88,6 @@ namespace MineLW.Adapters.MC498.Networking
             ));
         }
 
-        public void SendCustom(Identifier channel, byte[] data)
-        {
-            _networkClient.Send(new MessageClientCustomData.Message(channel, data));
-        }
-
-        public void SendMessage(TextComponent message)
-        {
-            _networkClient.Send(new MessageClientChatMessage.Message(message));
-        }
-
         public void Teleport(Vector3 position, Rotation rotation, int id)
         {
             _networkClient.Send(new MessageClientPlayerTeleport.Message(
@@ -86,9 +97,31 @@ namespace MineLW.Adapters.MC498.Networking
             ));
         }
 
-        public void UpdateView(ChunkPosition chunkPosition)
+        public void SpawnEntity(IEntity entity)
         {
-            _networkClient.Send(new MessageClientUpdateViewPosition.Message(chunkPosition));
+            switch (entity)
+            {
+                case IEntityPlayer _:
+                    _networkClient.Send(new MessageClientSpawnPlayer.Message(
+                        entity.Id,
+                        entity.Uuid,
+                        entity.Position,
+                        entity.Rotation
+                    ));
+                    break;
+                default:
+                    Logger.Warn("Undefined entity type \"{0}\"", entity);
+                    return;
+            }
+        }
+
+        public void DestroyEntities(IEnumerable<IEntity> entities)
+        {
+            _networkClient.Send(new MessageClientDestroyEntities.Message(
+                entities
+                    .Select(e => e.Id)
+                    .ToArray()
+            ));
         }
 
         public void LoadChunk(ChunkPosition position, IChunk chunk)
@@ -130,7 +163,6 @@ namespace MineLW.Adapters.MC498.Networking
                 buffer
             ));
         }
-
         public void UnloadChunk(ChunkPosition position)
         {
             _networkClient.Send(new MessageClientUnloadChunk.Message(position));

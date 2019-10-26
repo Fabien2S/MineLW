@@ -3,6 +3,7 @@ using MineLW.Adapters.MC498.Networking;
 using MineLW.API;
 using MineLW.API.Blocks.Properties;
 using MineLW.API.Client;
+using MineLW.API.Entities.Living.Player;
 using MineLW.API.Registries;
 using MineLW.API.Utils;
 using MineLW.Blocks;
@@ -37,6 +38,8 @@ namespace MineLW.Adapters.MC498
                 ImmutableArray<IBlockProperty>.Empty,
                 ImmutableList<dynamic>.Empty
             );
+            
+            EntityRegistry.Register<IEntityPlayer>(Minecraft.Entities.Player);
         }
 
         public IClientConnection CreateConnection(NetworkClient networkClient) => new ClientConnection(networkClient);
