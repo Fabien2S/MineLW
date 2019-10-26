@@ -9,17 +9,17 @@ namespace MineLW.Entities.Living.Player
     {
         public PlayerProfile Profile { get; }
 
-        public PlayerMode PlayerMode
+        public GameMode GameMode
         {
-            get => _playerMode;
+            get => _gameMode;
             set
             {
                 EnsureValid();
                 
-                var eventArgs = new PlayerGameModeEventArgs(this, _playerMode, value);
+                var eventArgs = new PlayerGameModeEventArgs(this, _gameMode, value);
                 GameModeChanged?.Invoke(this, eventArgs);
                 if(!eventArgs.Cancelled)
-                    _playerMode = value;
+                    _gameMode = value;
             }
         }
 
@@ -27,13 +27,14 @@ namespace MineLW.Entities.Living.Player
 
         private IClient _client;
 
-        private PlayerMode _playerMode;
+        private GameMode _gameMode;
 
         public EntityPlayer(int id, Guid uuid) : base(id, uuid)
         {
             Profile = new PlayerProfile(
                 uuid,
-                "NPC"
+                "NPC",
+                new PlayerProfile.Property[0]
             );
         }
 

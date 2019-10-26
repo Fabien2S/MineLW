@@ -7,7 +7,7 @@ namespace MineLW.API.Entities.Living.Player
     {
         PlayerProfile Profile { get; }
         
-        PlayerMode PlayerMode { get; set; }
+        GameMode GameMode { get; set; }
         
         event EventHandler<PlayerGameModeEventArgs> GameModeChanged;
     }

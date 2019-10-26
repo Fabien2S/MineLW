@@ -11,20 +11,20 @@ namespace MineLW.Adapters.MC498.Networking.Client
         protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteInt(message.Environment);
-            buffer.WriteByte((byte) message.PlayerMode);
+            buffer.WriteByte((byte) message.GameMode);
             buffer.WriteUtf8(message.LevelType);
         }
         
         public struct Message : IMessage
         {
             public readonly int Environment;
-            public readonly PlayerMode PlayerMode;
+            public readonly GameMode GameMode;
             public readonly string LevelType;
 
-            public Message(int environment, PlayerMode playerMode, string levelType)
+            public Message(int environment, GameMode gameMode, string levelType)
             {
                 Environment = environment;
-                PlayerMode = playerMode;
+                GameMode = gameMode;
                 LevelType = levelType;
             }
         }
