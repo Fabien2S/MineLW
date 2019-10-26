@@ -51,6 +51,14 @@ namespace MineLW.Networking.IO
             return buffer;
         }
 
+        public static IByteBuffer WriteGuid(this IByteBuffer buffer, Guid guid)
+        {
+            var bytes = guid.ToByteArray();
+            foreach (var b in bytes)
+                buffer.WriteByte(b);
+            return buffer;
+        }
+
         public static string ReadUtf8(this IByteBuffer buffer, short maxLen = short.MaxValue)
         {
             var len = buffer.ReadVarInt32();
