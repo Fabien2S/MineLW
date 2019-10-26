@@ -7,11 +7,13 @@ namespace MineLW.API.Entities.Living.Player
     {
         public readonly Guid Id;
         public readonly string Name;
-
-        public PlayerProfile(Guid id, string name)
+        public readonly Property[] Properties;
+        
+        public PlayerProfile(Guid id, string name, Property[] properties)
         {
             Id = id;
             Name = name;
+            Properties = properties;
         }
 
         public override string ToString()
