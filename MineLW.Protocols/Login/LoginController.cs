@@ -34,7 +34,7 @@ namespace MineLW.Protocols.Login
         private PlayerProfile _profile;
         private IGameAdapter _adapter;
 
-        public LoginController(NetworkClient client) : base(client)
+        public LoginController(NetworkClient networkClient) : base(networkClient)
         {
         }
 
@@ -44,9 +44,9 @@ namespace MineLW.Protocols.Login
             if (_username != null)
                 return;
 
-            if (!GameAdapters.IsSupported(Client.Version.Protocol))
+            if (!GameAdapters.IsSupported(NetworkClient.Version.Protocol))
             {
-                Client.Disconnect(new TextComponentString("Unsupported version " + Client.Version.Protocol)
+                NetworkClient.Disconnect(new TextComponentString("Unsupported version " + NetworkClient.Version.Protocol)
                 {
                     Color = TextColor.Red
                 });
@@ -61,7 +61,7 @@ namespace MineLW.Protocols.Login
                 rngProvider.GetBytes(_signature);
             }
 
-            Client.Send(new MessageClientEncryptionRequest.Message(
+            NetworkClient.Send(new MessageClientEncryptionRequest.Message(
                 string.Empty,
                 Cryptography.PublicKey,
                 _signature
@@ -77,13 +77,13 @@ namespace MineLW.Protocols.Login
             var decryptedSignature = Cryptography.CryptoServiceProvider.Decrypt(encryptedSignature, false);
             if (!decryptedSignature.SequenceEqual(_signature))
             {
-                Client.Close();
+                NetworkClient.Close();
                 return;
             }
 
             _signature = null;
             _sharedSecret = Cryptography.CryptoServiceProvider.Decrypt(encryptedSharedSecret, false);
-            Client.EnableEncryption(_sharedSecret);
+            NetworkClient.EnableEncryption(_sharedSecret);
 
             RequestSession();
         }
@@ -119,7 +119,7 @@ namespace MineLW.Protocols.Login
                     var responseMessage = requestTask.Result;
                     if (responseMessage.StatusCode != HttpStatusCode.OK)
                     {
-                        Client.Disconnect(new TextComponentTranslate("multiplayer.disconnect.authservers_down")
+                        NetworkClient.Disconnect(new TextComponentTranslate("multiplayer.disconnect.authservers_down")
                         {
                             Color = TextColor.Red
                         });
@@ -135,7 +135,7 @@ namespace MineLW.Protocols.Login
 
                             if (!_username.Equals(_profile.Name))
                             {
-                                Client.Disconnect(
+                                NetworkClient.Disconnect(
                                     new TextComponentTranslate("multiplayer.disconnect.unverified_username")
                                     {
                                         Color = TextColor.Red
@@ -145,17 +145,17 @@ namespace MineLW.Protocols.Login
 
                             Logger.Info("UUID of player {0} is {1}", _profile.Name, _profile.Id);
                             
-                            Client
+                            NetworkClient
                                 .Send(new MessageClientEnableCompression.Message(CompressionThreshold))
                                 .ContinueWith(CheckErrors)
                                 .ContinueWith(t1 =>
                                 {
-                                    if (Client.Closed) // encryption gone wrong
+                                    if (NetworkClient.Closed) // encryption gone wrong
                                         return;
                                     
-                                    Client.EnableCompression(CompressionThreshold);
+                                    NetworkClient.EnableCompression(CompressionThreshold);
                             
-                                    Client
+                                    NetworkClient
                                         .Send(new MessageClientLoginResponse.Message(
                                             _profile.Id.ToString(),
                                             _profile.Name
@@ -163,12 +163,12 @@ namespace MineLW.Protocols.Login
                                         .ContinueWith(CheckErrors)
                                         .ContinueWith(t2 =>
                                         {
-                                            if (Client.Closed) // compression gone wrong
+                                            if (NetworkClient.Closed) // compression gone wrong
                                                 return;
 
-                                            _adapter = GameAdapters.Resolve(Client.Version.Protocol);
-                                            Client.State = _adapter.NetworkState;
-                                            Client.AddTask(FinalizeLogin);
+                                            _adapter = GameAdapters.Resolve(NetworkClient.Version.Protocol);
+                                            NetworkClient.State = _adapter.NetworkState;
+                                            NetworkClient.AddTask(FinalizeLogin);
                                         });
                                 });
                         }).ContinueWith(CheckErrors);
@@ -185,20 +185,20 @@ namespace MineLW.Protocols.Login
 
             Logger.Error( "Unable to complete the login sequence of {0}", _profile);
             Logger.Error(exception);
-            Client.Disconnect();
+            NetworkClient.Disconnect();
         }
 
         private void FinalizeLogin()
         {
-            var gameServer = Client.Server;
+            var gameServer = NetworkClient.Server;
             var clientManager = gameServer.ClientManager;
 
-            var controller = Client.Controller;
+            var controller = NetworkClient.Controller;
             if(!(controller is IClientController clientController))
                 throw new InvalidOperationException("The client controller of " + _adapter.Version + " doesn't implement IClientController");
 
-            var clientConnection = _adapter.CreateConnection(Client);
-            Logger.Info("{0} ({1}) logged on successfully in {2}", _profile, Client, _adapter.Version);
+            var clientConnection = _adapter.CreateConnection(NetworkClient);
+            Logger.Info("{0} ({1}) logged on successfully in {2}", _profile, NetworkClient, _adapter.Version);
             clientManager.Initialize(clientConnection, clientController, _profile);
         }
     }

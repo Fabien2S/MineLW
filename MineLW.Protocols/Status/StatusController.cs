@@ -9,13 +9,13 @@ namespace MineLW.Protocols.Status
 {
     public class StatusController : MessageController
     {
-        public StatusController(NetworkClient client) : base(client)
+        public StatusController(NetworkClient networkClient) : base(networkClient)
         {
         }
 
         public void HandleInfoRequest()
         {
-            var version = GameAdapters.IsSupported(Client.Version.Protocol) ? Client.Version : GameAdapters.CurrentVersion;
+            var version = GameAdapters.IsSupported(NetworkClient.Version.Protocol) ? NetworkClient.Version : GameAdapters.CurrentVersion;
             var status = new ServerStatus(
                 version,
                 new PlayerInfo(
@@ -31,14 +31,14 @@ namespace MineLW.Protocols.Status
                 }
             );
 
-            Client.Send(new MessageClientServerInfo.Message(status));
+            NetworkClient.Send(new MessageClientServerInfo.Message(status));
         }
 
         public void HandlePing(in long payload)
         {
-            Client
+            NetworkClient
                 .Send(new MessageClientPong.Message(payload))
-                .ContinueWith(task => Client.Close());
+                .ContinueWith(task => NetworkClient.Close());
         }
     }
 }

@@ -10,14 +10,14 @@ namespace MineLW.Protocols.Handshake
 {
     public class HandshakeController : MessageController
     {
-        public HandshakeController(NetworkClient client) : base(client)
+        public HandshakeController(NetworkClient networkClient) : base(networkClient)
         {
         }
 
         public void HandleHandshake(HandshakeMessage.Message message)
         {
-            Client.Version = GameAdapters.IsSupported(message.Protocol) ? GameAdapters.GetVersion(message.Protocol) : new GameVersion("Unknown", message.Protocol);
-            Client.State = message.RequestedState switch
+            NetworkClient.Version = GameAdapters.IsSupported(message.Protocol) ? GameAdapters.GetVersion(message.Protocol) : new GameVersion("Unknown", message.Protocol);
+            NetworkClient.State = message.RequestedState switch
             {
                 1 => (NetworkState) StatusState.Instance,
                 2 => (NetworkState) LoginState.Instance,

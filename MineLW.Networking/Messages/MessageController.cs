@@ -2,11 +2,11 @@
 {
     public abstract class MessageController
     {
-        protected readonly NetworkClient Client;
+        protected readonly NetworkClient NetworkClient;
 
-        protected MessageController(NetworkClient client)
+        protected MessageController(NetworkClient networkClient)
         {
-            Client = client;
+            NetworkClient = networkClient;
         }
     }
 }
