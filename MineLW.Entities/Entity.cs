@@ -3,6 +3,7 @@ using System.Numerics;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
 using MineLW.API.Math;
+using MineLW.API.Text;
 using MineLW.API.Worlds;
 
 namespace MineLW.Entities
@@ -12,6 +13,8 @@ namespace MineLW.Entities
         public int Id { get; }
         public Guid Uuid { get; }
         public bool Valid { get; private set; } = true;
+        
+        public TextComponent DisplayName { get; set; }
 
         public IWorldContext WorldContext
         {
@@ -91,6 +94,7 @@ namespace MineLW.Entities
 
         public override bool Equals(object obj) => obj is IEntity other && Equals(other);
         public bool Equals(IEntity other) => Id == other?.Id;
+        public int CompareTo(IEntity other) => Id.CompareTo(other.Id);
         public override int GetHashCode() => Id;
     }
 }

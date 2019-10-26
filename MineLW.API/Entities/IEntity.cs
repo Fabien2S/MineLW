@@ -2,12 +2,13 @@
 using System.Numerics;
 using MineLW.API.Entities.Events;
 using MineLW.API.Math;
+using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
 
 namespace MineLW.API.Entities
 {
-    public interface IEntity : IUpdatable, IEquatable<IEntity>
+    public interface IEntity : IUpdatable, IEquatable<IEntity>, IComparable<IEntity>
     {
         /// <summary>
         /// The unique id of the entity. Incremental and shared across the server
@@ -23,6 +24,8 @@ namespace MineLW.API.Entities
         /// Gets if the entity is still in the world
         /// </summary>
         bool Valid { get; }
+        
+        TextComponent DisplayName { get; set; }
 
         IWorldContext WorldContext { get; set; }
         Vector3 Position { get; set; }
@@ -31,5 +34,7 @@ namespace MineLW.API.Entities
         event EventHandler<EntityEventArgs> Removed;
         event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
         event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
+
+        void Remove();
     }
 }
