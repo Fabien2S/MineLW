@@ -64,12 +64,16 @@ namespace MineLW.Adapters.MC498.Networking
 
             _client = client;
 
+            _networkClient.Send(new MessageClientPlayerInfo.Message(
+                MessageClientPlayerInfo.Action.AddPlayer,
+                new []{player}
+            ));
+
             var worldContext = player.WorldContext;
             var environment = worldContext.GetOption(WorldOption.Environment);
-
             _networkClient.Send(new MessageClientInitGame.Message(
                 player.Id,
-                (byte) player.PlayerMode,
+                (byte) player.GameMode,
                 environment.Id,
                 0,
                 LevelType,
@@ -83,7 +87,7 @@ namespace MineLW.Adapters.MC498.Networking
             var environment = worldContext.GetOption(WorldOption.Environment);
             _networkClient.Send(new MessageClientRespawn.Message(
                 environment.Id,
-                _client.Player.PlayerMode,
+                _client.Player.GameMode,
                 LevelType
             ));
         }
@@ -97,16 +101,49 @@ namespace MineLW.Adapters.MC498.Networking
             ));
         }
 
+        public void RotateToward(EntityReference reference, Vector3 position)
+        {
+            _networkClient.Send(new MessageClientRotateToward.Message(
+                reference,
+                position,
+                false,
+                0,
+                EntityReference.Feet
+            ));
+        }
+
+        public void RotateToward(EntityReference reference, IEntity entity, EntityReference targetReference)
+        {
+            _networkClient.Send(new MessageClientRotateToward.Message(
+                reference,
+                entity.Position,
+                true,
+                entity.Id,
+                targetReference
+            ));
+        }
+
         public void SpawnEntity(IEntity entity)
         {
             switch (entity)
             {
-                case IEntityPlayer _:
+                case IEntityPlayer player:
+                    _networkClient.Send(new MessageClientPlayerInfo.Message(
+                        MessageClientPlayerInfo.Action.AddPlayer,
+                        new []{player}
+                    ));
                     _networkClient.Send(new MessageClientSpawnPlayer.Message(
                         entity.Id,
                         entity.Uuid,
                         entity.Position,
                         entity.Rotation
+                    ));
+                    
+                    if(player.IsListed)
+                        break;
+                    _networkClient.Send(new MessageClientPlayerInfo.Message(
+                        MessageClientPlayerInfo.Action.RemovePlayer,
+                        new []{player}
                     ));
                     break;
                 default:

@@ -24,6 +24,8 @@ namespace MineLW.API.Client
         void Spawn(IClient client, IEntityPlayer player);
         void Respawn(IWorldContext worldContext);
         void Teleport(Vector3 position, Rotation rotation, int id);
+        void RotateToward(EntityReference reference, Vector3 position);
+        void RotateToward(EntityReference reference, IEntity entity, EntityReference targetReference);
         #endregion
         
         #region Entities
