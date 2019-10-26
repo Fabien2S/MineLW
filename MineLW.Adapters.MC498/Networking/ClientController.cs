@@ -1,8 +1,6 @@
 using System;
 using System.Numerics;
 using MineLW.API.Client;
-using MineLW.API.Entities.Events;
-using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
@@ -11,29 +9,33 @@ namespace MineLW.Adapters.MC498.Networking
 {
     public class ClientController : MessageController, IClientController
     {
-        public event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
-
-        private IEntityPlayer _player;
-        
-        public ClientController(NetworkClient client) : base(client)
+        public IClient Client
         {
+            get => _client;
+            set
+            {
+                if(_client != null)
+                    throw new InvalidOperationException("Controller already init");
+                _client = value;
+            }
         }
         
-        public void Init(IEntityPlayer player)
+        public event EventHandler<Vector3> PositionChanged;
+        public event EventHandler<int> TeleportConfirmed;
+        public event EventHandler<long> PingResponseReceived;
+
+        private IClient _client;
+        
+        public ClientController(NetworkClient networkClient) : base(networkClient)
         {
-            if(_player != null)
-                throw new InvalidOperationException("Player already set");
-            
-            _player = player;
         }
 
-        public void HandlePlayerPositionUpdate(Vector3 position)
+        public void HandlePlayerPositionUpdate(in Vector3 position)
         {
-            var from = _player.Position;
-            PositionChanged?.Invoke(this, new EntityPositionChangedEventArgs(_player, from, position));
+            PositionChanged?.Invoke(this, position);
         }
 
-        public void HandlePlayerRotationUpdate(Rotation rotation)
+        public void HandlePlayerRotationUpdate(in Rotation rotation)
         {
         }
 
@@ -41,8 +43,14 @@ namespace MineLW.Adapters.MC498.Networking
         {
         }
 
-        public void HandleTeleportConfirm(in int teleportId)
+        public void HandleTeleportConfirm(in int id)
         {
+            TeleportConfirmed?.Invoke(this, id);
+        }
+
+        public void HandlePingResponse(in long pingId)
+        {
+            PingResponseReceived?.Invoke(this, pingId);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MineLW.Clients
 
         // ping
         private float _sincePingRequest;
-        private uint _pingRequestId = 0;
+        private uint _pingRequestId;
         private bool _waitingForPingResponse;
 
         public Client(IClientConnection connection, IClientController controller, PlayerProfile profile)
@@ -46,7 +46,10 @@ namespace MineLW.Clients
 
             Player = player;
             World.Init();
-            Connection.JoinGame(this, player);
+
+            Controller.Client = this;
+            Controller.PingResponseReceived += OnPingResponse;
+            Connection.Spawn(this, player);
         }
 
         public void SendCustom(Identifier channel, Action<IByteBuffer> serializer)
@@ -77,6 +80,19 @@ namespace MineLW.Clients
                 _waitingForPingResponse = true;
                 Connection.SendPingRequest(_pingRequestId);
             }
+        }
+
+        private void OnPingResponse(object sender, long id)
+        {
+            if(!_waitingForPingResponse)
+                return;
+            
+            if (_pingRequestId != id)
+                return;
+
+            _pingRequestId++;
+            _sincePingRequest = 0;
+            _waitingForPingResponse = false;
         }
     }
 }

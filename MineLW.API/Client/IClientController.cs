@@ -1,13 +1,14 @@
 ﻿using System;
-using MineLW.API.Entities.Events;
-using MineLW.API.Entities.Living.Player;
+using System.Numerics;
 
 namespace MineLW.API.Client
 {
     public interface IClientController
     {
-        event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
+        IClient Client { get; set; }
 
-        void Init(IEntityPlayer player);
+        event EventHandler<Vector3> PositionChanged;
+        event EventHandler<int> TeleportConfirmed;
+        event EventHandler<long> PingResponseReceived;
     }
 }
