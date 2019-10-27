@@ -34,7 +34,7 @@ namespace MineLW.Entities
 
         private void OnEntityWorldChanged(object sender, EntityWorldChangedEventArgs e)
         {
-            var entity = e.Entity;
+            var entity = (IEntity) sender;
             RemoveEntity(entity);
 
             var destination = e.To;
@@ -42,10 +42,9 @@ namespace MineLW.Entities
             entityManager.AddEntity(entity);
         }
 
-        private void OnEntityRemoved(object sender, EntityEventArgs e)
+        private void OnEntityRemoved(object sender, EventArgs e)
         {
-            var entity = e.Entity;
-            RemoveEntity(entity);
+            RemoveEntity((IEntity) sender);
         }
 
         public IEntity SpawnEntity(Identifier name, Vector3 position, Rotation rotation)

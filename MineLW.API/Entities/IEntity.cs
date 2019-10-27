@@ -31,8 +31,10 @@ namespace MineLW.API.Entities
         Vector3 Position { get; set; }
         Rotation Rotation { get; set; }
 
-        event EventHandler<EntityEventArgs> Removed;
+        event EventHandler Removed;
+        event EventHandler<EntityWorldChangingEventArgs> WorldChanging;
         event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
+        event EventHandler<EntityPositionChangingEventArgs> PositionChanging;
         event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
 
         void Remove();

@@ -23,12 +23,16 @@ namespace MineLW.Entities
             {
                 EnsureValid();
 
-                var worldEventArgs = new EntityWorldChangedEventArgs(this, _worldContext, value);
-                WorldChanged?.Invoke(this, worldEventArgs);
-                if (worldEventArgs.Cancelled)
+                var worldChangingEventArgs = new EntityWorldChangingEventArgs(_worldContext, value);
+                WorldChanging?.Invoke(this, worldChangingEventArgs);
+                if (worldChangingEventArgs.Cancel)
                     return;
 
+                var from = _worldContext;
                 _worldContext = value;
+                
+                var worldChangedEventArgs = new EntityWorldChangedEventArgs(from, _worldContext);
+                WorldChanged?.Invoke(this, worldChangedEventArgs);
             }
         }
 
@@ -39,10 +43,16 @@ namespace MineLW.Entities
             {
                 EnsureValid();
 
-                var positionEventArgs = new EntityPositionChangedEventArgs(this, _position, value);
-                PositionChanged?.Invoke(this, positionEventArgs);
-                if (!positionEventArgs.Cancelled)
-                    _position = value;
+                var positionChangingEventArgs = new EntityPositionChangingEventArgs(_position, value);
+                PositionChanging?.Invoke(this, positionChangingEventArgs);
+                if (positionChangingEventArgs.Cancel)
+                    return;
+                
+                var from = _position;
+                _position = value;
+                    
+                var positionChangedEventArgs = new EntityPositionChangedEventArgs(from, value);
+                PositionChanged?.Invoke(this, positionChangedEventArgs);
             }
         }
 
@@ -56,8 +66,10 @@ namespace MineLW.Entities
             }
         }
 
-        public event EventHandler<EntityEventArgs> Removed;
+        public event EventHandler Removed;
+        public event EventHandler<EntityWorldChangingEventArgs> WorldChanging;
         public event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
+        public event EventHandler<EntityPositionChangingEventArgs> PositionChanging;
         public event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
 
         private IWorldContext _worldContext;
@@ -88,7 +100,7 @@ namespace MineLW.Entities
         {
             EnsureValid();
 
-            Removed?.Invoke(this, new EntityEventArgs(this));
+            Removed?.Invoke(this, EventArgs.Empty);
             Valid = false;
         }
 

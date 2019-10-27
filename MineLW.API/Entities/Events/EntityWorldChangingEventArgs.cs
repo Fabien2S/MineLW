@@ -1,14 +1,14 @@
-﻿using System;
+﻿using System.ComponentModel;
 using MineLW.API.Worlds;
 
 namespace MineLW.API.Entities.Events
 {
-    public class EntityWorldChangedEventArgs : EventArgs
+    public class EntityWorldChangingEventArgs : CancelEventArgs
     {
         public readonly IWorldContext From;
         public readonly IWorldContext To;
 
-        public EntityWorldChangedEventArgs(IWorldContext from, IWorldContext to)
+        public EntityWorldChangingEventArgs(IWorldContext from, IWorldContext to)
         {
             From = from;
             To = to;
