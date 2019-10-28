@@ -63,6 +63,9 @@ namespace MineLW.Networking
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
+            if(Closed)
+                return;
+            
             Logger.Error("An error occurred with {0}", this);
             Logger.Error(exception);
             Close();
@@ -82,6 +85,9 @@ namespace MineLW.Networking
 
         public void Update(float deltaTime)
         {
+            if(Closed)
+                return;
+            
             try
             {
                 while (_tasks.TryDequeue(out var task))
@@ -108,7 +114,7 @@ namespace MineLW.Networking
                     Style = TextStyles.Underlined,
                     Children =
                     {
-                        new TextComponentString("\n"),
+                        new TextComponentString("\n\n"),
                         new TextComponentString(innerException.Message)
                         {
                             Style = TextStyles.None,
@@ -130,14 +136,32 @@ namespace MineLW.Networking
 
         public void EnableCompression(int threshold)
         {
-            // TODO handle compression threshold update
-            
-            Logger.Debug("Enabling compression on {0} (threshold: {1})", this, threshold);
-            _channel.Pipeline.AddBefore(
-                MessageEncodingHandler.Name,
-                CompressionHandler.Name,
-                new CompressionHandler(threshold)
-            );
+            var compressionHandler = _channel.Pipeline.Get<CompressionHandler>();
+            if (threshold >= 0)
+            {
+                if (compressionHandler != null)
+                {
+                    Logger.Debug("Updating compression threshold to {0} on", threshold, this);
+                    compressionHandler.CompressionThreshold = threshold;
+                }
+                else
+                {
+                    Logger.Debug("Enabling compression with threshold {0} on", threshold, this);
+                    _channel.Pipeline.AddBefore(
+                        MessageEncodingHandler.Name,
+                        CompressionHandler.Name,
+                        new CompressionHandler(threshold)
+                    );
+                }
+            }
+            else
+            {
+                if (compressionHandler == null)
+                    return;
+                
+                Logger.Debug("Disabling compression on", threshold, this);
+                _channel.Pipeline.Remove<CompressionHandler>();
+            }
         }
 
         public void EnableEncryption(byte[] sharedSecret)
