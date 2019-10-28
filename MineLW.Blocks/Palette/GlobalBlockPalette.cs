@@ -1,7 +1,6 @@
 ﻿using DotNetty.Buffers;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Palette;
-using MineLW.API.Extensions;
 using MineLW.API.Registries;
 
 namespace MineLW.Blocks.Palette
@@ -20,8 +19,7 @@ namespace MineLW.Blocks.Palette
 
         public int GetId(IBlockState blockState)
         {
-            var type = blockState.Block;
-            return type.GetStateId(blockState.Properties);
+            return blockState.Id;
         }
 
         public IBlockState GetBlockState(int id)
