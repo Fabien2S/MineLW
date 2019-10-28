@@ -4,6 +4,8 @@ using System.Linq;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Entities;
+using MineLW.API.Entities.Events;
+using MineLW.API.Physics;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
 using MineLW.API.Worlds.Chunks.Events;
@@ -48,12 +50,6 @@ namespace MineLW.Clients.World
             RemoveEntities(loadedEntities);
         }
 
-        private void OnEntityRemoved(object sender, EventArgs e)
-        {
-            var entity = (IEntity) sender;
-            RemoveEntities(entity);
-        }
-
         private void OnChunkLoaded(object sender, ChunkEventArgs e)
         {
             // TODO get entities by chunk pos. Maybe store the entities in a per-chunk basis?
@@ -82,6 +78,18 @@ namespace MineLW.Clients.World
             }
 
             RemoveEntities(toRemove);
+        }
+
+        private void OnEntityRemoved(object sender, EventArgs e)
+        {
+            var entity = (IEntity) sender;
+            RemoveEntities(entity);
+        }
+
+        private void OnEntityPositionChanged(object sender, EntityPositionChangedEventArgs e)
+        {
+            var connection = _client.Connection;
+            connection.MoveEntity((IEntity) sender, e.To - e.From, MotionTypes.Position);
         }
 
         private void SpawnEntities(IWorldContext worldContext)
@@ -114,6 +122,7 @@ namespace MineLW.Clients.World
                 return false;
 
             entity.Removed += OnEntityRemoved;
+            entity.PositionChanged += OnEntityPositionChanged;
 
             Logger.Info("Spawning entity #{0} on {1}", entity.Id, _client);
             var connection = _client.Connection;
@@ -139,6 +148,7 @@ namespace MineLW.Clients.World
                 }
 
                 e.Removed -= OnEntityRemoved;
+                e.PositionChanged -= OnEntityPositionChanged;
                 removedEntities.Add(e);
             }
 
