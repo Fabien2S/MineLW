@@ -5,11 +5,9 @@ using System.Net;
 using MineLW.Adapters;
 using MineLW.API;
 using MineLW.API.Client;
-using MineLW.API.Commands;
 using MineLW.API.Server;
 using MineLW.API.Worlds;
 using MineLW.Clients;
-using MineLW.Commands;
 using MineLW.Networking;
 using MineLW.Protocols.Handshake;
 using MineLW.Worlds;
@@ -35,7 +33,6 @@ namespace MineLW.Server
 
         public IWorldManager WorldManager { get; }
         public IClientManager ClientManager { get; }
-        public ICommandManager CommandManager { get; }
 
         private readonly IGameAdapter _gameAdapter;
         private readonly Stopwatch _stopWatch;
@@ -51,7 +48,6 @@ namespace MineLW.Server
 
             WorldManager = new WorldManager(_gameAdapter.BlockRegistry);
             ClientManager = new ClientManager(this);
-            CommandManager = new CommandManager();
         }
 
         public void Start()
