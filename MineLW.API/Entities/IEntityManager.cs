@@ -4,11 +4,14 @@ using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Utils;
+using MineLW.API.Worlds.Chunks;
 
 namespace MineLW.API.Entities
 {
     public interface IEntityManager : IUpdatable, IEnumerable<IEntity>
     {
+        IEnumerable<IEntity> GetEntities(ChunkPosition position);
+        
         /// <summary>
         /// Spawn an entity in the world context 
         /// </summary>

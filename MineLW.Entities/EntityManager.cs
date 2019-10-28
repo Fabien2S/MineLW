@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using MineLW.API.Client;
 using MineLW.API.Entities;
@@ -9,6 +10,7 @@ using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
+using MineLW.API.Worlds.Chunks;
 using MineLW.Entities.Living.Player;
 
 namespace MineLW.Entities
@@ -45,6 +47,11 @@ namespace MineLW.Entities
         private void OnEntityRemoved(object sender, EventArgs e)
         {
             RemoveEntity((IEntity) sender);
+        }
+
+        public IEnumerable<IEntity> GetEntities(ChunkPosition position)
+        {
+            return _entities.Where(e => ChunkPosition.FromWorld(e.Position) == position);
         }
 
         public IEntity SpawnEntity(Identifier name, Vector3 position, Rotation rotation)
