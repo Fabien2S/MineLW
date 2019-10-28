@@ -7,7 +7,6 @@ using MineLW.API.Client.World;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
 using MineLW.API.Physics;
-using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
 using MineLW.API.Worlds.Chunks.Events;
 using MineLW.API.Worlds.Events;
@@ -38,8 +37,16 @@ namespace MineLW.Clients.World
         
         private void OnWorldContextRegistered(object sender, WorldContextEventArgs e)
         {
+            var chunkManager = _world.ChunkManager;
+            
             var worldContext = e.WorldContext;
-            SpawnEntities(worldContext);
+            var entityManager = worldContext.EntityManager;
+            foreach (var entity in entityManager)
+            {
+                var chunkPosition = ChunkPosition.FromWorld(entity.Position);
+                if (chunkManager.IsLoaded(chunkPosition))
+                    SpawnEntity(entity);
+            }
         }
 
         private void OnWorldContextUnregistered(object sender, WorldContextEventArgs e)
@@ -53,10 +60,14 @@ namespace MineLW.Clients.World
 
         private void OnChunkLoaded(object sender, ChunkEventArgs e)
         {
-            // TODO get entities by chunk pos. Maybe store the entities in a per-chunk basis?
             var worldContexts = _world.WorldContexts;
             foreach (var worldContext in worldContexts)
-                SpawnEntities(worldContext);
+            {
+                var entityManager = worldContext.EntityManager;
+                var entities = entityManager.GetEntities(e.Position);
+                foreach (var entity in entities)
+                    SpawnEntity(entity);
+            }
         }
 
         private void OnChunkUnloaded(object sender, ChunkEventArgs e)
@@ -97,18 +108,6 @@ namespace MineLW.Clients.World
         {
             var connection = _client.Connection;
             connection.MoveEntity((IEntity) sender, Vector3.Zero, MotionTypes.Rotation);
-        }
-
-        private void SpawnEntities(IWorldContext worldContext)
-        {
-            var chunkManager = _world.ChunkManager;
-            var entityManager = worldContext.EntityManager;
-            foreach (var entity in entityManager)
-            {
-                var chunkPosition = ChunkPosition.FromWorld(entity.Position);
-                if (chunkManager.IsLoaded(chunkPosition) && !_loadedEntities.Contains(entity))
-                    SpawnEntity(entity);
-            }
         }
 
         public bool SpawnEntity(IEntity entity)
