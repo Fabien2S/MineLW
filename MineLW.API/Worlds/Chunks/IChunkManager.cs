@@ -44,7 +44,8 @@ namespace MineLW.API.Worlds.Chunks
         /// Unload the chunk at the given position
         /// </summary>
         /// <param name="position">The chunk position</param>
-        void UnloadChunk(ChunkPosition position);
+        /// <returns>true if the chunk has been unloaded, false otherwise</returns>
+        bool UnloadChunk(ChunkPosition position);
         
         /// <summary>
         /// Gets the chunk at the given position, or null if none
