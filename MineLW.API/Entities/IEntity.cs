@@ -11,7 +11,7 @@ namespace MineLW.API.Entities
     public interface IEntity : IUpdatable, IComparable<IEntity>, IEquatable<IEntity>
     {
         /// <summary>
-        /// The unique id of the entity. Incremental and shared across the server
+        /// The network id of the entity
         /// </summary>
         int Id { get; }
 
