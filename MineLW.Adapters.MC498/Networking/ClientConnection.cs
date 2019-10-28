@@ -9,6 +9,7 @@ using MineLW.API.Client;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
+using MineLW.API.Physics;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
@@ -127,7 +128,11 @@ namespace MineLW.Adapters.MC498.Networking
         {
             switch (entity)
             {
-                case IEntityPlayer _:
+                case IEntityPlayer player:
+                    _networkClient.Send(new MessageClientPlayerInfo.Message(
+                        MessageClientPlayerInfo.Action.AddPlayer,
+                        new []{player}
+                    ));
                     _networkClient.Send(new MessageClientSpawnPlayer.Message(
                         entity.Id,
                         entity.Uuid,
@@ -148,6 +153,56 @@ namespace MineLW.Adapters.MC498.Networking
                     .Select(e => e.Id)
                     .ToArray()
             ));
+        }
+
+        public void MoveEntity(IEntity entity, Vector3 delta, MotionTypes motionTypes)
+        {
+            if (motionTypes.HasFlag(MotionTypes.Position))
+            {
+                const int maxBlocks = 8;
+                if (delta.LengthSquared() > maxBlocks * maxBlocks)
+                {
+                    _networkClient.Send(new MessageClientEntityTeleport.Message(
+                        entity.Id,
+                        entity.Position,
+                        entity.Rotation,
+                        entity.Grounded
+                    ));
+                }
+                else
+                {
+                    const int scale = short.MaxValue / maxBlocks;
+                    if (motionTypes.HasFlag(MotionTypes.Rotation))
+                    {
+                        _networkClient.Send(new MessageClientEntityMoveRotate.Message(
+                            entity.Id,
+                            (short) (delta.X * scale),
+                            (short) (delta.Y * scale),
+                            (short) (delta.Z * scale),
+                            entity.Rotation,
+                            entity.Grounded
+                        ));
+                    }
+                    else
+                    {
+                        _networkClient.Send(new MessageClientEntityMove.Message(
+                            entity.Id,
+                            (short) (delta.X * scale),
+                            (short) (delta.Y * scale),
+                            (short) (delta.Z * scale),
+                            entity.Grounded
+                        ));
+                    }
+                }
+            }
+            else if (motionTypes.HasFlag(MotionTypes.Rotation))
+            {
+                _networkClient.Send(new MessageClientEntityRotate.Message(
+                    entity.Id,
+                    entity.Rotation,
+                    true
+                ));
+            }
         }
 
         public void LoadChunk(ChunkPosition position, IChunk chunk)
