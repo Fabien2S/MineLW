@@ -10,6 +10,8 @@ namespace MineLW.API.Worlds.Chunks
         /// <remarks>If the generator is set to null, no chunk will be generated</remarks>
         /// </summary>
         IChunkGenerator Generator { get; set; }
+        
+        int LoadedChunks { get; }
 
         /// <summary>
         /// Return if a chunk is loaded at the given position

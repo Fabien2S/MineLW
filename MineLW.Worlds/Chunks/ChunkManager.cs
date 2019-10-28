@@ -13,6 +13,8 @@ namespace MineLW.Worlds.Chunks
         
         public IChunkGenerator Generator { get; set; }
 
+        public int LoadedChunks => _loadedChunks.Count;
+
         private readonly Random _random = new Random();
         private readonly IBlockPalette _globalPalette;
         private readonly Dictionary<ChunkPosition, IChunk> _loadedChunks = new Dictionary<ChunkPosition, IChunk>();
