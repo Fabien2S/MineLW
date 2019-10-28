@@ -13,7 +13,7 @@ namespace MineLW.Clients.World
 {
     public class ClientWorld : IClientWorld
     {
-        private const byte DefaultRenderDistance = 2;
+        private const byte DefaultRenderDistance = 10;
 
         public IClientChunkManager ChunkManager { get; }
         public IClientEntityManager EntityManager { get; }
