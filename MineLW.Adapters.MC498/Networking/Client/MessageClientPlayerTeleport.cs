@@ -12,7 +12,7 @@ namespace MineLW.Adapters.MC498.Networking.Client
         protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteVector3D(message.Position);
-            buffer.WriteRotation(message.Rotation);
+            buffer.WriteRotationF(message.Rotation);
             buffer.WriteByte(0);
             buffer.WriteVarInt32(message.TeleportId);
         }

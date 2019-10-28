@@ -15,7 +15,7 @@ namespace MineLW.Adapters.MC498.Networking.Client
             buffer.WriteVarInt32(message.Id);
             buffer.WriteGuid(message.Guid);
             buffer.WriteVector3D(message.Position);
-            buffer.WriteRotation(message.Rotation);
+            buffer.WriteRotationF(message.Rotation);
             buffer.WriteByte(0xFF);
         }
         
