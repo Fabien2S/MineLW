@@ -30,6 +30,7 @@ namespace MineLW.API.Entities
         IWorldContext WorldContext { get; set; }
         Vector3 Position { get; set; }
         Rotation Rotation { get; set; }
+        bool Grounded { get; }
 
         event EventHandler Removed;
         event EventHandler<EntityWorldChangingEventArgs> WorldChanging;

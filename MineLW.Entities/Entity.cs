@@ -67,6 +67,8 @@ namespace MineLW.Entities
             }
         }
 
+        public bool Grounded { get; private set; }
+        
         public event EventHandler Removed;
         public event EventHandler<EntityWorldChangingEventArgs> WorldChanging;
         public event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
