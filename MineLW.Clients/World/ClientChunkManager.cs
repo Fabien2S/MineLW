@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MineLW.Adapters;
 using MineLW.API;
 using MineLW.API.Blocks.Palette;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Worlds.Chunks;
+using MineLW.API.Worlds.Chunks.Events;
 using MineLW.Blocks.Palette;
 using MineLW.Worlds.Chunks;
 using NLog;
@@ -15,8 +17,11 @@ namespace MineLW.Clients.World
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public event EventHandler<ChunkEventArgs> ChunkLoaded;
+        public event EventHandler<ChunkEventArgs> ChunkUnloaded;
+
         private readonly IClient _client;
-        private readonly ISet<ChunkPosition> _loadedChunks = new HashSet<ChunkPosition>();
+        private readonly Dictionary<ChunkPosition, IChunk> _loadedChunks = new Dictionary<ChunkPosition, IChunk>();
 
         public ClientChunkManager(IClient client)
         {
@@ -29,7 +34,7 @@ namespace MineLW.Clients.World
             var renderDistance = clientWorld.RenderDistance;
             var clientPosition = clientWorld.ChunkPosition;
 
-            ISet<ChunkPosition> chunkToUnload = new HashSet<ChunkPosition>(_loadedChunks);
+            ISet<ChunkPosition> chunkToUnload = new HashSet<ChunkPosition>(_loadedChunks.Keys);
             ISet<ChunkPosition> chunkToLoad = new HashSet<ChunkPosition>();
 
             for (var x = clientPosition.X - renderDistance; x <= clientPosition.X + renderDistance; x++)
@@ -95,12 +100,12 @@ namespace MineLW.Clients.World
 
         public bool IsLoaded(ChunkPosition position)
         {
-            return _loadedChunks.Contains(position);
+            return _loadedChunks.ContainsKey(position);
         }
 
         public void LoadChunk(ChunkPosition position)
         {
-            if (!_loadedChunks.Add(position))
+            if (IsLoaded(position))
             {
                 Logger.Warn("Trying to load an already loaded chunk at {0}", position);
                 return;
@@ -109,19 +114,28 @@ namespace MineLW.Clients.World
             // TODO use Client's adapter
             var version = GameAdapters.CurrentVersion;
             var adapter = GameAdapters.Resolve(version.Protocol);
-            var renderedChunk = RenderChunk(position, new GlobalBlockPalette(adapter.BlockRegistry));
-            _client.Connection.LoadChunk(position, renderedChunk);
+            var chunk = RenderChunk(position, new GlobalBlockPalette(adapter.BlockRegistry));
+            
+            _loadedChunks[position] = chunk;
+            _client.Connection.LoadChunk(position, chunk);
+            
+            ChunkLoaded?.Invoke(this, new ChunkEventArgs(position, chunk));
         }
 
         public void UnloadChunk(ChunkPosition position)
         {
-            if (!_loadedChunks.Remove(position))
+            if(!_loadedChunks.ContainsKey(position))
             {
                 Logger.Warn("Trying to unload an unloaded chunk at {0}", position);
                 return;
             }
 
+            var chunk = _loadedChunks[position];
+            if (!_loadedChunks.Remove(position))
+                return;
+            
             _client.Connection.UnloadChunk(position);
+            ChunkUnloaded?.Invoke(this, new ChunkEventArgs(position, chunk));
         }
     }
 }
