@@ -148,10 +148,17 @@ namespace MineLW.Networking.IO
             );
         }
 
-        public static IByteBuffer WriteRotation(this IByteBuffer buffer, Rotation rotation)
+        public static IByteBuffer WriteRotationF(this IByteBuffer buffer, Rotation rotation)
         {
             buffer.WriteFloat(rotation.Yaw);
             buffer.WriteFloat(rotation.Pitch);
+            return buffer;
+        }
+
+        public static IByteBuffer WriteRotationB(this IByteBuffer buffer, Rotation rotation)
+        {
+            buffer.WriteByte((int) (rotation.Yaw / 360 * 256));
+            buffer.WriteByte((int) (rotation.Pitch / 360 * 256));
             return buffer;
         }
 
