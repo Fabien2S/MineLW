@@ -188,7 +188,7 @@ namespace MineLW.Adapters.MC498.Networking
                 blockStorage.Serialize(buffer);
             }
 
-            // biome
+            // TODO send biome to the client
             for (var i = 0; i < 256; i++)
                 buffer.WriteInt(0);
 

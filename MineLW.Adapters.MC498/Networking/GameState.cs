@@ -73,7 +73,7 @@ namespace MineLW.Adapters.MC498.Networking
                 new MessageClientRotateToward(),
                 new MessageClientPlayerTeleport(),
                 null,
-                null,
+                new MessageClientDestroyEntities(),
                 null,
                 null,
                 new MessageClientRespawn(),

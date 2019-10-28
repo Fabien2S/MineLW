@@ -18,6 +18,7 @@ namespace MineLW.Adapters.MC498.Networking.Server
 
         protected override void Handle(ClientController controller, Message message)
         {
+            controller.HandlePlayerGroundedUpdate(message.Grounded);
             controller.HandlePlayerRotationUpdate(message.Position);
         }
         

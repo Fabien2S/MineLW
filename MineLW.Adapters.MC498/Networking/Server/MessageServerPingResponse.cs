@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetty.Buffers;
+﻿using DotNetty.Buffers;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
