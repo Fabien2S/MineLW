@@ -56,6 +56,7 @@ namespace MineLW.Clients.World
 
         private void OnChunkLoaded(object sender, ChunkEventArgs e)
         {
+            // TODO get entities by chunk pos. Maybe store the entities in a per-chunk basis?
             var worldContexts = _world.WorldContexts;
             foreach (var worldContext in worldContexts)
                 SpawnEntities(worldContext);
