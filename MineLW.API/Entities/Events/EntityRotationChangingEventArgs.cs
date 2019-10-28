@@ -8,9 +8,9 @@ namespace MineLW.API.Entities.Events
         public readonly Rotation From;
         public readonly Rotation To;
 
-        public EntityRotationChangingEventArgs(Rotation @from, Rotation to)
+        public EntityRotationChangingEventArgs(Rotation from, Rotation to)
         {
-            From = @from;
+            From = from;
             To = to;
         }
     }

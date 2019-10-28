@@ -18,5 +18,7 @@ namespace MineLW.API.Worlds
             Name = name;
             Id = id;
         }
+
+        public override string ToString() => Name.ToString();
     }
 }

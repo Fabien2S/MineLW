@@ -15,23 +15,23 @@ namespace MineLW.Worlds.Lights
         
         private static readonly LightType[] Values = (LightType[]) Enum.GetValues(typeof(LightType));
         
-        private readonly Dictionary<LightType, ILightStorage> _storages = new Dictionary<LightType, ILightStorage>();
+        private readonly Dictionary<LightType, ILightStorage> _lightStorage = new Dictionary<LightType, ILightStorage>();
 
         public LightManager()
         {
             foreach (var type in Values)
-                _storages[type] = new LightStorage();
+                _lightStorage[type] = new LightStorage();
         }
 
         public void SetLight(Vector3Int position, LightType type, byte level)
         {
-            var storage = _storages[type];
+            var storage = _lightStorage[type];
             storage.SetLight((byte) position.X, (byte) position.Y, (byte) position.Z, level);
         }
 
         public byte GetLight(Vector3Int position, LightType type)
         {
-            var storage = _storages[type];
+            var storage = _lightStorage[type];
             return storage.GetLight((byte) position.X, (byte) position.Y, (byte) position.Z);
         }
 

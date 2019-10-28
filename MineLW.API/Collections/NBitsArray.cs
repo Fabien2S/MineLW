@@ -6,10 +6,9 @@ namespace MineLW.API.Collections
     public class NBitsArray
     {
         public readonly long[] Backing;
-
-        public readonly int BitsPerEntry;
         public readonly int Capacity;
 
+        private readonly int _bitsPerEntry;
         private readonly long _maxValue;
 
         private NBitsArray(long[] backing, byte bitsPerEntry, ushort capacity)
@@ -24,7 +23,7 @@ namespace MineLW.API.Collections
             }
 
             Backing = backing;
-            BitsPerEntry = bitsPerEntry;
+            _bitsPerEntry = bitsPerEntry;
             Capacity = capacity;
 
             _maxValue = (1L << bitsPerEntry) - 1L;
@@ -37,12 +36,12 @@ namespace MineLW.API.Collections
                 if (index < 0 || index >= Capacity)
                     throw new ArgumentOutOfRangeException(nameof(index), "Invalid index");
 
-                index *= BitsPerEntry;
+                index *= _bitsPerEntry;
                 var i0 = index >> 6;
                 var i1 = index & 0x3f;
 
                 var value = (long) ((ulong) Backing[i0] >> i1);
-                var i2 = i1 + BitsPerEntry;
+                var i2 = i1 + _bitsPerEntry;
                 if (i2 > 64)
                     value |= Backing[++i0] << 64 - i1;
                 return (int) (value & _maxValue);
@@ -54,12 +53,12 @@ namespace MineLW.API.Collections
                 if (value < 0 || value > _maxValue)
                     throw new ArgumentOutOfRangeException(nameof(value), "Invalid value");
 
-                index *= BitsPerEntry;
+                index *= _bitsPerEntry;
                 var i0 = index >> 6;
                 var i1 = index & 0x3f;
 
                 Backing[i0] = Backing[i0] & ~(_maxValue << i1) | (value & _maxValue) << i1;
-                var i2 = i1 + BitsPerEntry;
+                var i2 = i1 + _bitsPerEntry;
                 if (i2 <= 64)
                     return;
 

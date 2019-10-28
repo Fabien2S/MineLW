@@ -104,7 +104,7 @@ namespace MineLW.Adapters.MC498.Networking
                 null,
                 null,
                 null,
-                new MessageClientEntityTeleport(),
+                new MessageClientEntityTeleport()
             };
         }
 
@@ -132,7 +132,7 @@ namespace MineLW.Adapters.MC498.Networking
                 new MessageServerPlayerPosition(),
                 new MessageServerPlayerPositionRotation(), 
                 new MessageServerPlayerRotation(),
-                null,
+                null
             };
         }
 

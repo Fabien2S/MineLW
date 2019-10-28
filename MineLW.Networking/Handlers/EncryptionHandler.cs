@@ -4,8 +4,6 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using MineLW.Networking.IO;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
 
 namespace MineLW.Networking.Handlers
 {

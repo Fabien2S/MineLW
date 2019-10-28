@@ -9,7 +9,7 @@ namespace MineLW.API.Client
     public interface IClient : IUpdatable
     {
         /// <summary>
-        /// Gets the client profile. This is the profile that was received from Mojang's auth servers
+        /// Gets the client profile. This is the profile that was received from Mojang auth servers
         /// </summary>
         PlayerProfile Profile { get; }
         /// <summary>
