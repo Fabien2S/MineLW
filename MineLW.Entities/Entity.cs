@@ -22,16 +22,17 @@ namespace MineLW.Entities
             set
             {
                 EnsureValid();
-
-                var worldChangingEventArgs = new EntityWorldChangingEventArgs(_worldContext, value);
+                
+                var previousWorldContext = _worldContext;
+                
+                var worldChangingEventArgs = new EntityWorldChangingEventArgs(previousWorldContext, value);
                 WorldChanging?.Invoke(this, worldChangingEventArgs);
                 if (worldChangingEventArgs.Cancel)
                     return;
 
-                var from = _worldContext;
                 _worldContext = value;
                 
-                var worldChangedEventArgs = new EntityWorldChangedEventArgs(from, _worldContext);
+                var worldChangedEventArgs = new EntityWorldChangedEventArgs(previousWorldContext, value);
                 WorldChanged?.Invoke(this, worldChangedEventArgs);
             }
         }
@@ -42,16 +43,16 @@ namespace MineLW.Entities
             set
             {
                 EnsureValid();
+                
+                var previousPosition = _position;
 
-                var positionChangingEventArgs = new EntityPositionChangingEventArgs(_position, value);
+                var positionChangingEventArgs = new EntityPositionChangingEventArgs(previousPosition, value);
                 PositionChanging?.Invoke(this, positionChangingEventArgs);
                 if (positionChangingEventArgs.Cancel)
                     return;
-                
-                var from = _position;
                 _position = value;
                     
-                var positionChangedEventArgs = new EntityPositionChangedEventArgs(from, value);
+                var positionChangedEventArgs = new EntityPositionChangedEventArgs(previousPosition, value);
                 PositionChanged?.Invoke(this, positionChangedEventArgs);
             }
         }
