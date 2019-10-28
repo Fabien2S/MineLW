@@ -36,6 +36,7 @@ namespace MineLW.API.Entities.Living.Player
         /// </summary>
         GameMode GameMode { get; set; }
 
-        event EventHandler<PlayerGameModeEventArgs> GameModeChanged;
+        event EventHandler<GameModeCancelEventArgs> GameModeChanging;
+        event EventHandler<GameModeEventArgs> GameModeChanged;
     }
 }
