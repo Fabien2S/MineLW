@@ -45,14 +45,6 @@ namespace MineLW.API.Math
             return builder.ToString();
         }
 
-        /*public static explicit operator Rotation(Quaternion q)
-        {
-            return new Rotation(
-                (float) System.Math.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (sqz + sqw)),
-                (float) System.Math.Asin(2f * (q.X * q.Z - q.W * q.Y))
-            );
-        }*/
-
         public static bool operator ==(Rotation a, Rotation b)
         {
             return a.Equals(b);
