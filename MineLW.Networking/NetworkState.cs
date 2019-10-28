@@ -1,7 +1,5 @@
 ﻿using System;
-using DotNetty.Buffers;
 using MineLW.API.Text;
-using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
 
@@ -28,17 +26,15 @@ namespace MineLW.Networking
         protected abstract IMessageDeserializer[] GetDeserializers();
         public abstract MessageController CreateController(NetworkClient client);
 
-        public void Serialize(IByteBuffer buffer, IMessage message)
+        public IMessageSerializer GetSerializer(IMessage message, out int id)
         {
-            for (var i = 0; i < _serializers.Length; i++)
+            for (id = 0; id < _serializers.Length; id++)
             {
-                var serializer = _serializers[i];
+                var serializer = _serializers[id];
                 if (serializer == null || !serializer.CanSerialize(message))
                     continue;
 
-                buffer.WriteVarInt32(i);
-                serializer.Serialize(buffer, message);
-                return;
+                return serializer;
             }
 
             throw new NotSupportedException("No serializer for message " + message);

@@ -26,9 +26,12 @@ namespace MineLW.Networking.Handlers
             var buffer = ctx.Allocator.Buffer();
             
             var state = _client.State;
-            state.Serialize(buffer, msg);
+            var serializer = state.GetSerializer(msg, out var id);
             
-            Logger.Debug("Sending message \"{0}\" to {1} ({2} bytes)", msg, _client, buffer.ReadableBytes);
+            buffer.WriteVarInt32(id);
+            serializer.Serialize(buffer, msg);
+            
+            Logger.Debug("Sending message \"{0}\" (id {1}, {2} bytes) to {3}", msg, id.ToString("X"), buffer.ReadableBytes, _client);
 
             output.Add(buffer);
         }
@@ -56,7 +59,7 @@ namespace MineLW.Networking.Handlers
 
                 output.Add(message);
 
-                Logger.Debug("Receiving message \"{0}\" from {1}", message, _client);
+                Logger.Debug("Receiving message \"{0}\" (id {1}) from {2}", message, id.ToString("X"), _client);
             }
             catch (DecoderException e)
             {
