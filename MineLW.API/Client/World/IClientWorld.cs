@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using MineLW.API.Client.Events;
 using MineLW.API.Utils;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
+using MineLW.API.Worlds.Events;
 
 namespace MineLW.API.Client.World
 {
@@ -17,8 +17,10 @@ namespace MineLW.API.Client.World
 
         byte RenderDistance { get; set; }
 
-        event EventHandler<ClientWorldContextEventArgs> WorldContextRegistered; 
-        event EventHandler<ClientWorldContextEventArgs> WorldContextUnregistered; 
+        event EventHandler<WorldContextCancelEventArgs> WorldContextRegistering;
+        event EventHandler<WorldContextEventArgs> WorldContextRegistered;  
+        event EventHandler<WorldContextCancelEventArgs> WorldContextUnregistering; 
+        event EventHandler<WorldContextEventArgs> WorldContextUnregistered; 
 
         void Init();
         void RegisterContext(IWorldContext context);

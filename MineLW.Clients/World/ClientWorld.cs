@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Numerics;
 using MineLW.API.Client;
-using MineLW.API.Client.Events;
 using MineLW.API.Client.World;
 using MineLW.API.Entities.Events;
 using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
+using MineLW.API.Worlds.Events;
 
 namespace MineLW.Clients.World
 {
@@ -44,8 +44,10 @@ namespace MineLW.Clients.World
             }
         }
 
-        public event EventHandler<ClientWorldContextEventArgs> WorldContextRegistered;
-        public event EventHandler<ClientWorldContextEventArgs> WorldContextUnregistered;
+        public event EventHandler<WorldContextCancelEventArgs> WorldContextRegistering;
+        public event EventHandler<WorldContextEventArgs> WorldContextRegistered;
+        public event EventHandler<WorldContextCancelEventArgs> WorldContextUnregistering;
+        public event EventHandler<WorldContextEventArgs> WorldContextUnregistered;
 
         private readonly IClient _client;
         private readonly ISet<IWorldContext> _worldContexts = new HashSet<IWorldContext>();
@@ -95,12 +97,15 @@ namespace MineLW.Clients.World
             if(_worldContexts.Contains(context))
                 return;
             
-            var eventArgs = new ClientWorldContextEventArgs(_client, context);
-            WorldContextRegistered?.Invoke(this, eventArgs);
-            if(eventArgs.Cancelled)
+            var worldContextCancelEventArgs = new WorldContextCancelEventArgs(context);
+            WorldContextRegistering?.Invoke(this, worldContextCancelEventArgs);
+            if(worldContextCancelEventArgs.Cancel)
                 return;
             
             _worldContexts.Add(context);
+
+            var worldContextEventArgs = new WorldContextEventArgs(context);
+            WorldContextRegistered?.Invoke(this, worldContextEventArgs);
         }
 
         public void UnregisterContext(IWorldContext context)
@@ -111,12 +116,15 @@ namespace MineLW.Clients.World
             if(!_worldContexts.Contains(context))
                 return;
             
-            var eventArgs = new ClientWorldContextEventArgs(_client, context);
-            WorldContextUnregistered?.Invoke(this, eventArgs);
-            if(eventArgs.Cancelled)
+            var worldContextCancelEventArgs = new WorldContextCancelEventArgs(context);
+            WorldContextUnregistering?.Invoke(this, worldContextCancelEventArgs);
+            if(worldContextCancelEventArgs.Cancel)
                 return;
             
             _worldContexts.Remove(context);
+
+            var worldContextEventArgs = new WorldContextEventArgs(context);
+            WorldContextUnregistered?.Invoke(this, worldContextEventArgs);
         }
 
         private void OnPlayerPositionChanged(object sender, Vector3 position)
