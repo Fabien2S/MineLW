@@ -127,23 +127,12 @@ namespace MineLW.Adapters.MC498.Networking
         {
             switch (entity)
             {
-                case IEntityPlayer player:
-                    _networkClient.Send(new MessageClientPlayerInfo.Message(
-                        MessageClientPlayerInfo.Action.AddPlayer,
-                        new []{player}
-                    ));
+                case IEntityPlayer _:
                     _networkClient.Send(new MessageClientSpawnPlayer.Message(
                         entity.Id,
                         entity.Uuid,
                         entity.Position,
                         entity.Rotation
-                    ));
-                    
-                    if(player.IsListed)
-                        break;
-                    _networkClient.Send(new MessageClientPlayerInfo.Message(
-                        MessageClientPlayerInfo.Action.RemovePlayer,
-                        new []{player}
                     ));
                     break;
                 default:
