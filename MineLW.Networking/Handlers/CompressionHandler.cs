@@ -4,36 +4,33 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using MineLW.Networking.IO;
-using NLog;
 
 namespace MineLW.Networking.Handlers
 {
     public class CompressionHandler : MessageToMessageCodec<IByteBuffer, IByteBuffer>
     {
         public const string Name = "compression";
-        
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public int CompressionThreshold { get; set; }
         
         private static readonly byte[] Buffer = new byte[8192];
         
         private readonly Deflater _deflater;
         private readonly Inflater _inflater;
 
-        private readonly int _compressionThreshold;
-
         public CompressionHandler(int compressionThreshold)
         {
             _deflater= new Deflater(Deflater.DEFAULT_COMPRESSION);
             _inflater= new Inflater();
             
-            _compressionThreshold = compressionThreshold;
+            CompressionThreshold = compressionThreshold;
         }
 
         protected override void Encode(IChannelHandlerContext ctx, IByteBuffer msg, List<object> output)
         {
             var buffer = Unpooled.Buffer();
             
-            if (msg.ReadableBytes >= _compressionThreshold)
+            if (msg.ReadableBytes >= CompressionThreshold)
             {
                 var data = msg.ToArray(out var offset, out var count);
 
@@ -65,7 +62,7 @@ namespace MineLW.Networking.Handlers
             if (uncompressedSize == 0)
             {
                 var length = msg.ReadableBytes;
-                if (length >= _compressionThreshold)
+                if (length >= CompressionThreshold)
                     throw new DecoderException("Badly compressed message");
                 
                 msg.Retain();
@@ -73,7 +70,7 @@ namespace MineLW.Networking.Handlers
                 return;
             }
             
-            if (uncompressedSize < _compressionThreshold)
+            if (uncompressedSize < CompressionThreshold)
                 throw new DecoderException("Badly compressed message (uncompressed size: " + uncompressedSize + ')');
             if (uncompressedSize > 1 << 21)
                 throw new DecoderException("Badly compressed message (size over protocol limit: " + uncompressedSize + ')');
