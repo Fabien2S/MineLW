@@ -38,6 +38,7 @@ namespace MineLW.Clients
             
             _clients.Add(client);
             
+            // TODO Implements client tp (with "waiting for confirm" state)
             client.Connection.Teleport(player.Position, player.Rotation, 0);
         }
 
