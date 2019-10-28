@@ -19,8 +19,8 @@ namespace MineLW.Worlds
 
         public IWorldContext CreateContext(Identifier name)
         {
-            if (_contexts.ContainsKey(name))
-                return _contexts[name];
+            if (_contexts.TryGetValue(name, out var context))
+                return context;
             return _contexts[name] = new WorldContext(this, _uidGenerator, _globalPalette);
         }
     }

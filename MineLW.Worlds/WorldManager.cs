@@ -32,10 +32,10 @@ namespace MineLW.Worlds
         
         public IWorld CreateWorld(Identifier name)
         {
-            if (_worlds.ContainsKey(name))
-                return _worlds[name];
+            if (_worlds.TryGetValue(name, out var world))
+                return world;
 
-            var world = new World(this, _globalPalette);
+            world = new World(this, _globalPalette);
             WorldCreated?.Invoke(this, new WorldEventArgs(world));
             return _worlds[name] = world;
         }

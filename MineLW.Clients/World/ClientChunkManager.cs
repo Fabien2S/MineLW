@@ -124,13 +124,12 @@ namespace MineLW.Clients.World
 
         public void UnloadChunk(ChunkPosition position)
         {
-            if(!_loadedChunks.ContainsKey(position))
+            if(!_loadedChunks.TryGetValue(position, out var chunk))
             {
                 Logger.Warn("Trying to unload an unloaded chunk at {0}", position);
                 return;
             }
 
-            var chunk = _loadedChunks[position];
             if (!_loadedChunks.Remove(position))
                 return;
             

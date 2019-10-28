@@ -74,8 +74,8 @@ namespace MineLW.Worlds
 
         public T GetOption<T>(WorldOption<T> option)
         {
-            if (_options.ContainsKey(option))
-                return _options[option];
+            if (_options.TryGetValue(option, out var value))
+                return value;
             return _world != null ? _world.GetOption(option) : option.DefaultValue;
         }
 

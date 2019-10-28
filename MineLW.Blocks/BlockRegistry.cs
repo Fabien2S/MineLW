@@ -66,11 +66,9 @@ namespace MineLW.Blocks
             {
                 var blockProperty = blockProperties[i];
                 var blockPropertyName = blockProperty.Name;
-                if (properties.ContainsKey(blockPropertyName))
-                {
-                    var propValue = properties[blockPropertyName];
+
+                if (properties.TryGetValue(blockPropertyName, out var propValue))
                     props[i] = blockProperty.Parse(propValue);
-                }
                 else
                     props[i] = blockDefaultValues[i];
             }
