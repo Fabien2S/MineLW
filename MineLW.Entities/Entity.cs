@@ -104,10 +104,10 @@ namespace MineLW.Entities
             Removed?.Invoke(this, EventArgs.Empty);
             Valid = false;
         }
-
+        
+        public int CompareTo(IEntity other) => Id.CompareTo(other.Id);
         public override bool Equals(object obj) => obj is IEntity other && Equals(other);
         public bool Equals(IEntity other) => Id == other?.Id;
-        public int CompareTo(IEntity other) => Id.CompareTo(other.Id);
         public override int GetHashCode() => Id;
     }
 }

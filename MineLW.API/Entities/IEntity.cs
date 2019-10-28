@@ -8,7 +8,7 @@ using MineLW.API.Worlds;
 
 namespace MineLW.API.Entities
 {
-    public interface IEntity : IUpdatable, IEquatable<IEntity>, IComparable<IEntity>
+    public interface IEntity : IUpdatable, IComparable<IEntity>, IEquatable<IEntity>
     {
         /// <summary>
         /// The unique id of the entity. Incremental and shared across the server
