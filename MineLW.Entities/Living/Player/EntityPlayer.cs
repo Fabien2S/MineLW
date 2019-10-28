@@ -22,14 +22,22 @@ namespace MineLW.Entities.Living.Player
             {
                 EnsureValid();
                 
-                var eventArgs = new PlayerGameModeEventArgs(this, _gameMode, value);
-                GameModeChanged?.Invoke(this, eventArgs);
-                if(!eventArgs.Cancelled)
-                    _gameMode = value;
+                var previousGameMode = _gameMode;
+                
+                var gameModeCancelEventArgs = new GameModeCancelEventArgs(previousGameMode, value);
+                GameModeChanging?.Invoke(this, gameModeCancelEventArgs);
+                if (gameModeCancelEventArgs.Cancel)
+                    return;
+                
+                _gameMode = value;
+
+                var gameModeEventArgs = new GameModeEventArgs(previousGameMode, value);
+                GameModeChanged?.Invoke(this, gameModeEventArgs);
             }
         }
 
-        public event EventHandler<PlayerGameModeEventArgs> GameModeChanged;
+        public event EventHandler<GameModeCancelEventArgs> GameModeChanging;
+        public event EventHandler<GameModeEventArgs> GameModeChanged;
 
         private GameMode _gameMode;
 
