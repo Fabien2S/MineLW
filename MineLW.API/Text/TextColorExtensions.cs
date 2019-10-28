@@ -1,7 +1,7 @@
 using System;
-using MineLW.API.Text;
+using MineLW.API.Extensions;
 
-namespace MineLW.API.Extensions
+namespace MineLW.API.Text
 {
     public static class TextColorExtensions
     {
