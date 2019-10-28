@@ -4,8 +4,7 @@ namespace MineLW.API.Client.World
 {
     public interface IClientEntityManager
     {
-        void SynchronizeEntities();
         bool SpawnEntity(IEntity entity);
-        bool RemoveEntities(params IEntity[] entities);
+        int RemoveEntities(params IEntity[] entities);
     }
 }

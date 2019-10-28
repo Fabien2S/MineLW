@@ -13,7 +13,7 @@ namespace MineLW.Clients.World
 {
     public class ClientWorld : IClientWorld
     {
-        private const byte DefaultRenderDistance = 4;
+        private const byte DefaultRenderDistance = 2;
 
         public IClientChunkManager ChunkManager { get; }
         public IClientEntityManager EntityManager { get; }
@@ -62,7 +62,7 @@ namespace MineLW.Clients.World
             _client = client;
             
             ChunkManager = new ClientChunkManager(client);
-            EntityManager = new ClientEntityManager(client);
+            EntityManager = new ClientEntityManager(client, this);
         }
 
         public void Init()
@@ -84,9 +84,7 @@ namespace MineLW.Clients.World
                 return;
 
             _worldDirty = false;
-
             ChunkManager.SynchronizeChunks();
-            EntityManager.SynchronizeEntities();
         }
 
         public void RegisterContext(IWorldContext context)

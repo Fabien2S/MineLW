@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Entities;
+using MineLW.API.Worlds;
 using MineLW.API.Worlds.Chunks;
+using MineLW.API.Worlds.Chunks.Events;
+using MineLW.API.Worlds.Events;
 using NLog;
 
 namespace MineLW.Clients.World
@@ -12,85 +17,91 @@ namespace MineLW.Clients.World
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly IClient _client;
+        private readonly IClientWorld _world;
         private readonly ISet<IEntity> _loadedEntities = new HashSet<IEntity>();
 
-        public ClientEntityManager(IClient client)
+        public ClientEntityManager(IClient client, IClientWorld world)
         {
             _client = client;
+            _world = world;
+
+            world.WorldContextRegistered += OnWorldContextRegistered;
+            world.WorldContextUnregistered += OnWorldContextUnregistered;
+
+            var chunkManager = world.ChunkManager;
+            chunkManager.ChunkLoaded += OnChunkLoaded;
+            chunkManager.ChunkUnloaded += OnChunkUnloaded;
+        }
+        
+        private void OnWorldContextRegistered(object sender, WorldContextEventArgs e)
+        {
+            var worldContext = e.WorldContext;
+            SpawnEntities(worldContext);
         }
 
-        private ISet<IEntity> ComputeLoadedEntities()
+        private void OnWorldContextUnregistered(object sender, WorldContextEventArgs e)
         {
-            ISet<IEntity> entities = new HashSet<IEntity>();
+            var worldContext = e.WorldContext;
+            var entityManager = worldContext.EntityManager;
 
-            var clientPlayer = _client.Player;
-            var clientWorld = _client.World;
-            var chunkManager = clientWorld.ChunkManager;
+            var loadedEntities = entityManager.Where(ent => _loadedEntities.Contains(ent));
+            RemoveEntities(loadedEntities);
+        }
 
-            var worldContexts = clientWorld.WorldContexts;
+        private void OnEntityRemoved(object sender, EventArgs e)
+        {
+            var entity = (IEntity) sender;
+            RemoveEntities(entity);
+        }
+
+        private void OnChunkLoaded(object sender, ChunkEventArgs e)
+        {
+            var worldContexts = _world.WorldContexts;
+            foreach (var worldContext in worldContexts)
+                SpawnEntities(worldContext);
+        }
+
+        private void OnChunkUnloaded(object sender, ChunkEventArgs e)
+        {
+            var toRemove = new HashSet<IEntity>();
+            
+            var unloadedChunk = e.Position;
+            var worldContexts = _world.WorldContexts;
             foreach (var worldContext in worldContexts)
             {
                 var entityManager = worldContext.EntityManager;
                 foreach (var entity in entityManager)
                 {
-                    if (entity.Equals(clientPlayer))
-                        continue;
-
                     var chunkPosition = ChunkPosition.FromWorld(entity.Position);
-                    if (!chunkManager.IsLoaded(chunkPosition))
+                    if(unloadedChunk != chunkPosition)
                         continue;
 
-                    entities.Add(entity);
+                    toRemove.Add(entity);
                 }
             }
 
-            return entities;
+            RemoveEntities(toRemove);
         }
 
-        private bool RemoveEntities(IEnumerable<IEntity> entities)
+        private void SpawnEntities(IWorldContext worldContext)
         {
-            var removedEntities = new HashSet<IEntity>();
-
-            foreach (var e in entities)
+            var chunkManager = _world.ChunkManager;
+            var entityManager = worldContext.EntityManager;
+            foreach (var entity in entityManager)
             {
-                if (_loadedEntities.Remove(e))
-                    removedEntities.Add(e);
+                var chunkPosition = ChunkPosition.FromWorld(entity.Position);
+                if (chunkManager.IsLoaded(chunkPosition) && !_loadedEntities.Contains(entity))
+                    SpawnEntity(entity);
             }
-
-            if (removedEntities.Count == 0)
-                return true;
-
-            var connection = _client.Connection;
-            connection.DestroyEntities(removedEntities);
-            return true;
-        }
-
-        public void SynchronizeEntities()
-        {
-            var toSpawn = ComputeLoadedEntities();
-            var toDestroy = new HashSet<IEntity>();
-
-            foreach (var entity in _loadedEntities)
-            {
-                if (toSpawn.Contains(entity))
-                    toSpawn.Remove(entity);
-                else
-                    toDestroy.Add(entity);
-            }
-
-            RemoveEntities(toDestroy);
-            foreach (var entity in toSpawn)
-                SpawnEntity(entity);
         }
 
         public bool SpawnEntity(IEntity entity)
         {
             var player = _client.Player;
-            if (player.Equals(entity))
+            if (player.Id == entity.Id)
                 return false;
 
-            var clientWorld = _client.World;
-            var chunkManager = clientWorld.ChunkManager;
+            var chunkManager = _world.ChunkManager;
             var chunkPosition = ChunkPosition.FromWorld(entity.Position);
             if (!chunkManager.IsLoaded(chunkPosition))
             {
@@ -101,14 +112,42 @@ namespace MineLW.Clients.World
             if (!_loadedEntities.Add(entity))
                 return false;
 
-            var clientConnection = _client.Connection;
-            clientConnection.SpawnEntity(entity);
+            entity.Removed += OnEntityRemoved;
+
+            Logger.Info("Spawning entity #{0} on {1}", entity.Id, _client);
+            var connection = _client.Connection;
+            connection.SpawnEntity(entity);
             return true;
         }
 
-        public bool RemoveEntities(params IEntity[] entities)
+        public int RemoveEntities(params IEntity[] entities)
         {
             return RemoveEntities((IEnumerable<IEntity>) entities);
+        }
+
+        private int RemoveEntities(IEnumerable<IEntity> entities)
+        {
+            var removedEntities = new HashSet<IEntity>();
+
+            foreach (var e in entities)
+            {
+                if (!_loadedEntities.Remove(e))
+                {
+                    Logger.Warn("Unable to despawn entity on {0} (Entity not known by the client)", _client);
+                    continue;
+                }
+
+                e.Removed -= OnEntityRemoved;
+                removedEntities.Add(e);
+            }
+
+            if (removedEntities.Count == 0)
+                return 0;
+            
+            Logger.Info("Removing {0} entities on {1}", removedEntities.Count, _client);
+            var connection = _client.Connection;
+            connection.DestroyEntities(removedEntities);
+            return removedEntities.Count;
         }
     }
 }
