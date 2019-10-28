@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Entities;
@@ -92,6 +93,12 @@ namespace MineLW.Clients.World
             connection.MoveEntity((IEntity) sender, e.To - e.From, MotionTypes.Position);
         }
 
+        private void OnEntityRotationChanged(object sender, EntityRotationChangedEventArgs e)
+        {
+            var connection = _client.Connection;
+            connection.MoveEntity((IEntity) sender, Vector3.Zero, MotionTypes.Rotation);
+        }
+
         private void SpawnEntities(IWorldContext worldContext)
         {
             var chunkManager = _world.ChunkManager;
@@ -123,6 +130,7 @@ namespace MineLW.Clients.World
 
             entity.Removed += OnEntityRemoved;
             entity.PositionChanged += OnEntityPositionChanged;
+            entity.RotationChanged += OnEntityRotationChanged;
 
             Logger.Info("Spawning entity #{0} on {1}", entity.Id, _client);
             var connection = _client.Connection;
@@ -149,6 +157,7 @@ namespace MineLW.Clients.World
 
                 e.Removed -= OnEntityRemoved;
                 e.PositionChanged -= OnEntityPositionChanged;
+                e.RotationChanged -= OnEntityRotationChanged;
                 removedEntities.Add(e);
             }
 
