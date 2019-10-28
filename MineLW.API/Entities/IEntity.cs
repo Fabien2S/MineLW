@@ -37,6 +37,8 @@ namespace MineLW.API.Entities
         event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
         event EventHandler<EntityPositionChangingEventArgs> PositionChanging;
         event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
+        event EventHandler<EntityRotationChangingEventArgs> RotationChanging;
+        event EventHandler<EntityRotationChangedEventArgs> RotationChanged;
 
         void Remove();
     }

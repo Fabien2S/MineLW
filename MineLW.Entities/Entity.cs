@@ -50,6 +50,7 @@ namespace MineLW.Entities
                 PositionChanging?.Invoke(this, positionChangingEventArgs);
                 if (positionChangingEventArgs.Cancel)
                     return;
+                
                 _position = value;
                     
                 var positionChangedEventArgs = new EntityPositionChangedEventArgs(previousPosition, value);
@@ -63,7 +64,18 @@ namespace MineLW.Entities
             set
             {
                 EnsureValid();
+                
+                var previousRotation = _rotation;
+
+                var rotationChangingEventArgs = new EntityRotationChangingEventArgs(previousRotation, value);
+                RotationChanging?.Invoke(this, rotationChangingEventArgs);
+                if (rotationChangingEventArgs.Cancel)
+                    return;
+                
                 _rotation = value;
+                
+                var rotationChangedEventArgs = new EntityRotationChangedEventArgs(previousRotation, value);
+                RotationChanged?.Invoke(this, rotationChangedEventArgs);
             }
         }
 
@@ -74,6 +86,8 @@ namespace MineLW.Entities
         public event EventHandler<EntityWorldChangedEventArgs> WorldChanged;
         public event EventHandler<EntityPositionChangingEventArgs> PositionChanging;
         public event EventHandler<EntityPositionChangedEventArgs> PositionChanged;
+        public event EventHandler<EntityRotationChangingEventArgs> RotationChanging;
+        public event EventHandler<EntityRotationChangedEventArgs> RotationChanged;
 
         private IWorldContext _worldContext;
         private Vector3 _position = Vector3.Zero;
