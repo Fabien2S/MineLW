@@ -68,7 +68,8 @@ namespace MineLW.Server
             var defaultWorld = WorldManager.CreateWorld(WorldManager.DefaultWorld);
             var blockManager = _gameAdapter.BlockRegistry;
             var blockState = blockManager.CreateState(Minecraft.Blocks.Stone);
-            defaultWorld.ChunkManager.Generator = new DefaultChunkGenerator(blockState);
+            var chunkManager = defaultWorld.ChunkManager;
+            chunkManager.Generator = new DefaultChunkGenerator(blockState);
 
             // start the network server
             var ipEndPoint = new IPEndPoint(IPAddress.Any, 25565);
