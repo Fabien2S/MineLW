@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MineLW.API.Blocks;
 using MineLW.API.Blocks.Properties;
-using MineLW.API.Extensions;
 using MineLW.API.Registries;
 using MineLW.API.Utils;
 using NLog;
@@ -77,8 +75,26 @@ namespace MineLW.Blocks
                     props[i] = blockDefaultValues[i];
             }
 
-            var id = block.GetStateId(props);
+            var id = GetStateId(block, props);
             return _blockStates[id];
+        }
+
+        private static int GetStateId(IBlock block, IReadOnlyList<dynamic> prop)
+        {
+            var properties = block.Properties;
+            var data = 0;
+
+            for (var i = 0; i < properties.Count; i++)
+            {
+                var property = properties[i];
+                var value = prop[i];
+                var index = (int) property.GetIndex(value);
+
+                data *= property.ValueCount;
+                data += index;
+            }
+
+            return block.Id + data;
         }
 
         public IBlockState this[int id] => _blockStates[id];
