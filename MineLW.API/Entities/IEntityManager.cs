@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using MineLW.API.Client;
+using MineLW.API.Entities.Events;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Utils;
@@ -10,6 +12,8 @@ namespace MineLW.API.Entities
 {
     public interface IEntityManager : IUpdatable, IEnumerable<IEntity>
     {
+        event EventHandler<EntityEventArgs> EntitySpawned;
+
         IEnumerable<IEntity> GetEntities(ChunkPosition position);
         
         /// <summary>
