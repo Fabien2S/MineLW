@@ -12,9 +12,8 @@ namespace MineLW.Networking.Handlers
         public const string Name = "compression";
 
         public int CompressionThreshold { get; set; }
-        
-        private static readonly byte[] Buffer = new byte[8192];
-        
+
+        private readonly byte[] _buffer = new byte[8192];
         private readonly Deflater _deflater;
         private readonly Inflater _inflater;
 
@@ -41,8 +40,8 @@ namespace MineLW.Networking.Handlers
                 
                 while (!_deflater.IsFinished)
                 {
-                    var read = _deflater.Deflate(Buffer);
-                    buffer.WriteBytes(Buffer, 0, read);
+                    var read = _deflater.Deflate(_buffer);
+                    buffer.WriteBytes(_buffer, 0, read);
                 }
                 
                 _deflater.Reset();
