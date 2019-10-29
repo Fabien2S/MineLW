@@ -73,7 +73,9 @@ namespace MineLW.Clients.World
             var player = _client.Player;
             player.WorldChanged += OnPlayerWorldChanged;
 
-            _worldContexts.Add(player.WorldContext);
+            var playerWorldContext = player.WorldContext;
+            _worldContexts.Add(playerWorldContext);
+            WorldContextRegistered?.Invoke(this, new WorldContextEventArgs(playerWorldContext));
 
             _worldDirty = true;
         }
