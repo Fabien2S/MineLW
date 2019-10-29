@@ -24,6 +24,7 @@ namespace MineLW.Adapters.MC498.Networking
         public event EventHandler<TextComponent> Disconnected;
 
         public event EventHandler<Vector3> PositionChanged;
+        public event EventHandler<Rotation> RotationChanged;
         public event EventHandler<int> TeleportConfirmed;
         public event EventHandler<long> PingResponseReceived;
 
@@ -46,6 +47,7 @@ namespace MineLW.Adapters.MC498.Networking
 
         public void HandlePlayerRotationUpdate(in Rotation rotation)
         {
+            RotationChanged?.Invoke(this, rotation);
         }
 
         public void HandlePlayerGroundedUpdate(in bool grounded)
