@@ -14,7 +14,7 @@ namespace MineLW.Adapters.MC498.Networking.Client
             buffer.WriteShort(message.DeltaX);
             buffer.WriteShort(message.DeltaY);
             buffer.WriteShort(message.DeltaZ);
-            buffer.WriteRotationF(message.Rotation);
+            buffer.WriteRotationB(message.Rotation);
             buffer.WriteBoolean(message.Grounded);
         }
         

@@ -11,7 +11,7 @@ namespace MineLW.Adapters.MC498.Networking.Client
         protected override void Serialize(IByteBuffer buffer, Message message)
         {
             buffer.WriteVarInt32(message.Id);
-            buffer.WriteRotationF(message.Rotation);
+            buffer.WriteRotationB(message.Rotation);
             buffer.WriteBoolean(message.Grounded);
         }
         
