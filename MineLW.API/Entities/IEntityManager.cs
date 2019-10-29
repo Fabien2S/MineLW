@@ -13,6 +13,7 @@ namespace MineLW.API.Entities
     public interface IEntityManager : IUpdatable, IEnumerable<IEntity>
     {
         event EventHandler<EntityEventArgs> EntitySpawned;
+        event EventHandler<EntityEventArgs> EntityRemoved;
 
         IEnumerable<IEntity> GetEntities(ChunkPosition position);
         

@@ -18,7 +18,8 @@ namespace MineLW.Entities
     public class EntityManager : IEntityManager
     {
         public event EventHandler<EntityEventArgs> EntitySpawned;
-        
+        public event EventHandler<EntityEventArgs> EntityRemoved;
+
         private readonly IWorldContext _worldContext;
         private readonly IUidGenerator _uidGenerator;
         private readonly HashSet<IEntity> _entities = new HashSet<IEntity>();
@@ -102,6 +103,8 @@ namespace MineLW.Entities
 
             entity.WorldChanged -= OnEntityWorldChanged;
             entity.Removed -= OnEntityRemoved;
+            
+            EntityRemoved?.Invoke(this, new EntityEventArgs(entity));
         }
 
         public IEnumerator<IEntity> GetEnumerator() => _entities.GetEnumerator();
