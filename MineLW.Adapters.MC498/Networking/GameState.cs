@@ -77,7 +77,7 @@ namespace MineLW.Adapters.MC498.Networking
                 null,
                 null,
                 new MessageClientRespawn(),
-                null,
+                new MessageClientEntityLook(),
                 null,
                 null,
                 null,

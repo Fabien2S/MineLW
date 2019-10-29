@@ -7,6 +7,7 @@ using MineLW.Adapters.MC498.Networking.Client;
 using MineLW.API;
 using MineLW.API.Client;
 using MineLW.API.Entities;
+using MineLW.API.Entities.Living;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Physics;
@@ -128,11 +129,7 @@ namespace MineLW.Adapters.MC498.Networking
         {
             switch (entity)
             {
-                case IEntityPlayer player:
-                    _networkClient.Send(new MessageClientPlayerInfo.Message(
-                        MessageClientPlayerInfo.Action.AddPlayer,
-                        new []{player}
-                    ));
+                case IEntityPlayer _:
                     _networkClient.Send(new MessageClientSpawnPlayer.Message(
                         entity.Id,
                         entity.Uuid,
@@ -203,6 +200,14 @@ namespace MineLW.Adapters.MC498.Networking
                     true
                 ));
             }
+        }
+
+        public void RotateEntityHead(IEntityLiving living)
+        {
+            _networkClient.Send(new MessageClientEntityLook.Message(
+                living.Id,
+                living.Rotation.Yaw
+            ));
         }
 
         public void LoadChunk(ChunkPosition position, IChunk chunk)

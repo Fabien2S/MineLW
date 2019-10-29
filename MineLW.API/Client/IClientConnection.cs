@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 using MineLW.API.Entities;
+using MineLW.API.Entities.Living;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Math;
 using MineLW.API.Physics;
@@ -33,6 +34,7 @@ namespace MineLW.API.Client
         void SpawnEntity(IEntity entity);
         void DestroyEntities(IEnumerable<IEntity> entities);
         void MoveEntity(IEntity entity, Vector3 delta, MotionTypes motionTypes);
+        void RotateEntityHead(IEntityLiving living);
         #endregion
         
 
