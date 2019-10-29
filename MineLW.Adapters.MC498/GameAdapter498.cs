@@ -1,7 +1,6 @@
-using System.Collections.Immutable;
+using MineLW.Adapters.MC498.Blocks;
 using MineLW.Adapters.MC498.Networking;
 using MineLW.API;
-using MineLW.API.Blocks.Properties;
 using MineLW.API.Client;
 using MineLW.API.Entities.Living.Player;
 using MineLW.API.Registries;
@@ -23,21 +22,7 @@ namespace MineLW.Adapters.MC498
 
         public GameAdapter498()
         {
-            BlockRegistry.Register(
-                Minecraft.CreateIdentifier("air"),
-                ImmutableArray<IBlockProperty>.Empty,
-                ImmutableList<dynamic>.Empty
-            );
-            BlockRegistry.Register(
-                Minecraft.CreateIdentifier("stone"),
-                ImmutableArray<IBlockProperty>.Empty,
-                ImmutableList<dynamic>.Empty
-            );
-            BlockRegistry.Register(
-                Minecraft.CreateIdentifier("granite"),
-                ImmutableArray<IBlockProperty>.Empty,
-                ImmutableList<dynamic>.Empty
-            );
+            BlockTypes.Register(BlockRegistry);
             
             EntityRegistry.Register<IEntityPlayer>(Minecraft.Entities.Player);
         }
