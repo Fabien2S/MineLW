@@ -8,6 +8,7 @@ namespace MineLW.API
         {
             public static readonly Identifier Air = CreateIdentifier("air");
             public static readonly Identifier Stone = CreateIdentifier("stone");
+            public static readonly Identifier Granite = CreateIdentifier("granite");
         }
     }
 }
