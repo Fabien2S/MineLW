@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using MineLW.API.Client;
 using MineLW.API.Client.World;
 using MineLW.API.Entities;
 using MineLW.API.Entities.Events;
-using MineLW.API.Physics;
 using MineLW.API.Worlds.Chunks;
 using MineLW.API.Worlds.Chunks.Events;
 using MineLW.API.Worlds.Events;
@@ -50,6 +47,7 @@ namespace MineLW.Clients.World
             }
 
             entityManager.EntitySpawned += OnEntitySpawned;
+            entityManager.EntityRemoved += OnEntityRemoved;
         }
 
         private void OnWorldContextUnregistered(object sender, WorldContextEventArgs e)
@@ -61,6 +59,7 @@ namespace MineLW.Clients.World
             RemoveEntities(loadedEntities);
 
             entityManager.EntitySpawned -= OnEntitySpawned;
+            entityManager.EntityRemoved -= OnEntityRemoved;
         }
 
         private void OnChunkLoaded(object sender, ChunkEventArgs e)
@@ -106,22 +105,11 @@ namespace MineLW.Clients.World
                 SpawnEntity(entity);
         }
 
-        private void OnEntityRemoved(object sender, EventArgs e)
+        private void OnEntityRemoved(object sender, EntityEventArgs e)
         {
-            var entity = (IEntity) sender;
-            RemoveEntities(entity);
-        }
-
-        private void OnEntityPositionChanged(object sender, EntityPositionChangedEventArgs e)
-        {
-            var connection = _client.Connection;
-            connection.MoveEntity((IEntity) sender, e.To - e.From, MotionTypes.Position);
-        }
-
-        private void OnEntityRotationChanged(object sender, EntityRotationChangedEventArgs e)
-        {
-            var connection = _client.Connection;
-            connection.MoveEntity((IEntity) sender, Vector3.Zero, MotionTypes.Rotation);
+            var entity = e.Entity;
+            if(_loadedEntities.Contains(entity))
+                RemoveEntities(entity);
         }
 
         public bool SpawnEntity(IEntity entity)
@@ -140,10 +128,6 @@ namespace MineLW.Clients.World
 
             if (!_loadedEntities.Add(entity))
                 return false;
-
-            entity.Removed += OnEntityRemoved;
-            entity.PositionChanged += OnEntityPositionChanged;
-            entity.RotationChanged += OnEntityRotationChanged;
 
             Logger.Info("Spawning entity #{0} on {1}", entity.Id, _client);
             var connection = _client.Connection;
@@ -167,10 +151,7 @@ namespace MineLW.Clients.World
                     Logger.Warn("Unable to despawn entity on {0} (Entity not known by the client)", _client);
                     continue;
                 }
-
-                e.Removed -= OnEntityRemoved;
-                e.PositionChanged -= OnEntityPositionChanged;
-                e.RotationChanged -= OnEntityRotationChanged;
+                
                 removedEntities.Add(e);
             }
 
