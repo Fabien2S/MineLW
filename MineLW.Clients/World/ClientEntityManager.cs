@@ -41,12 +41,15 @@ namespace MineLW.Clients.World
             
             var worldContext = e.WorldContext;
             var entityManager = worldContext.EntityManager;
+            
             foreach (var entity in entityManager)
             {
                 var chunkPosition = ChunkPosition.FromWorld(entity.Position);
                 if (chunkManager.IsLoaded(chunkPosition))
                     SpawnEntity(entity);
             }
+
+            entityManager.EntitySpawned += OnEntitySpawned;
         }
 
         private void OnWorldContextUnregistered(object sender, WorldContextEventArgs e)
@@ -56,6 +59,8 @@ namespace MineLW.Clients.World
 
             var loadedEntities = entityManager.Where(ent => _loadedEntities.Contains(ent));
             RemoveEntities(loadedEntities);
+
+            entityManager.EntitySpawned -= OnEntitySpawned;
         }
 
         private void OnChunkLoaded(object sender, ChunkEventArgs e)
@@ -90,6 +95,15 @@ namespace MineLW.Clients.World
             }
 
             RemoveEntities(toRemove);
+        }
+
+        private void OnEntitySpawned(object sender, EntityEventArgs e)
+        {
+            var entity = e.Entity;
+            var position = ChunkPosition.FromWorld(entity.Position);
+            var chunkManager = _world.ChunkManager;
+            if (chunkManager.IsLoaded(position))
+                SpawnEntity(entity);
         }
 
         private void OnEntityRemoved(object sender, EventArgs e)
