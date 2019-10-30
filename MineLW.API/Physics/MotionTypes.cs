@@ -3,7 +3,7 @@
 namespace MineLW.API.Physics
 {
     [Flags]
-    public enum MotionTypes
+    public enum MotionTypes : byte
     {
         None = 0b00,
         Position = 0b01,
