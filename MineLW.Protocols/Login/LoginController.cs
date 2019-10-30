@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using DotNetty.Common.Internal;
 using MineLW.Adapters;
 using MineLW.API.Client;
-using MineLW.API.Entities.Living.Player;
+using MineLW.API.Players;
 using MineLW.API.Text;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
@@ -31,7 +31,7 @@ namespace MineLW.Protocols.Login
         private byte[] _signature;
         private byte[] _sharedSecret;
 
-        private PlayerProfile _profile;
+        private GameProfile _profile;
         private IGameAdapter _adapter;
 
         public LoginController(NetworkClient networkClient) : base(networkClient)
@@ -131,7 +131,7 @@ namespace MineLW.Protocols.Login
                         .ReadAsStringAsync()
                         .ContinueWith(readTask =>
                         {
-                            _profile = JsonConvert.DeserializeObject<PlayerProfile>(readTask.Result);
+                            _profile = JsonConvert.DeserializeObject<GameProfile>(readTask.Result);
 
                             if (!_username.Equals(_profile.Name))
                             {

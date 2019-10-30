@@ -1,15 +1,15 @@
 using System;
 
-namespace MineLW.API.Entities.Living.Player
+namespace MineLW.API.Players
 {
     [Serializable]
-    public struct PlayerProfile
+    public struct GameProfile
     {
         public readonly Guid Id;
         public readonly string Name;
         public readonly Property[] Properties;
         
-        public PlayerProfile(Guid id, string name, Property[] properties)
+        public GameProfile(Guid id, string name, Property[] properties)
         {
             Id = id;
             Name = name;

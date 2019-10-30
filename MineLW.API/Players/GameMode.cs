@@ -1,4 +1,4 @@
-﻿namespace MineLW.API.Entities.Living.Player
+﻿namespace MineLW.API.Players
 {
     public enum GameMode : byte
     {

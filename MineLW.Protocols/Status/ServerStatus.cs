@@ -1,5 +1,5 @@
 using System;
-using MineLW.API.Entities.Living.Player;
+using MineLW.API.Players;
 using MineLW.API.Text;
 using MineLW.API.Utils;
 
@@ -25,9 +25,9 @@ namespace MineLW.Protocols.Status
     {
         public readonly int Online;
         public readonly int Max;
-        public readonly PlayerProfile[] Players;
+        public readonly GameProfile[] Players;
 
-        public PlayerInfo(int online, int max, PlayerProfile[] players)
+        public PlayerInfo(int online, int max, GameProfile[] players)
         {
             Online = online;
             Max = max;

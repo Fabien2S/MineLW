@@ -1,5 +1,5 @@
 using MineLW.Adapters;
-using MineLW.API.Entities.Living.Player;
+using MineLW.API.Players;
 using MineLW.API.Text;
 using MineLW.Networking;
 using MineLW.Networking.Messages;
@@ -19,7 +19,7 @@ namespace MineLW.Protocols.Status
             var status = new ServerStatus(
                 version,
                 new PlayerInfo(
-                    0, 20, new PlayerProfile[0]
+                    0, 20, new GameProfile[0]
                 ),
                 new TextComponentString("Using game adapter ")
                 {

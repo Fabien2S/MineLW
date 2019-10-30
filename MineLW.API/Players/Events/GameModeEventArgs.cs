@@ -1,6 +1,6 @@
 using System;
 
-namespace MineLW.API.Entities.Living.Player.Events
+namespace MineLW.API.Players.Events
 {
     public class GameModeEventArgs : EventArgs
     {

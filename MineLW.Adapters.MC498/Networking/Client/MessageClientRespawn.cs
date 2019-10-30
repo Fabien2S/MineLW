@@ -1,5 +1,5 @@
 ﻿using DotNetty.Buffers;
-using MineLW.API.Entities.Living.Player;
+using MineLW.API.Players;
 using MineLW.Networking.IO;
 using MineLW.Networking.Messages;
 using MineLW.Networking.Messages.Serialization;
