@@ -46,7 +46,7 @@ namespace MineLW.Server
             _stopWatch = new Stopwatch();
             _networkServer = new NetworkServer(this, HandshakeState.Instance);
 
-            WorldManager = new WorldManager(_gameAdapter.BlockRegistry);
+            WorldManager = new WorldManager(_gameAdapter.BlockRegistry, _gameAdapter.EntityRegistry);
             ClientManager = new ClientManager(this);
         }
 
@@ -55,12 +55,11 @@ namespace MineLW.Server
             if (_running)
                 return;
 
-            _running = true;
-
             _stopWatch.Start();
 
             Logger.Info("Starting {0} (Minecraft {1})", Name, GameAdapters.CurrentVersion);
 
+            // create default world
             var defaultWorld = WorldManager.CreateWorld(WorldManager.DefaultWorld);
             var blockManager = _gameAdapter.BlockRegistry;
             var blockState = blockManager.CreateState(Minecraft.Blocks.Stone);
@@ -75,8 +74,9 @@ namespace MineLW.Server
             var formattedElapsed = elapsed.ToString("F", CultureInfo.InvariantCulture);
             Logger.Info("Server started in {0}s (running at {1} ups)", formattedElapsed, UpdatePerSecond);
 
+            _running = true;
             _stopWatch.Stop();
-
+            
             HandleUpdate();
         }
 
@@ -124,9 +124,12 @@ namespace MineLW.Server
                         var formattedRatio = (ratio * 100f).ToString("F", CultureInfo.InvariantCulture);
                         var formattedUps = updatePerSecond.ToString("F", CultureInfo.InvariantCulture);
 
-                        Logger.Warn("The server is running at {0}%  ({1} / {2} ups)", formattedRatio,
+                        Logger.Warn(
+                            "The server is running at {0}%  ({1} / {2} ups)",
+                            formattedRatio,
                             formattedUps,
-                            UpdatePerSecond);
+                            UpdatePerSecond
+                        );
                     }
 
                     sinceLastUpsCheck = 0;
@@ -146,7 +149,8 @@ namespace MineLW.Server
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("An error occurred while stopping the server.\n\n\t-> {0}", e.Message);
+                    Logger.Error("An error occurred while stopping the server.");
+                    Logger.Error(e);
                 }
             }
         }
